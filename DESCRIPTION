@@ -1,0 +1,24 @@
+Package: ContentStructure
+Type: Package
+Title: What the package does (short line)
+Version: 0.1
+Date: 2015-05-22
+Author: Matt Denny
+Maintainer: Matt Denny <mzd5530@psu.edu>
+Description:  This package provide functions to estimate an as-yet unnamed extension and generalization of the TPME model introduced in Krafft et al. 2011. Samplers are written in  C++ and use the Boost libraries. The Model currently expects 0-1 binary mixing covaries and should scale up to a maximum of about 10-20,000 emails sent by up to 50-100 senders and still run in a few weeks.
+License: GPL (>= 2)
+Imports: 
+	BH,
+	coda,
+	gplots,
+	ggplot2,
+	grid,
+	Rcpp (>= 0.11.6),
+	RcppArmadillo,
+	slam,
+	snowfall,
+	vegan
+LinkingTo: 
+	Rcpp, 
+	RcppArmadillo, 
+	BH
