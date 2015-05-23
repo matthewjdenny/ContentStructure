@@ -627,14 +627,22 @@ Generate_Model_Diagnsotics <- function(input_folder_path = "~/Dropbox/PINLab/",
 
         Pretty_Cluster_Likelihood <- function(Cluster){
             likelihoods <- cbind(Metropolis_Results[[5]][,Cluster],Metropolis_Results[[6]][,Cluster])
-            bets <- length(which(abs(unlist(beta_list[(4*(Cluster-1)+2):(4*Cluster)])) < 1.645))
+            if(used_binary_mixing_attribute){
+              bets <- length(which(abs(unlist(beta_list[(4*(Cluster-1)+2):(4*Cluster)])) < 1.645))
+            }
+            
             
             ls <- length(which(abs(unlist(LS_list[(Actors*2*(Cluster-1)+1):(Actors*2*Cluster)])) < 1.645))
             num_ls <- length((Actors*2*(Cluster-1)+1):(Actors*2*Cluster))
             
             ints <- intercept_list[[Cluster]]
             
-            matplot(likelihoods, main = paste(pretty_name,": Trace Plot of Log Likelihoods For Cluster", Cluster, "\n Geweke Statistic:", round(geweke.diag(likelihoods[,1])$z,2),paste(" --- Percent Betas Converged ($z < 1.645$):",round(bets/3,3)), "\n",paste(" Percent LS Positions Converged ($z < 1.645$):",round(ls/num_ls,3)),"  --- Intercept Geweke Statistic:",round(ints,3) ),ylab= "Log Likelihood",pch = 20)
+            if(used_binary_mixing_attribute){
+              matplot(likelihoods, main = paste(pretty_name,": Trace Plot of Log Likelihoods For Cluster", Cluster, "\n Geweke Statistic:", round(geweke.diag(likelihoods[,1])$z,2),paste(" --- Percent Betas Converged ($z < 1.645$):",round(bets/3,3)), "\n",paste(" Percent LS Positions Converged ($z < 1.645$):",round(ls/num_ls,3)),"  --- Intercept Geweke Statistic:",round(ints,3) ),ylab= "Log Likelihood",pch = 20)
+            }else{
+              matplot(likelihoods, main = paste(pretty_name,": Trace Plot of Log Likelihoods For Cluster", Cluster, "\n Geweke Statistic:", round(geweke.diag(likelihoods[,1])$z,2),"\n",paste(" Percent LS Positions Converged ($z < 1.645$):",round(ls/num_ls,3)),"  --- Intercept Geweke Statistic:",round(ints,3) ),ylab= "Log Likelihood",pch = 20)
+            }
+            
             legend("bottomright",c("Proposed", "Current"), fill=c("black","red"), horiz=T)
             
         }

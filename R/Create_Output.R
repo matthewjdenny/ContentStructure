@@ -8,6 +8,8 @@
 #' @param Topic_Model_Burnin The number of iterations of Gibbs sampling that should be discarded before calculated Geweke statistic to determine model convergence. You will simply want to set it pretty low and then look at the trace to determine where you should set it to provide evidence of convergence.
 #' @param Thin The number of iterations to skip in the MH for LSM chain when generating output. Set to 1 as default does not thin but can be set higher to make plotting easier if you took a lot of samples.
 #' @param Skip The number of MH for LSM iterations to skip when generating out (if your burnin was not long enough).
+#' @param Used_MP If TRUE then will generate output for mixing parameter estimates (if they were used).
+#' @param MP_Name If we are using mixing parameters then specify the name of the binary variable for which mixing parameter estimates were created in the author_attributes dataset.
 #' @return A list object with the following structure. The first entry is a sublist which contains three objects: a vector containing the full vocabulary, an email-word matrix aggregated across all organizations, and a metadata data frame -- again aggregated across all emails in all organizations. The second entry in the outer list is a list with one entry for each organization with a sublist containing data about that organization and emails sent within it. Only returns if you are using North Carolina County Government Email data. 
 #' @export
 Create_Output <- function(data_list,
@@ -17,7 +19,10 @@ Create_Output <- function(data_list,
                           using_county_email_data = F,
                           Topic_Model_Burnin = 50,
                           Skip = 0, 
-                          Thin = 1){
+                          Thin = 1,
+                          Used_MP = F,
+                          MP_Name = "Gender"
+                          ){
   
   setwd(data_directory)
   #     source("./Scripts/CPME_Generate_Diagnostics.R")
@@ -44,7 +49,9 @@ Create_Output <- function(data_list,
                                            pretty_name = data_list[i],
                                            only_print_summaries = only_generate_summaries,
                                            print_agregate_level_stats = print_agg_stats, 
-                                           used_county_email_data = using_county_email_data
+                                           used_county_email_data = using_county_email_data,
+                                           used_binary_mixing_attribute = Used_MP, 
+                                           binary_mixing_attribute_name = MP_Name
                                            )
         
         #testing
