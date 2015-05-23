@@ -1,0 +1,22 @@
+#' Department Manager EMail dataset
+#'
+#' A dataset containing 121 emails sent between department managers in a North 
+#' Carolina County Government. This dataset is very small and not terrbily interesting 
+#' and is meant primarily to serve as an illustration of what the model can do and the 
+#' output it will create. The data objects included represent the minimal set necessary
+#'  to make themodel work and should serve as a template for formatting your own data 
+#'  and are as follows:
+#'   
+#' \itemize{
+#'   \item author_attributes -- individual level data for 20 county department managers recording their department title and their gender. 
+#'   \item document_edge_matrix -- a number of emails (121) by number of authors plus one (21), matrix where the first column records the index (starting from 1) of the sender of the email and the rest of the columns record a 1 if the manager recieved the email and zero otherwise. 
+#'   \item document_word_matrix -- a number of emails (121) by number of unique terms (221) matrix the records the number of times each term was used in each email.
+#'   \item vocabulary -- a vector containing all unique terms.
+#' }
+#'
+#' @docType data
+#' @keywords datasets
+#' @name Example
+#' @usage data(Example)
+#' @format The following files are included: author_attributes, document_edge_matrix, document_word_matrix, vocabulary -- this is the minimal set of files necessary to run the model.
+NULL
