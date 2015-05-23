@@ -4,13 +4,14 @@
 \alias{Create_Output}
 \title{A Function to generate diagnostic plots and interpretable output for a list of 1 to N model output objects from running the ContentStructure model.}
 \usage{
-Create_Output(data_list, only_generate_summaries = T, data_directory,
+Create_Output(data_name, only_generate_summaries = T, data_directory,
   print_agg_stats = F, using_county_email_data = F,
   Topic_Model_Burnin = 50, Skip = 0, Thin = 1, Used_MP = F,
-  MP_Name = "Gender")
+  MP_Name = "Gender", data_list = NULL, Auth_Attr = NULL,
+  Vocabulary = NULL)
 }
 \arguments{
-\item{data_list}{A vector containing the names of organization data files as in the function to run the model. Should only contain names of those organizations for which output has already been created.}
+\item{data_name}{The name of organization data file as in the function to run the model.}
 
 \item{only_generate_summaries}{If TRUE, then only generate a one-page-per-cluster pdf summary of model output for each county, otherwise generate a ton of output.}
 
@@ -29,6 +30,12 @@ Create_Output(data_list, only_generate_summaries = T, data_directory,
 \item{Used_MP}{If TRUE then will generate output for mixing parameter estimates (if they were used).}
 
 \item{MP_Name}{If we are using mixing parameters then specify the name of the binary variable for which mixing parameter estimates were created in the author_attributes dataset.}
+
+\item{data_list}{A vector containing the names of organization data files as in the function to run the model. Should only contain names of those organizations for which output has already been created. Only for use with county government datasets (not for public use)}
+
+\item{Auth_Attr}{The author attributes dataframe.}
+
+\item{Vocabulary}{The Vocabulary dataframe}
 }
 \value{
 A list object with the following structure. The first entry is a sublist which contains three objects: a vector containing the full vocabulary, an email-word matrix aggregated across all organizations, and a metadata data frame -- again aggregated across all emails in all organizations. The second entry in the outer list is a list with one entry for each organization with a sublist containing data about that organization and emails sent within it. Only returns if you are using North Carolina County Government Email data.
