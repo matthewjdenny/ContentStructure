@@ -29,76 +29,90 @@ Create_Output <- function(data_list,
     #load data
     load( paste(data_directory,data_list[i],".Rdata", sep = ""))
     
-    if(using_county_email_data){
-      temp <- Generate_Model_Diagnsotics(input_file = paste("Sample_",data_list[i],sep = "") ,
-                                         LS_Actor = 8, 
-                                         out_directory = data_directory, 
-                                         vocab = vocabulary, 
-                                         output_name = paste("Output_",data_list[i],sep = ""),
-                                         Thin_Itterations = Thin,
-                                         skip_first = Skip,
-                                         Author_Attributes = author_attributes,
-                                         proportion_in_confidence_contour  = 0.9, 
-                                         topic_model_burnin = Topic_Model_Burnin, 
-                                         pretty_name = data_list[i],
-                                         only_print_summaries = only_generate_summaries,
-                                         print_agregate_level_stats = print_agg_stats, 
-                                         used_county_email_data = using_county_email_data
-                                         )
-      
-      #testing
-      #temp <- test[[1]]
-      #temp <- test[[2]]
-      #if we are on the first iteration, make the return object equal to temp, oterwise, append
-      if(i == 1){
-        county_data <- list(temp)
-        word_mat <- temp[[3]]
-        metadata <- word_mat[,1:3]
-        len <- length(word_mat[1,])
-        nr <-nrow(word_mat[,14:len])
-        nc <-ncol(word_mat[,14:len])
-        word_mat <- matrix(as.numeric(word_mat[,14:len]),nrow = nr, ncol= nc)
-        all_vocab <- temp[[4]]
-        all_words <- as.simple_triplet_matrix(word_mat)
-      }else{
-        county_data <- append(county_data,list(temp))
-        word_mat <- temp[[3]]
-        metadata <- rbind(metadata,word_mat[,1:3])
-        len <- length(word_mat[1,])
-        nr <-nrow(word_mat[,14:len])
-        nc <-ncol(word_mat[,14:len])
-        word_mat <- matrix(as.numeric(word_mat[,14:len]),nrow = nr, ncol= nc)
+      if(using_county_email_data){
+        temp <- Generate_Model_Diagnsotics(input_file = paste("Sample_",data_list[i],sep = "") ,
+                                           LS_Actor = 8, 
+                                           out_directory = data_directory, 
+                                           vocab = vocabulary, 
+                                           output_name = paste("Output_",data_list[i],sep = ""),
+                                           Thin_Itterations = Thin,
+                                           skip_first = Skip,
+                                           Author_Attributes = author_attributes,
+                                           proportion_in_confidence_contour  = 0.9, 
+                                           topic_model_burnin = Topic_Model_Burnin, 
+                                           pretty_name = data_list[i],
+                                           only_print_summaries = only_generate_summaries,
+                                           print_agregate_level_stats = print_agg_stats, 
+                                           used_county_email_data = using_county_email_data
+                                           )
         
-        cur_vocab <- temp[[4]]
-        new_vocab <- unique(rbind(all_vocab,cur_vocab))
-        #the new words that the current vocab is adding
-        addition <- new_vocab[-(1:length(all_vocab[,1])),]
-        #create a block of zeros to append to the right side of the existing matrix (becasue those documents do not use the new words)
-        add_word_matrix <- simple_triplet_zero_matrix(nrow =nrow(all_words),ncol= length(addition))
-        #stick them together
-        all_words <- cbind(all_words,add_word_matrix)
-        
-        #now create a new matrix with all the right row indicies to 
-        current_word_matrix <- simple_triplet_zero_matrix(nrow = nrow(word_mat),ncol= length(new_vocab[,1]))
-        for(j in 1:length(cur_vocab[,1])){
-          index <- which(new_vocab[,1] == cur_vocab[j,1])
-          current_word_matrix[,index] <- word_mat[,j]
+        #testing
+        #temp <- test[[1]]
+        #temp <- test[[2]]
+        #if we are on the first iteration, make the return object equal to temp, oterwise, append
+        if(i == 1){
+          county_data <- list(temp)
+          word_mat <- temp[[3]]
+          metadata <- word_mat[,1:3]
+          len <- length(word_mat[1,])
+          nr <-nrow(word_mat[,14:len])
+          nc <-ncol(word_mat[,14:len])
+          word_mat <- matrix(as.numeric(word_mat[,14:len]),nrow = nr, ncol= nc)
+          all_vocab <- temp[[4]]
+          all_words <- as.simple_triplet_matrix(word_mat)
+        }else{
+          county_data <- append(county_data,list(temp))
+          word_mat <- temp[[3]]
+          metadata <- rbind(metadata,word_mat[,1:3])
+          len <- length(word_mat[1,])
+          nr <-nrow(word_mat[,14:len])
+          nc <-ncol(word_mat[,14:len])
+          word_mat <- matrix(as.numeric(word_mat[,14:len]),nrow = nr, ncol= nc)
+          
+          cur_vocab <- temp[[4]]
+          new_vocab <- unique(rbind(all_vocab,cur_vocab))
+          #the new words that the current vocab is adding
+          addition <- new_vocab[-(1:length(all_vocab[,1])),]
+          #create a block of zeros to append to the right side of the existing matrix (becasue those documents do not use the new words)
+          add_word_matrix <- simple_triplet_zero_matrix(nrow =nrow(all_words),ncol= length(addition))
+          #stick them together
+          all_words <- cbind(all_words,add_word_matrix)
+          
+          #now create a new matrix with all the right row indicies to 
+          current_word_matrix <- simple_triplet_zero_matrix(nrow = nrow(word_mat),ncol= length(new_vocab[,1]))
+          for(j in 1:length(cur_vocab[,1])){
+            index <- which(new_vocab[,1] == cur_vocab[j,1])
+            current_word_matrix[,index] <- word_mat[,j]
+          }
+          
+          #update
+          all_words <- rbind(all_words,current_word_matrix)
+          all_vocab <- new_vocab
+          tv <- unlist(all_vocab[,1])
+          colnames(all_words) <- tv
         }
-        
-        #update
-        all_words <- rbind(all_words,current_word_matrix)
-        all_vocab <- new_vocab
-        tv <- unlist(all_vocab[,1])
-        colnames(all_words) <- tv
+      }else{
+        #if we are not using the county email dataset
+        Generate_Model_Diagnsotics(input_file = paste("Sample_",data_list[i],sep = "") ,
+                                   LS_Actor = 8, 
+                                   out_directory = data_directory, 
+                                   vocab = vocabulary, 
+                                   output_name = paste("Output_",data_list[i],sep = ""),
+                                   Thin_Itterations = Thin,
+                                   skip_first = Skip,
+                                   Author_Attributes = author_attributes,
+                                   proportion_in_confidence_contour  = 0.9, 
+                                   topic_model_burnin = Topic_Model_Burnin, 
+                                   pretty_name = data_list[i],
+                                   only_print_summaries = only_generate_summaries,
+                                   print_agregate_level_stats = print_agg_stats, 
+                                   used_county_email_data = using_county_email_data
+                                   )
       }
-    }else{
-      #if we are not using the county email dataset
-      Generate_Model_Diagnsotics(input_file = paste("Sample_",data_list[i],sep = "") ,LS_Actor = 8, out_directory = "~/Dropbox/PINLab/Projects/Denny_Working_Directory/2011_Analysis_Output/", vocab = vocabulary, output_name = paste("Output_",data_list[i],sep = ""), Thin_Itterations = 1,skip_first = 2000,Author_Attributes = author_attributes,Clusters_to_Pretty_Print=c(1,2,3,4),proportion_in_confidence_contour  = 0.9, topic_model_burnin = 2500, pretty_name = data_list[i],only_print_summaries = only_generate_summaries,print_agregate_level_stats = print_agg_stats,used_county_email_data = using_county_email_data)
-    }
       
     
     
-    }
+    }#end of loop
   
   if(using_county_email_data){
     token_master_data <- list(tv,all_words,metadata)
