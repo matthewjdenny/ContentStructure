@@ -7,7 +7,7 @@
 Cluster_Run_Models(name_vector, Data_Directory, MAX_CPUs = 4,
   Main_Iterations = 4000, Sample_Step_Burnin = 2e+06,
   Sample_Step_Iterations = 8e+06, Topics = 40, Clusters = 4,
-  Sample_Step_Sample_Every = 2000)
+  Sample_Step_Sample_Every = 2000, Mixing_Variable = NULL)
 }
 \arguments{
 \item{name_vector}{A vector containing the exact names of the .Rdata files containing the relevant files necessary to run the model for each organization.}
@@ -27,6 +27,8 @@ Cluster_Run_Models(name_vector, Data_Directory, MAX_CPUs = 4,
 \item{Clusters}{The number of topic clusters to use}
 
 \item{Sample_Step_Sample_Every}{How many iterations to skip when thinning the MH for the LSM chain in our MH for the LSM sample step.}
+
+\item{Mixing_Variable}{if not NULL, specifies the name of the binary variable in the author_attributes dataset that will be used to estimate mixing parameter effects.}
 }
 \value{
 Does not return anything, just saves everything to our data_directory folder.

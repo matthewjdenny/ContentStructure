@@ -7,7 +7,7 @@
 Run_Full_Model(data_name, main_iterations = 4000,
   sample_step_burnin = 2e+06, sample_step_iterations = 8e+06,
   sample_step_sample_every = 2000, topics = 40, clusters = 4,
-  data_directory, run_MH_only = F)
+  data_directory, run_MH_only = F, mixing_variable = NULL)
 }
 \arguments{
 \item{data_name}{The exact name of the .Rdata file containing the relevant files necessary to run the model.}
@@ -27,6 +27,8 @@ Run_Full_Model(data_name, main_iterations = 4000,
 \item{data_directory}{The directory where our data_name file is stored. This is also where all output will be saved}
 
 \item{run_MH_only}{If TRUE, then we only rerun MH for the LSM to convergence}
+
+\item{mixing_variable}{if not NULL, specifies the name of the binary variable in the author_attributes dataset that will be used to estimate mixing parameter effects.}
 }
 \value{
 Does not return anything, just saves everything to our data_directory folder.

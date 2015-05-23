@@ -9,9 +9,10 @@
 #' @param Sample_Step_Sample_Every How many iterations to skip when thinning the MH for the LSM chain in our MH for the LSM sample step.
 #' @param Topics The number of topics to use
 #' @param Clusters The number of topic clusters to use
+#' @param Mixing_Variable if not NULL, specifies the name of the binary variable in the author_attributes dataset that will be used to estimate mixing parameter effects.
 #' @return Does not return anything, just saves everything to our data_directory folder.
 #' @export
-Cluster_Run_Models <- function(name_vector, Data_Directory,MAX_CPUs = 4,Main_Iterations = 4000, Sample_Step_Burnin = 2000000, Sample_Step_Iterations = 8000000,Topics = 40, Clusters = 4,Sample_Step_Sample_Every = 2000){
+Cluster_Run_Models <- function(name_vector, Data_Directory,MAX_CPUs = 4,Main_Iterations = 4000, Sample_Step_Burnin = 2000000, Sample_Step_Iterations = 8000000,Topics = 40, Clusters = 4,Sample_Step_Sample_Every = 2000,  Mixing_Variable = NULL){
 
   setwd(Data_Directory)
   
@@ -47,7 +48,8 @@ Cluster_Run_Models <- function(name_vector, Data_Directory,MAX_CPUs = 4,Main_Ite
                    topics = Topics,
                    clusters = Clusters,
                    data_directory = Data_Directory,
-                   sample_step_sample_every = Sample_Step_Sample_Every 
+                   sample_step_sample_every = Sample_Step_Sample_Every,
+                   mixing_variable = Mixing_Variable
                    )
     return(1)
   }
