@@ -6,7 +6,7 @@
 \usage{
 Run_Full_Model(data_name, main_iterations = 4000,
   sample_step_burnin = 2e+06, sample_step_iterations = 8e+06,
-  sample_step_sample_every = 2000, topics = 40, clusters = 4,
+  sample_step_sample_every = 2000, topics = 10, clusters = 2,
   data_directory, run_MH_only = F, mixing_variable = NULL,
   Auth_Attr = author_attributes, Doc_Edge_Matrix = document_edge_matrix,
   Doc_Word_Matrix = document_word_matrix, Vocab = vocabulary, Seed = 1234)

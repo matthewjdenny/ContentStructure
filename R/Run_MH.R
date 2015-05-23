@@ -1,4 +1,17 @@
-Run_MH_To_Convergence <- function(input_file = "Test",data_source = "McDowell_2011_Data", output_file = "Test", itterations = 1200000,sample_every = 100, data_dir = "~/Dropbox/PINLab/",sample_step_burnin = 200000,post_burin_variance_multiplier = 0.1, prop_var = 1,set_proposal_variance = F,adaptive_metropolis_update_every = 100, use_adaptive_metropolis = 1, MH_prior_standard_deviation = 2, seed = 1234){
+Run_MH_To_Convergence <- function(input_file = "Test",
+                                  data_source = "McDowell_2011_Data", 
+                                  output_file = "Test", 
+                                  itterations = 1200000,
+                                  sample_every = 100, 
+                                  data_dir = "~/Dropbox/PINLab/",
+                                  sample_step_burnin = 200000,
+                                  post_burin_variance_multiplier = 0.1, 
+                                  prop_var = 1,
+                                  set_proposal_variance = F,
+                                  adaptive_metropolis_update_every = 100, 
+                                  use_adaptive_metropolis = 1, 
+                                  MH_prior_standard_deviation = 2, 
+                                  seed = 1234){
     
     set.seed(seed)
 #     library(RcppArmadillo)
