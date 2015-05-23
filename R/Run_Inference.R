@@ -11,7 +11,7 @@ Run_Inference <- function(Number_Of_Iterations,
                           Latent_Dimensions = 2, 
                           Topic_Step_Itterations, 
                           Sample_Step_Itterations = 10, 
-                          output_file = "Test",
+                          output_file,
                           Proposal_Variance = 0.5, 
                           seed = 1234, 
                           output_folder_path = "~/Dropbox/PINLab/", 
@@ -29,7 +29,6 @@ Run_Inference <- function(Number_Of_Iterations,
 #     require(RcppArmadillo)
     set.seed(seed)
     
-    print("Source Files Loaded...")
     
     #================= Initialize all variables, latent spaces edge assingments and topic assignments ==============#
     

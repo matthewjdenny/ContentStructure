@@ -36,13 +36,13 @@ Run_Full_Model <- function(data_name,
     
     
     #load data
-    load( paste(data_directory,data_name,".Rdata", sep = ""))
+    #load( paste(data_directory,data_name,".Rdata", sep = ""))
     
     #assign global variables
-    document_edge_matrix <<- document_edge_matrix
-    document_word_matrix <<- document_word_matrix
-    vocabulary <<- vocabulary
-    author_attributes <<- author_attributes
+#     document_edge_matrix <<- document_edge_matrix
+#     document_word_matrix <<- document_word_matrix
+#     vocabulary <<- vocabulary
+#     author_attributes <<- author_attributes
     
     num_bin_mix_vars <- 0
     if(!is.null(mixing_variable)){
@@ -73,11 +73,11 @@ Run_Full_Model <- function(data_name,
                                  Document_Edge_Matrix = Doc_Edge_Matrix,
                                  Document_Word_Matrix = Doc_Word_Matrix, 
                                  Vocabulary = Vocab,
-                                 output_folder_path = data_directory)
+                                 output_folder_path = data_directory,
+                                 output_file = data_name)
     }
       
     Run_MH_To_Convergence(input_file = paste("Model_Output_",data_name,sep = ""),
-                          data_source = data_name, 
                           output_file = paste("Sample_",data_name,sep = ""),
                           sample_step_burnin = sample_step_burnin,
                           itterations = sample_step_iterations,

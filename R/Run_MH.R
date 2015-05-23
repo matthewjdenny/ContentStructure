@@ -1,5 +1,4 @@
 Run_MH_To_Convergence <- function(input_file = "Test",
-                                  data_source = "McDowell_2011_Data", 
                                   output_file = "Test", 
                                   itterations = 1200000,
                                   sample_every = 100, 
@@ -36,7 +35,8 @@ Run_MH_To_Convergence <- function(input_file = "Test",
     Number_of_Betas <- Return_List[[21]]
     Beta_Indicator_Array <- Return_List[[22]]
     
-    load(paste(data_dir,data_source,".Rdata", sep = ""))
+    # load(paste(data_dir,data_source,".Rdata", sep = ""))
+    # data_source = "McDowell_2011_Data", 
     
     
     #remove the first skip_first itterations of each sublist and recombine
