@@ -263,7 +263,7 @@ List Main_Sampler(
                     }//end recipeints loop
                 }//end of loop over edges for for current document
             }// end of loop over docuemnts for edge-topic assignemnt step
-            Rcpp::Rcout << "Edges Assigned to Each Topic: " << std::endl << topic_present_edge_counts << std::endl;
+            //Rcpp::Rcout << "Edges Assigned to Each Topic: " << std::endl << topic_present_edge_counts << std::endl;
             // ===================== Hard Cluster Topics ====================== //
             for(int t = 0; t < number_of_topics; ++t){
                 

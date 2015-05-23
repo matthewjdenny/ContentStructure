@@ -1,11 +1,11 @@
-Run_MH_To_Convergence <- function(input_file = "Current_Itteration_McDowell_2011_3-7-14",data_source = "McDowell_2011_Data", output_file = "Sample_McDowell_2011_3-7-14", itterations = 1200000,sample_every = 100, data_directory = "~/Dropbox/PINLab/Projects/Denny_Working_Directory/2011_Analysis_Output/",sample_step_burnin = 200000,post_burin_variance_multiplier = 0.1, system_OS = "Linux",prop_var = 1,set_proposal_variance = F,adaptive_metropolis_update_every = 100, use_adaptive_metropolis = 1, MH_prior_standard_deviation = 2, seed = 1234,wave= 2013){
+Run_MH_To_Convergence <- function(input_file = "Test",data_source = "McDowell_2011_Data", output_file = "Test", itterations = 1200000,sample_every = 100, data_dir = "~/Dropbox/PINLab/",sample_step_burnin = 200000,post_burin_variance_multiplier = 0.1, prop_var = 1,set_proposal_variance = F,adaptive_metropolis_update_every = 100, use_adaptive_metropolis = 1, MH_prior_standard_deviation = 2, seed = 1234){
     
     set.seed(seed)
 #     library(RcppArmadillo)
 #     library(BH)
     
     
-    load(paste(data_directory,input_file,".Rdata", sep = ""))
+    load(paste(data_dir,input_file,".Rdata", sep = ""))
     
     #set.seed(seed)
 #     Rcpp::sourceCpp("./Scripts/CPME_Inference_MH.cpp")
@@ -90,7 +90,7 @@ Run_MH_To_Convergence <- function(input_file = "Current_Itteration_McDowell_2011
     Return_List[[20]] <- Result_List[[3]]
 
     print("saving")
-    save(Return_List, file=paste(data_directory,output_file,".Rdata",sep = ""))
+    save(Return_List, file=paste(data_dir,output_file,".Rdata",sep = ""))
 
 }# end of ouuter function definition 
 

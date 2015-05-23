@@ -6,6 +6,37 @@
 
 using namespace Rcpp;
 
+// MH_Sampler
+List MH_Sampler(int number_of_MH_itterations, int number_of_actors, int number_of_topics, int number_of_latent_dimensions, arma::vec proposal_variance, arma::vec topic_cluster_assignments, NumericVector tpec, NumericVector taec, NumericVector clp, NumericVector plp, arma::vec current_intercepts, arma::mat betas, int number_of_betas, NumericVector indicator_array, int burnin, int number_of_clusters, int store_every_x_rounds, int adaptive_metropolis_update_every, int use_adaptive_metropolis, double MH_prior_standard_deviation, int seed);
+RcppExport SEXP ContentStructure_MH_Sampler(SEXP number_of_MH_itterationsSEXP, SEXP number_of_actorsSEXP, SEXP number_of_topicsSEXP, SEXP number_of_latent_dimensionsSEXP, SEXP proposal_varianceSEXP, SEXP topic_cluster_assignmentsSEXP, SEXP tpecSEXP, SEXP taecSEXP, SEXP clpSEXP, SEXP plpSEXP, SEXP current_interceptsSEXP, SEXP betasSEXP, SEXP number_of_betasSEXP, SEXP indicator_arraySEXP, SEXP burninSEXP, SEXP number_of_clustersSEXP, SEXP store_every_x_roundsSEXP, SEXP adaptive_metropolis_update_everySEXP, SEXP use_adaptive_metropolisSEXP, SEXP MH_prior_standard_deviationSEXP, SEXP seedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< int >::type number_of_MH_itterations(number_of_MH_itterationsSEXP);
+    Rcpp::traits::input_parameter< int >::type number_of_actors(number_of_actorsSEXP);
+    Rcpp::traits::input_parameter< int >::type number_of_topics(number_of_topicsSEXP);
+    Rcpp::traits::input_parameter< int >::type number_of_latent_dimensions(number_of_latent_dimensionsSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type proposal_variance(proposal_varianceSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type topic_cluster_assignments(topic_cluster_assignmentsSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type tpec(tpecSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type taec(taecSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type clp(clpSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type plp(plpSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type current_intercepts(current_interceptsSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type betas(betasSEXP);
+    Rcpp::traits::input_parameter< int >::type number_of_betas(number_of_betasSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type indicator_array(indicator_arraySEXP);
+    Rcpp::traits::input_parameter< int >::type burnin(burninSEXP);
+    Rcpp::traits::input_parameter< int >::type number_of_clusters(number_of_clustersSEXP);
+    Rcpp::traits::input_parameter< int >::type store_every_x_rounds(store_every_x_roundsSEXP);
+    Rcpp::traits::input_parameter< int >::type adaptive_metropolis_update_every(adaptive_metropolis_update_everySEXP);
+    Rcpp::traits::input_parameter< int >::type use_adaptive_metropolis(use_adaptive_metropolisSEXP);
+    Rcpp::traits::input_parameter< double >::type MH_prior_standard_deviation(MH_prior_standard_deviationSEXP);
+    Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
+    __result = Rcpp::wrap(MH_Sampler(number_of_MH_itterations, number_of_actors, number_of_topics, number_of_latent_dimensions, proposal_variance, topic_cluster_assignments, tpec, taec, clp, plp, current_intercepts, betas, number_of_betas, indicator_array, burnin, number_of_clusters, store_every_x_rounds, adaptive_metropolis_update_every, use_adaptive_metropolis, MH_prior_standard_deviation, seed));
+    return __result;
+END_RCPP
+}
 // Main_Sampler
 List Main_Sampler(int number_of_outer_itterations, int number_of_Gibbs_itterations, int number_of_MH_itterations, int number_of_actors, int number_of_topics, int number_of_clusters, int number_of_latent_dimensions, int number_of_documents, arma::vec proposal_variance, arma::vec topic_cluster_assignments, NumericVector clp, NumericVector plp, arma::vec current_intercepts, arma::mat betas, int number_of_betas, NumericVector indicator_array, arma::mat observed_edges, List token_topic_assignment_list, List token_word_type_list, arma::vec document_authors, double beta, arma::vec alpha_m, arma::mat token_type_topic_counts, arma::vec topic_token_sums, int number_of_word_types, int itterations_before_cluster_assingment_update, double metropolis_target_accpet_rate, double step_size, int slice_sample_alpha, double MH_prior_standard_deviation, int seed);
 RcppExport SEXP ContentStructure_Main_Sampler(SEXP number_of_outer_itterationsSEXP, SEXP number_of_Gibbs_itterationsSEXP, SEXP number_of_MH_itterationsSEXP, SEXP number_of_actorsSEXP, SEXP number_of_topicsSEXP, SEXP number_of_clustersSEXP, SEXP number_of_latent_dimensionsSEXP, SEXP number_of_documentsSEXP, SEXP proposal_varianceSEXP, SEXP topic_cluster_assignmentsSEXP, SEXP clpSEXP, SEXP plpSEXP, SEXP current_interceptsSEXP, SEXP betasSEXP, SEXP number_of_betasSEXP, SEXP indicator_arraySEXP, SEXP observed_edgesSEXP, SEXP token_topic_assignment_listSEXP, SEXP token_word_type_listSEXP, SEXP document_authorsSEXP, SEXP betaSEXP, SEXP alpha_mSEXP, SEXP token_type_topic_countsSEXP, SEXP topic_token_sumsSEXP, SEXP number_of_word_typesSEXP, SEXP itterations_before_cluster_assingment_updateSEXP, SEXP metropolis_target_accpet_rateSEXP, SEXP step_sizeSEXP, SEXP slice_sample_alphaSEXP, SEXP MH_prior_standard_deviationSEXP, SEXP seedSEXP) {
@@ -44,37 +75,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type MH_prior_standard_deviation(MH_prior_standard_deviationSEXP);
     Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
     __result = Rcpp::wrap(Main_Sampler(number_of_outer_itterations, number_of_Gibbs_itterations, number_of_MH_itterations, number_of_actors, number_of_topics, number_of_clusters, number_of_latent_dimensions, number_of_documents, proposal_variance, topic_cluster_assignments, clp, plp, current_intercepts, betas, number_of_betas, indicator_array, observed_edges, token_topic_assignment_list, token_word_type_list, document_authors, beta, alpha_m, token_type_topic_counts, topic_token_sums, number_of_word_types, itterations_before_cluster_assingment_update, metropolis_target_accpet_rate, step_size, slice_sample_alpha, MH_prior_standard_deviation, seed));
-    return __result;
-END_RCPP
-}
-// MH_Sampler
-List MH_Sampler(int number_of_MH_itterations, int number_of_actors, int number_of_topics, int number_of_latent_dimensions, arma::vec proposal_variance, arma::vec topic_cluster_assignments, NumericVector tpec, NumericVector taec, NumericVector clp, NumericVector plp, arma::vec current_intercepts, arma::mat betas, int number_of_betas, NumericVector indicator_array, int burnin, int number_of_clusters, int store_every_x_rounds, int adaptive_metropolis_update_every, int use_adaptive_metropolis, double MH_prior_standard_deviation, int seed);
-RcppExport SEXP ContentStructure_MH_Sampler(SEXP number_of_MH_itterationsSEXP, SEXP number_of_actorsSEXP, SEXP number_of_topicsSEXP, SEXP number_of_latent_dimensionsSEXP, SEXP proposal_varianceSEXP, SEXP topic_cluster_assignmentsSEXP, SEXP tpecSEXP, SEXP taecSEXP, SEXP clpSEXP, SEXP plpSEXP, SEXP current_interceptsSEXP, SEXP betasSEXP, SEXP number_of_betasSEXP, SEXP indicator_arraySEXP, SEXP burninSEXP, SEXP number_of_clustersSEXP, SEXP store_every_x_roundsSEXP, SEXP adaptive_metropolis_update_everySEXP, SEXP use_adaptive_metropolisSEXP, SEXP MH_prior_standard_deviationSEXP, SEXP seedSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< int >::type number_of_MH_itterations(number_of_MH_itterationsSEXP);
-    Rcpp::traits::input_parameter< int >::type number_of_actors(number_of_actorsSEXP);
-    Rcpp::traits::input_parameter< int >::type number_of_topics(number_of_topicsSEXP);
-    Rcpp::traits::input_parameter< int >::type number_of_latent_dimensions(number_of_latent_dimensionsSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type proposal_variance(proposal_varianceSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type topic_cluster_assignments(topic_cluster_assignmentsSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type tpec(tpecSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type taec(taecSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type clp(clpSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type plp(plpSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type current_intercepts(current_interceptsSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type betas(betasSEXP);
-    Rcpp::traits::input_parameter< int >::type number_of_betas(number_of_betasSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type indicator_array(indicator_arraySEXP);
-    Rcpp::traits::input_parameter< int >::type burnin(burninSEXP);
-    Rcpp::traits::input_parameter< int >::type number_of_clusters(number_of_clustersSEXP);
-    Rcpp::traits::input_parameter< int >::type store_every_x_rounds(store_every_x_roundsSEXP);
-    Rcpp::traits::input_parameter< int >::type adaptive_metropolis_update_every(adaptive_metropolis_update_everySEXP);
-    Rcpp::traits::input_parameter< int >::type use_adaptive_metropolis(use_adaptive_metropolisSEXP);
-    Rcpp::traits::input_parameter< double >::type MH_prior_standard_deviation(MH_prior_standard_deviationSEXP);
-    Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
-    __result = Rcpp::wrap(MH_Sampler(number_of_MH_itterations, number_of_actors, number_of_topics, number_of_latent_dimensions, proposal_variance, topic_cluster_assignments, tpec, taec, clp, plp, current_intercepts, betas, number_of_betas, indicator_array, burnin, number_of_clusters, store_every_x_rounds, adaptive_metropolis_update_every, use_adaptive_metropolis, MH_prior_standard_deviation, seed));
     return __result;
 END_RCPP
 }

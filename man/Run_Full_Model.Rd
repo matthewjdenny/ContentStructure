@@ -9,7 +9,7 @@ Run_Full_Model(data_name, main_iterations = 4000,
   sample_step_sample_every = 2000, topics = 40, clusters = 4,
   data_directory, run_MH_only = F, mixing_variable = NULL,
   Auth_Attr = author_attributes, Doc_Edge_Matrix = document_edge_matrix,
-  Doc_Word_Matrix = document_word_matrix, Vocab = vocabulary)
+  Doc_Word_Matrix = document_word_matrix, Vocab = vocabulary, Seed = 1234)
 }
 \arguments{
 \item{data_name}{The exact name of the .Rdata file containing the relevant files necessary to run the model.}
@@ -39,6 +39,8 @@ Run_Full_Model(data_name, main_iterations = 4000,
 \item{Doc_Word_Matrix}{A matrix with one row for each email and one column for each unique word in the vocabulary that records the number of times each word was used in each document.}
 
 \item{Vocab}{A vector containing every unique term in the vocabulary an corresponding in length to the number of columns in the Doc_Word_Matrix.}
+
+\item{Seed}{Sets the seed in R and C++ for replicability}
 }
 \value{
 Does not return anything, just saves everything to our data_directory folder.
