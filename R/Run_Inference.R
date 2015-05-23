@@ -86,6 +86,7 @@ Run_Inference <- function(Number_Of_Iterations = 1000, Base_Alpha =1, Base_Beta 
   
     Number_of_Betas <- MP[[1]]
     Beta_Indicator_Array <- MP[[2]]
+    Betas <-  MP[[3]]
 
     Topic_Cluster_Assignments <- rep(0,Number_Of_Topics)
     for(k in 1:Number_Of_Topics){
