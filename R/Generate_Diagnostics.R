@@ -843,7 +843,11 @@ Generate_Model_Diagnsotics <- function(input_folder_path = "~/Dropbox/PINLab/Pro
         ls <- length(which(abs(unlist(LS_list)) < 1.645))
         print(paste("Percent LS Positions Converged ($z < 1.645$):",ls/length(LS_list), "Number:", ls))
         
-        total <- ints + bets +ls
+        if(used_binary_mixing_attribute){
+          total <- ints + bets +ls
+        }else{
+          total <- ints +ls
+        }
         print(paste("Percent All Parameters Converged ($z < 1.645$):",total/(length(beta_list)+ length(LS_list) + length(intercept_list)), "Number:", total))
         
 

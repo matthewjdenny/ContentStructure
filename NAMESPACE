@@ -1,7 +1,6 @@
 useDynLib(ContentStructure)
-export(Generate_Diagnostics_All_Datasets)
+export(Create_Output)
 export(Run_Full_Model)
-export(Cluster_Run_Models)
 importFrom(Rcpp, evalCpp)
 import(BH)
 import(coda)

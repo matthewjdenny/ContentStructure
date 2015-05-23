@@ -7,7 +7,7 @@
 #' @param using_county_email_data Logical if you are using North Carolina County Government email data that are properly formatted to produce aggregate level output. 
 #' @return A list object with the following structure. The first entry is a sublist which contains three objects: a vector containing the full vocabulary, an email-word matrix aggregated across all organizations, and a metadata data frame -- again aggregated across all emails in all organizations. The second entry in the outer list is a list with one entry for each organization with a sublist containing data about that organization and emails sent within it. Only returns if you are using North Carolina County Government Email data. 
 #' @export
-Generate_Diagnostics_All_Datasets <- function(data_list,only_generate_summaries = T, data_directory ,print_agg_stats = F,using_county_email_data = F){
+Create_Output <- function(data_list,only_generate_summaries = T, data_directory ,print_agg_stats = F,using_county_email_data = F){
   
   setwd(data_directory)
   #     source("./Scripts/CPME_Generate_Diagnostics.R")
