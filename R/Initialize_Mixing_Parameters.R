@@ -7,11 +7,14 @@ Initialize_Mixing_Parameters <- function(num_mixing_parameters,
                                          mixing_attribute){
   
   if(num_mixing_parameters == 1){
-    
+    print("checking to ensure that the mixing parameter selected exists...")
     #determine which column of the author attribute table to use
     if(ncol(author_attributes) > 1){
       names <- colnames(author_attributes)
       index <- which(names == mixing_attribute)
+      if(is.na(index)){
+        stop("The mixing parameter you selected does not exist!")
+      }
     }else{
       index <- 1
     }
@@ -34,7 +37,7 @@ Initialize_Mixing_Parameters <- function(num_mixing_parameters,
         if(author_attributes[j,index] == values[1] & author_attributes[k,index] == values[1]){
           Beta_Indicator_Array[j,k,1] = 1   
         }
-        if(author_attributess[j,index] == values[1] & author_attributes[k,index] == values[2]){
+        if(author_attributes[j,index] == values[1] & author_attributes[k,index] == values[2]){
           Beta_Indicator_Array[j,k,2] = 1   
         }
         if(author_attributes[j,index] == values[2] & author_attributes[k,index] == values[1]){

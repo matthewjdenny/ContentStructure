@@ -10,6 +10,10 @@
 #' @param data_directory The directory where our data_name file is stored. This is also where all output will be saved
 #' @param run_MH_only If TRUE, then we only rerun MH for the LSM to convergence
 #' @param mixing_variable if not NULL, specifies the name of the binary variable in the author_attributes dataset that will be used to estimate mixing parameter effects.
+#' @param Auth_Attr A dataframe with one row for each unique sender/reciever and containing atleast one column with the ID of each sender/reciever and any number of additional varaibles which will be ignored unless specified as a binary attribute for which the user would like to calculate mixing parameter estimates by specifying the mixing_variable.
+#' @param Doc_Edge_Matrix A matrix with one row for each email and one column which records the index of the sender of the email (indexed from 1) followed by one column for each unique sender/receiver in the dataset.
+#' @param Doc_Word_Matrix A matrix with one row for each email and one column for each unique word in the vocabulary that records the number of times each word was used in each document. 
+#' @param Vocab A vector containing every unique term in the vocabulary an corresponding in length to the number of columns in the Doc_Word_Matrix.
 #' @return Does not return anything, just saves everything to our data_directory folder.
 #' @export
 Run_Full_Model <- function(data_name,  
@@ -21,7 +25,11 @@ Run_Full_Model <- function(data_name,
                            clusters = 4,
                            data_directory,
                            run_MH_only = F,
-                           mixing_variable = NULL){
+                           mixing_variable = NULL,
+                           Auth_Attr = author_attributes, 
+                           Doc_Edge_Matrix = document_edge_matrix ,
+                           Doc_Word_Matrix = document_word_matrix, 
+                           Vocab = vocabulary){
   
     
     
@@ -42,7 +50,7 @@ Run_Full_Model <- function(data_name,
     
     #print(ls())
     if(!run_MH_only){
-        Results <- Run_Inference(Number_Of_Iterations = main_iterations, Base_Alpha =0.1, Base_Beta = 0.01, Number_Of_Topics = 50, Topic_Step_Itterations = 1, Sample_Step_Itterations = 1000, output_file = data_name ,Proposal_Variance = 0.5, seed = 1234, Number_of_Clusters = clusters ,Itterations_Before_Cluster_Assingment_Updates = 2, Adaptive_Metropolis_Target_Accept_Rate = 0.2, slice_sample_alpha_step_size = 1,MH_prior_standard_deviation = 5,Slice_Sample_Alpha = F,Number_of_Binary_Mixing_Parameters = num_bin_mix_vars, Mixing_Variable = mixing_variable)
+        Results <- Run_Inference(Number_Of_Iterations = main_iterations, Base_Alpha =0.1, Base_Beta = 0.01, Number_Of_Topics = 50, Topic_Step_Itterations = 1, Sample_Step_Itterations = 1000, output_file = data_name ,Proposal_Variance = 0.5, seed = 1234, Number_of_Clusters = clusters ,Itterations_Before_Cluster_Assingment_Updates = 2, Adaptive_Metropolis_Target_Accept_Rate = 0.2, slice_sample_alpha_step_size = 1,MH_prior_standard_deviation = 5,Slice_Sample_Alpha = F,Number_of_Binary_Mixing_Parameters = num_bin_mix_vars, Mixing_Variable = mixing_variable,Author_Attributes= Auth_Attr, Document_Edge_Matrix = Doc_Edge_Matrix ,Document_Word_Matrix = Doc_Word_Matrix, Vocabulary = Vocab)
     }
       
     Run_MH_To_Convergence(input_file = paste("Model_Output_",data_name,sep = "") ,data_source = data_name, output_file = paste("Sample_",data_name,sep = ""), data_directory = "~/Dropbox/PINLab/Projects/Denny_Working_Directory/2011_Analysis_Output/",sample_step_burnin = sample_step_burnin,itterations = sample_step_iterations,sample_every = sample_step_sample_every, prop_var = 1,set_proposal_variance = F,adaptive_metropolis_update_every = 1000, use_adaptive_metropolis = 1, MH_prior_standard_deviation = 5)

@@ -7,7 +7,9 @@
 Run_Full_Model(data_name, main_iterations = 4000,
   sample_step_burnin = 2e+06, sample_step_iterations = 8e+06,
   sample_step_sample_every = 2000, topics = 40, clusters = 4,
-  data_directory, run_MH_only = F, mixing_variable = NULL)
+  data_directory, run_MH_only = F, mixing_variable = NULL,
+  Auth_Attr = author_attributes, Doc_Edge_Matrix = document_edge_matrix,
+  Doc_Word_Matrix = document_word_matrix, Vocab = vocabulary)
 }
 \arguments{
 \item{data_name}{The exact name of the .Rdata file containing the relevant files necessary to run the model.}
@@ -29,6 +31,14 @@ Run_Full_Model(data_name, main_iterations = 4000,
 \item{run_MH_only}{If TRUE, then we only rerun MH for the LSM to convergence}
 
 \item{mixing_variable}{if not NULL, specifies the name of the binary variable in the author_attributes dataset that will be used to estimate mixing parameter effects.}
+
+\item{Auth_Attr}{A dataframe with one row for each unique sender/reciever and containing atleast one column with the ID of each sender/reciever and any number of additional varaibles which will be ignored unless specified as a binary attribute for which the user would like to calculate mixing parameter estimates by specifying the mixing_variable.}
+
+\item{Doc_Edge_Matrix}{A matrix with one row for each email and one column which records the index of the sender of the email (indexed from 1) followed by one column for each unique sender/receiver in the dataset.}
+
+\item{Doc_Word_Matrix}{A matrix with one row for each email and one column for each unique word in the vocabulary that records the number of times each word was used in each document.}
+
+\item{Vocab}{A vector containing every unique term in the vocabulary an corresponding in length to the number of columns in the Doc_Word_Matrix.}
 }
 \value{
 Does not return anything, just saves everything to our data_directory folder.
