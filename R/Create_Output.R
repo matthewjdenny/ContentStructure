@@ -115,7 +115,9 @@ Create_Output <- function(data_list,
                                    pretty_name = data_list[i],
                                    only_print_summaries = only_generate_summaries,
                                    print_agregate_level_stats = print_agg_stats, 
-                                   used_county_email_data = using_county_email_data
+                                   used_county_email_data = using_county_email_data,
+                                   used_binary_mixing_attribute = Used_MP, 
+                                   binary_mixing_attribute_name = MP_Name
                                    )
       }
       

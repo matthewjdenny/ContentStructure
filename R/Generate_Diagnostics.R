@@ -1,21 +1,21 @@
 
-Generate_Model_Diagnsotics <- function(input_folder_path = "~/Dropbox/PINLab/", 
+Generate_Model_Diagnsotics <- function(input_folder_path , 
                                        input_file = "Test",
                                        LS_Actor = 8, 
-                                       out_directory = "~/Dropbox/PINLab/",
-                                       Thin_Itterations = 1, 
+                                       out_directory ,
+                                       Thin_Itterations , 
                                        vocab = vocabulary,
                                        output_name = "Testing",
-                                       skip_first = 0,
+                                       skip_first ,
                                        Author_Attributes = author_attributes,
                                        proportion_in_confidence_contour  = 0.9, 
-                                       topic_model_burnin = 500, 
-                                       pretty_name = "New Hannover County", 
-                                       only_print_summaries = F, 
-                                       print_agregate_level_stats = F, 
-                                       used_binary_mixing_attribute = F, 
-                                       binary_mixing_attribute_name = "Gender", 
-                                       used_county_email_data = F){
+                                       topic_model_burnin , 
+                                       pretty_name , 
+                                       only_print_summaries, 
+                                       print_agregate_level_stats, 
+                                       used_binary_mixing_attribute, 
+                                       binary_mixing_attribute_name , 
+                                       used_county_email_data ){
 
 #         library(coda)
 #         library(depth)
