@@ -5,9 +5,19 @@
 #' @param data_directory The directory where all .Rdata files are stored -- also where all output will be stored.
 #' @param print_agg_stats If TRUE, then will print aggregate level stats for the county across all cluster simultaneously. I have not found this to be terribly useful.
 #' @param using_county_email_data Logical if you are using North Carolina County Government email data that are properly formatted to produce aggregate level output. 
+#' @param Topic_Model_Burnin The number of iterations of Gibbs sampling that should be discarded before calculated Geweke statistic to determine model convergence. You will simply want to set it pretty low and then look at the trace to determine where you should set it to provide evidence of convergence.
+#' @param Thin The number of iterations to skip in the MH for LSM chain when generating output. Set to 1 as default does not thin but can be set higher to make plotting easier if you took a lot of samples.
+#' @param Skip The number of MH for LSM iterations to skip when generating out (if your burnin was not long enough).
 #' @return A list object with the following structure. The first entry is a sublist which contains three objects: a vector containing the full vocabulary, an email-word matrix aggregated across all organizations, and a metadata data frame -- again aggregated across all emails in all organizations. The second entry in the outer list is a list with one entry for each organization with a sublist containing data about that organization and emails sent within it. Only returns if you are using North Carolina County Government Email data. 
 #' @export
-Create_Output <- function(data_list,only_generate_summaries = T, data_directory ,print_agg_stats = F,using_county_email_data = F){
+Create_Output <- function(data_list,
+                          only_generate_summaries = T, 
+                          data_directory ,
+                          print_agg_stats = F,
+                          using_county_email_data = F,
+                          Topic_Model_Burnin = 50,
+                          Skip = 0, 
+                          Thin = 1){
   
   setwd(data_directory)
   #     source("./Scripts/CPME_Generate_Diagnostics.R")
@@ -20,7 +30,21 @@ Create_Output <- function(data_list,only_generate_summaries = T, data_directory 
     load( paste(data_directory,data_list[i],".Rdata", sep = ""))
     
     if(using_county_email_data){
-      temp <- Generate_Model_Diagnsotics(input_file = paste("Sample_",data_list[i],sep = "") ,LS_Actor = 8, out_directory = "~/Dropbox/PINLab/Projects/Denny_Working_Directory/2011_Analysis_Output/", vocab = vocabulary, output_name = paste("Output_",data_list[i],sep = ""), Thin_Itterations = 1,skip_first = 2000,Author_Attributes = author_attributes,Clusters_to_Pretty_Print=c(1,2,3,4),proportion_in_confidence_contour  = 0.9, topic_model_burnin = 2500, pretty_name = data_list[i],only_print_summaries = only_generate_summaries,print_agregate_level_stats = print_agg_stats, used_county_email_data = using_county_email_data)
+      temp <- Generate_Model_Diagnsotics(input_file = paste("Sample_",data_list[i],sep = "") ,
+                                         LS_Actor = 8, 
+                                         out_directory = data_directory, 
+                                         vocab = vocabulary, 
+                                         output_name = paste("Output_",data_list[i],sep = ""),
+                                         Thin_Itterations = Thin,
+                                         skip_first = Skip,
+                                         Author_Attributes = author_attributes,
+                                         proportion_in_confidence_contour  = 0.9, 
+                                         topic_model_burnin = Topic_Model_Burnin, 
+                                         pretty_name = data_list[i],
+                                         only_print_summaries = only_generate_summaries,
+                                         print_agregate_level_stats = print_agg_stats, 
+                                         used_county_email_data = using_county_email_data
+                                         )
       
       #testing
       #temp <- test[[1]]

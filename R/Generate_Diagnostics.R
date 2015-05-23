@@ -1,5 +1,21 @@
 
-Generate_Model_Diagnsotics <- function(input_folder_path = "~/Dropbox/PINLab/Projects/Denny_Working_Directory/2011_Analysis_Output/", input_file = "Test",LS_Actor = 8, out_directory = "~/Dropbox/PINLab/Projects/Denny_Working_Directory/2011_Analysis_Output/",Thin_Itterations = 1, vocab = vocabulary,output_name = "Testing",skip_first = 0,Author_Attributes = author_attributes,Clusters_to_Pretty_Print = 0, proportion_in_confidence_contour  = 0.9, topic_model_burnin = 500, pretty_name = "New Hannover County", only_print_summaries = F, print_agregate_level_stats = F, used_binary_mixing_attribute = F, binary_mixing_attribute_name = "Gender", used_county_email_data = T){
+Generate_Model_Diagnsotics <- function(input_folder_path = "~/Dropbox/PINLab/", 
+                                       input_file = "Test",
+                                       LS_Actor = 8, 
+                                       out_directory = "~/Dropbox/PINLab/",
+                                       Thin_Itterations = 1, 
+                                       vocab = vocabulary,
+                                       output_name = "Testing",
+                                       skip_first = 0,
+                                       Author_Attributes = author_attributes,
+                                       proportion_in_confidence_contour  = 0.9, 
+                                       topic_model_burnin = 500, 
+                                       pretty_name = "New Hannover County", 
+                                       only_print_summaries = F, 
+                                       print_agregate_level_stats = F, 
+                                       used_binary_mixing_attribute = F, 
+                                       binary_mixing_attribute_name = "Gender", 
+                                       used_county_email_data = F){
 
 #         library(coda)
 #         library(depth)
@@ -71,6 +87,9 @@ Generate_Model_Diagnsotics <- function(input_folder_path = "~/Dropbox/PINLab/Pro
 
         
         Clusters <- Model_Parameters[[5]]
+        
+        #just print everything
+        Clusters_to_Pretty_Print = 1:Clusters 
         #Clusters <- 2
         Topics <- length(Last_Cluster_Topic_Assignments)
         Actors <- length(Metropolis_Results[[3]][1,1,])

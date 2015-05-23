@@ -5,7 +5,8 @@
 \title{A Function to generate diagnostic plots and interpretable output for a list of 1 to N model output objects from running the ContentStructure model.}
 \usage{
 Create_Output(data_list, only_generate_summaries = T, data_directory,
-  print_agg_stats = F, using_county_email_data = F)
+  print_agg_stats = F, using_county_email_data = F,
+  Topic_Model_Burnin = 50, Skip = 0, Thin = 1)
 }
 \arguments{
 \item{data_list}{A vector containing the names of organization data files as in the function to run the model. Should only contain names of those organizations for which output has already been created.}
@@ -17,6 +18,12 @@ Create_Output(data_list, only_generate_summaries = T, data_directory,
 \item{print_agg_stats}{If TRUE, then will print aggregate level stats for the county across all cluster simultaneously. I have not found this to be terribly useful.}
 
 \item{using_county_email_data}{Logical if you are using North Carolina County Government email data that are properly formatted to produce aggregate level output.}
+
+\item{Topic_Model_Burnin}{The number of iterations of Gibbs sampling that should be discarded before calculated Geweke statistic to determine model convergence. You will simply want to set it pretty low and then look at the trace to determine where you should set it to provide evidence of convergence.}
+
+\item{Skip}{The number of MH for LSM iterations to skip when generating out (if your burnin was not long enough).}
+
+\item{Thin}{The number of iterations to skip in the MH for LSM chain when generating output. Set to 1 as default does not thin but can be set higher to make plotting easier if you took a lot of samples.}
 }
 \value{
 A list object with the following structure. The first entry is a sublist which contains three objects: a vector containing the full vocabulary, an email-word matrix aggregated across all organizations, and a metadata data frame -- again aggregated across all emails in all organizations. The second entry in the outer list is a list with one entry for each organization with a sublist containing data about that organization and emails sent within it. Only returns if you are using North Carolina County Government Email data.
