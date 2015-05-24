@@ -10,6 +10,11 @@ Now we can install from Github using the following line:
 
     devtools::install_github("matthewjdenny/ContentStructure")
 
+I have  had success installing with R 3.2.0+ installed but if you do not have the latest version of R installed, it should work as long as you install the dependencies first with the following block of code:
+
+    install.packages( pkgs = c("BH","coda","RcppArmadillo","gridBase",
+    "gplots","ggplot2","slam","snowfall","vegan"), dependencies = TRUE)
+
 If all went well, check out the `?ContentStructure` help file to see a full working example with info on hos the data should look. Here is some example code that will run the model an generate output on a toy dataset of 121 emails between 20 department managers.
 
     # set working directory and load the library 
