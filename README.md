@@ -34,7 +34,7 @@ The package provides two functions: `Run_Full_Model()` and `Create_Output()` whi
 
 ## Example
 
-Here is some example code that will run the model an generate output on a toy dataset of 121 emails between 20 department managers.
+Here is some example code that will run the model an generate output on a toy dataset of 121 emails between 20 department managers. The `Create_Output()` function returns a list object that has the following members: `Cluster_Data` contains cluster level data including top words and mixing parameters (with standard errors) if applicable. `Actor_Data` contains actors level data (all of the `Auth_Attr` dataframe) plus average latent positions for each actor in each dimension (2 currently), for each cluster. `Token_Data` contains the counts of each token for each topic, along with the edge counts for that topic and the cluster assignment for it. `Vocabulary` simply holds the vocabulary as a vector for easy handling. We have found these aggregate level statistics to be helpful in further analysis.
 
     # set working directory and load the library 
     setwd("~/Working/Directory/")
@@ -60,18 +60,18 @@ Here is some example code that will run the model an generate output on a toy da
                    Doc_Word_Matrix = document_word_matrix, 
                    Vocab = vocabulary
                    )
-    Create_Output(data_name = "Test",
-                  only_generate_summaries = T, 
-                  data_directory = "~/Working/Directory/",
-                  print_agg_stats = T,
-                  using_county_email_data = F,
-                  Topic_Model_Burnin = 50,
-                  Skip = 0, 
-                  Thin = 1,
-                  Used_MP = T,
-                  MP_Name = "Gender",
-                  Auth_Attr = author_attributes,
-                  Vocabulary = vocabulary
-                  )
+    Data <- Create_Output(data_name = "Test",
+                          only_generate_summaries = T, 
+                          data_directory = "~/Working/Directory/",
+                          print_agg_stats = T,
+                          using_county_email_data = F,
+                          Topic_Model_Burnin = 50,
+                          Skip = 0, 
+                          Thin = 1,
+                          Used_MP = T,
+                          MP_Name = "Gender",
+                          Auth_Attr = author_attributes,
+                          Vocabulary = vocabulary
+                          )
             
 So far, this package has been tested successfully on OSX 10.9.5 and CentOS 6.6. Please email me at <mzd5530@psu.edu> if you have success on another OS or run into any problems.
