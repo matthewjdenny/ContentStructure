@@ -54,17 +54,17 @@ Run_Full_Model(data_name = "Test",
                Vocab = vocabulary
                )
 
-Create_Output(data_name = "Test",
-              only_generate_summaries = T, 
-              data_directory = "~/Dropbox/PINLab/Package_Development/",
-              print_agg_stats = F,
-              using_county_email_data = F,
-              Topic_Model_Burnin = 50,
-              Skip = 0, 
-              Thin = 1,
-              Used_MP = T,
-              MP_Name = "Gender",
-              Auth_Attr = author_attributes,
-              Vocabulary = vocabulary
-              )
+Data <- Create_Output(data_name = "Test",
+              		  only_generate_summaries = T, 
+                      data_directory = "~/Dropbox/PINLab/Package_Development/",
+                      print_agg_stats = T,
+                      using_county_email_data = F,
+                      Topic_Model_Burnin = 50,
+                      Skip = 0, 
+                      Thin = 1,
+                      Used_MP = T,
+                      MP_Name = "Gender",
+                      Auth_Attr = author_attributes,
+                      Vocabulary = vocabulary
+                      )
 }

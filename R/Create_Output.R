@@ -11,9 +11,9 @@
 #' @param Used_MP If TRUE then will generate output for mixing parameter estimates (if they were used).
 #' @param MP_Name If we are using mixing parameters then specify the name of the binary variable for which mixing parameter estimates were created in the author_attributes dataset.
 #' @param Auth_Attr The author attributes dataframe.
-#' @param Vocabulary The Vocabulary dataframe
+#' @param Vocabulary The vocabulary dataframe.
 #' @param data_list A vector containing the names of organization data files as in the function to run the model. Should only contain names of those organizations for which output has already been created. Only for use with county government datasets (not for public use)
-#' @return A list object with the following structure. The first entry is a sublist which contains three objects: a vector containing the full vocabulary, an email-word matrix aggregated across all organizations, and a metadata data frame -- again aggregated across all emails in all organizations. The second entry in the outer list is a list with one entry for each organization with a sublist containing data about that organization and emails sent within it. Only returns if you are using North Carolina County Government Email data. 
+#' @return A list object with 4 entries and the following structure: Cluster_Data contains cluster level data including top words and mixing parameters (with standard errors) if applicable. Actor_Data contains actors level data (all of the Auth_Attr dataframe) plus average latent positions for each actor in each dimension (2 currently), for each cluster. Token_Data contains the counts of each token for each topic, along with the edge counts for that topic and the cluster assignment for it. Vocabulary simply holds the vocabulary as a vector for easy handling.
 #' @export
 Create_Output <- function(data_name,
                           only_generate_summaries = T, 

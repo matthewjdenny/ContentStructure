@@ -35,10 +35,10 @@ Create_Output(data_name, only_generate_summaries = T, data_directory,
 
 \item{Auth_Attr}{The author attributes dataframe.}
 
-\item{Vocabulary}{The Vocabulary dataframe}
+\item{Vocabulary}{The vocabulary dataframe.}
 }
 \value{
-A list object with the following structure. The first entry is a sublist which contains three objects: a vector containing the full vocabulary, an email-word matrix aggregated across all organizations, and a metadata data frame -- again aggregated across all emails in all organizations. The second entry in the outer list is a list with one entry for each organization with a sublist containing data about that organization and emails sent within it. Only returns if you are using North Carolina County Government Email data.
+A list object with 4 entries and the following structure: Cluster_Data contains cluster level data including top words and mixing parameters (with standard errors) if applicable. Actor_Data contains actors level data (all of the Auth_Attr dataframe) plus average latent positions for each actor in each dimension (2 currently), for each cluster. Token_Data contains the counts of each token for each topic, along with the edge counts for that topic and the cluster assignment for it. Vocabulary simply holds the vocabulary as a vector for easy handling.
 }
 \description{
 A Function to generate diagnostic plots and interpretable output for a list of 1 to N model output objects from running the ContentStructure model.
