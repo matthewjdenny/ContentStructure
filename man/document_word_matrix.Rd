@@ -4,7 +4,7 @@
 \name{document_word_matrix}
 \alias{document_word_matrix}
 \title{Department Manager Email dataset -- Document Word Matrix}
-\format{A a number of emails (121) by number of unique terms (221) dataframe that records the number of times each term was used in each email.}
+\format{A a number of emails (121) by number of unique terms (204) dataframe that records the number of times each term was used in each email.}
 \usage{
 data(document_word_matrix)
 }
@@ -18,7 +18,8 @@ and are as follows:
 }
 \details{
 \itemize{
-  \item document_word_matrix -- a number of emails (121) by number of unique terms (221) matrix the records the number of times each term was used in each email.
+  \item document_word_matrix -- a number of emails (121) by number of unique terms (204) matrix the records the number of times each term was used in each email. Note that stopwords
+  have been removed as have names.
 }
 }
 \keyword{datasets}

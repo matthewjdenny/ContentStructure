@@ -4,7 +4,7 @@
 \name{vocabulary}
 \alias{vocabulary}
 \title{Department Manager Email dataset -- Vocabulary}
-\format{A dataframe with 20 rows and 2 columns.}
+\format{A dataframe with 204 rows and one word per row.}
 \usage{
 data(vocabulary)
 }
@@ -18,7 +18,8 @@ and are as follows:
 }
 \details{
 \itemize{
-  \item a vector containing all unique terms.
+  \item a vector containing all 204 unique terms. Note that stopwords
+  have been removed as have names.
 }
 }
 \keyword{datasets}
