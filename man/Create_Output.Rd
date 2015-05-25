@@ -5,7 +5,7 @@
 \title{A Function to generate diagnostic plots and interpretable output for a list of 1 to N model output objects from running the ContentStructure model.}
 \usage{
 Create_Output(data_name, only_generate_summaries = T, data_directory,
-  print_agg_stats = F, using_county_email_data = F,
+  print_agg_stats = T, using_county_email_data = F,
   Topic_Model_Burnin = 50, Skip = 0, Thin = 1, Used_MP = F,
   MP_Name = "Gender", data_list = NULL, Auth_Attr = NULL,
   Vocabulary = NULL)
@@ -17,7 +17,7 @@ Create_Output(data_name, only_generate_summaries = T, data_directory,
 
 \item{data_directory}{The directory where all .Rdata files are stored -- also where all output will be stored.}
 
-\item{print_agg_stats}{If TRUE, then will print aggregate level stats for the county across all cluster simultaneously. I have not found this to be terribly useful.}
+\item{print_agg_stats}{If TRUE, generates a plot comapring topics frequency across all clusters and a trace plot of th topic model log likelihood -- very useful.}
 
 \item{using_county_email_data}{Logical if you are using North Carolina County Government email data that are properly formatted to produce aggregate level output.}
 

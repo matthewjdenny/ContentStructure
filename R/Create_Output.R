@@ -3,7 +3,7 @@
 #' @param data_name The name of organization data file as in the function to run the model. 
 #' @param only_generate_summaries If TRUE, then only generate a one-page-per-cluster pdf summary of model output for each county, otherwise generate a ton of output.
 #' @param data_directory The directory where all .Rdata files are stored -- also where all output will be stored.
-#' @param print_agg_stats If TRUE, then will print aggregate level stats for the county across all cluster simultaneously. I have not found this to be terribly useful.
+#' @param print_agg_stats If TRUE, generates a plot comapring topics frequency across all clusters and a trace plot of th topic model log likelihood -- very useful.
 #' @param using_county_email_data Logical if you are using North Carolina County Government email data that are properly formatted to produce aggregate level output. 
 #' @param Topic_Model_Burnin The number of iterations of Gibbs sampling that should be discarded before calculated Geweke statistic to determine model convergence. You will simply want to set it pretty low and then look at the trace to determine where you should set it to provide evidence of convergence.
 #' @param Thin The number of iterations to skip in the MH for LSM chain when generating output. Set to 1 as default does not thin but can be set higher to make plotting easier if you took a lot of samples.
@@ -18,7 +18,7 @@
 Create_Output <- function(data_name,
                           only_generate_summaries = T, 
                           data_directory,
-                          print_agg_stats = F,
+                          print_agg_stats = T,
                           using_county_email_data = F,
                           Topic_Model_Burnin = 50,
                           Skip = 0, 
