@@ -63,7 +63,7 @@ Here is some example code that will run the model an generate output on a toy da
     Create_Output(data_name = "Test",
                   only_generate_summaries = T, 
                   data_directory = "~/Working/Directory/",
-                  print_agg_stats = F,
+                  print_agg_stats = T,
                   using_county_email_data = F,
                   Topic_Model_Burnin = 50,
                   Skip = 0, 
@@ -74,4 +74,4 @@ Here is some example code that will run the model an generate output on a toy da
                   Vocabulary = vocabulary
                   )
             
-So far, this package has been tested successfully on OSX 10.9.5 and CentOS 6.6. Please email me at <mzd5530@psu.edu> if you have success on another OS.
+So far, this package has been tested successfully on OSX 10.9.5 and CentOS 6.6. Please email me at <mzd5530@psu.edu> if you have success on another OS or run into any problems.
