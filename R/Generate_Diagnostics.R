@@ -32,7 +32,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         print("Loading Data...")
         print(paste(input_folder_path,input_file,".Rdata", sep = ""))
         load(paste(input_folder_path,input_file,".Rdata", sep = ""))
-        
+        #print(vocab)
         print("Extracting Reduced Data")
         first_return <- 13
         Topic_Model_Results <- Return_List[1:5]
@@ -181,6 +181,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
             indicies <- indicies[which(probabilities > 0)]
             probabilities <- probabilities[which(probabilities > 0)]
             top_words <- vocab[indicies,]
+            #print(top_words)
             Cluster_List <- list(top_words,probabilities,indicies)
             Cluster_Top_Words <- append(Cluster_Top_Words,list(Cluster_List))
             #add top words
@@ -959,65 +960,108 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
 
         dev.off()
 
-
-        if(used_county_email_data){
-          attr_index <- which(colnames(Author_Attributes) == binary_mixing_attribute_name)
-          attr <- Author_Attributes[,attr_index]
-          unique_attrs <- unique(attr)
-          #generate asortativity - token dataset
-          print("Generating Dataset")
-          get_beta_estimates <- function(Cluster){
-            betas <- matrix(0,ncol = 4, nrow = Itterations)
-            for(i in 1:Itterations){
-              betas[i,] <- Metropolis_Results[[2]][Cluster,,i]
-            }
-            mean_se <- as.data.frame(matrix(0,nrow=4, ncol = 2))
-            mean_se <- cbind(c("M-M", "M-F","F-M", "F-F"),mean_se)
-            names(mean_se) <- c("Tie","Parameter_Estimate","SE")
-            for(j in 1:length(mean_se[,1])){
-              mean_se[j,2] <- mean(betas[,j])
-              mean_se[j,3] <- sd(betas[,j]) 
-            }
-            return(mean_se[,2:3])
+        #return(Generate_Datasets(used_binary_mixing_attribute,binary_mixing_attribute_name))
+# 
+      if(used_binary_mixing_attribute){
+        attr_index <- which(colnames(Author_Attributes) == binary_mixing_attribute_name)
+        attr <- Author_Attributes[,attr_index]
+        unique_attrs <- unique(attr)
+        #generate asortativity - token dataset
+        print("Generating Dataset")
+        get_beta_estimates <- function(Cluster){
+          betas <- matrix(0,ncol = 4, nrow = Itterations)
+          for(i in 1:Itterations){
+            betas[i,] <- Metropolis_Results[[2]][Cluster,,i]
           }
-          
-          beta_averages <- matrix(0, ncol = 4,nrow = Clusters)
-          beta_se <- matrix(0, ncol = 4,nrow = Clusters)
-          for(i in 1:Clusters){
-            result <- get_beta_estimates(i)
-            beta_averages[i,] <- result[,1]
-            beta_se[i,] <- result[,2] 
+          mean_se <- as.data.frame(matrix(0,nrow=4, ncol = 2))
+          mean_se <- cbind(c("1-1", "1-2","2-1", "2-2"),mean_se)
+          names(mean_se) <- c("Tie","Parameter_Estimate","SE")
+          for(j in 1:length(mean_se[,1])){
+            mean_se[j,2] <- mean(betas[,j])
+            mean_se[j,3] <- sd(betas[,j]) 
           }
+          return(mean_se[,2:3])
+        }
+        
+        beta_averages <- matrix(0, ncol = 4,nrow = Clusters)
+        beta_se <- matrix(0, ncol = 4,nrow = Clusters)
+        for(i in 1:Clusters){
+          result <- get_beta_estimates(i)
+          beta_averages[i,] <- result[,1]
+          beta_se[i,] <- result[,2] 
+        }
         
         
         
         Clusters_intercepts <- matrix(0,ncol = 2,nrow= Clusters)
         for(c in 1:Clusters){
-            intercepts <- Metropolis_Results[[1]][,c]
-            for(i in 1:Itterations){
-                intercepts[i] <- Metropolis_Results[[1]][i,c]
-            }
-            Clusters_intercepts[c,1] <- mean(intercepts)
-            Clusters_intercepts[c,2] <- sd(intercepts)
+          intercepts <- Metropolis_Results[[1]][,c]
+          for(i in 1:Itterations){
+            intercepts[i] <- Metropolis_Results[[1]][i,c]
+          }
+          Clusters_intercepts[c,1] <- mean(intercepts)
+          Clusters_intercepts[c,2] <- sd(intercepts)
         }
         county <- matrix(pretty_name,ncol = 1,nrow = Clusters)
         county2 <- matrix(pretty_name,ncol = 1,nrow = Actors)
         county3 <- matrix(pretty_name,ncol = 1,nrow = Topics)
-
+        
         Cluster_Data <- cbind(county,Clusters_intercepts,beta_averages,beta_se,Cluster_Top_Twenty_Words)
-        colnames(Cluster_Data) = c("County","Intercept","Intercept_SE","MM", "MF","FM", "FF","MM_SE", "MF_SE","FM_SE", "FF_SE","Top1","Top2","Top3","Top4","Top5","Top6","Top7","Top8","Top9","Top10","Top11","Top12","Top13","Top14","Top15","Top16","Top17","Top18","Top19","Top20")
+        colnames(Cluster_Data) = c("County","Intercept","Intercept_SE",paste(unique_attrs[1],"-",unique_attrs[1],sep = ""), paste(unique_attrs[1],"-",unique_attrs[2],sep = ""),paste(unique_attrs[2],"-",unique_attrs[1],sep = ""), paste(unique_attrs[2],"-",unique_attrs[2],sep = ""),paste(unique_attrs[1],"-",unique_attrs[1],"_SE",sep = ""), paste(unique_attrs[1],"-",unique_attrs[2],"_SE",sep = ""),paste(unique_attrs[2],"-",unique_attrs[1],"_SE",sep = ""), paste(unique_attrs[2],"-",unique_attrs[2],"_SE",sep = ""),"Top1","Top2","Top3","Top4","Top5","Top6","Top7","Top8","Top9","Top10","Top11","Top12","Top13","Top14","Top15","Top16","Top17","Top18","Top19","Top20")
         Actor_Dataset <- cbind(county2,Actor_Dataset)
-        colnames(Actor_Dataset) <- c("County","Name","Email","Department","Gender","C1_D1","C1_D2","C2_D1","C2_D2","C3_D1","C3_D2","C4_D1","C4_D2")
+        cad <- c("Organization",colnames(Author_Attributes))
+        for(i in 1:Clusters){
+          cad <- c(cad, paste("C",i,"_D1",sep = ""),paste("C",i,"_D2",sep = ""))
+        }
+        colnames(Actor_Dataset) <- cad
+        
         Token_Data <- cbind(county3,Cluster_Topic_Assigns,Email_Assignments,Topic_Top_Ten_Words, t(Word_Type_Topic_Counts))
         #colnames(Token_Data) <- 
-        t1 <- c("County","Cluster","Edges","Top1","Top2","Top3","Top4","Top5","Top6","Top7","Top8","Top9","Top10")
+        t1 <- c("Organization","Cluster","Edges","Top1","Top2","Top3","Top4","Top5","Top6","Top7","Top8","Top9","Top10")
         temp2 <- c(t1,unlist(vocab))
         temp2 <- unlist(temp2)
         colnames(Token_Data) <- temp2
-
-        return_list <- list(Cluster_Data ,Actor_Dataset,Token_Data,vocab)
+        
+        return_list <- list(Cluster_Data = Cluster_Data , Actor_Data = Actor_Dataset, Token_Data = Token_Data, Vocabulary = vocab)
         return(return_list)
+      }else{
+        ##if we did not use a mixing parameter
+        #generate asortativity - token dataset
+        print("Generating Dataset")
+        
+        Clusters_intercepts <- matrix(0,ncol = 2,nrow= Clusters)
+        for(c in 1:Clusters){
+          intercepts <- Metropolis_Results[[1]][,c]
+          for(i in 1:Itterations){
+            intercepts[i] <- Metropolis_Results[[1]][i,c]
+          }
+          Clusters_intercepts[c,1] <- mean(intercepts)
+          Clusters_intercepts[c,2] <- sd(intercepts)
         }
+        county <- matrix(pretty_name,ncol = 1,nrow = Clusters)
+        county2 <- matrix(pretty_name,ncol = 1,nrow = Actors)
+        county3 <- matrix(pretty_name,ncol = 1,nrow = Topics)
+        
+        Cluster_Data <- cbind(county,Clusters_intercepts,Cluster_Top_Twenty_Words)
+        colnames(Cluster_Data) = c("County","Intercept","Intercept_SE","Top1","Top2","Top3","Top4","Top5","Top6","Top7","Top8","Top9","Top10","Top11","Top12","Top13","Top14","Top15","Top16","Top17","Top18","Top19","Top20")
+        
+        
+        Actor_Dataset <- cbind(county2,Actor_Dataset)
+        cad <- c("Organization",colnames(Author_Attributes))
+        for(i in 1:Clusters){
+          cad <- c(cad, paste("C",i,"_D1",sep = ""),paste("C",i,"_D2",sep = ""))
+        }
+        colnames(Actor_Dataset) <- cad
+        Token_Data <- cbind(county3,Cluster_Topic_Assigns,Email_Assignments,Topic_Top_Ten_Words, t(Word_Type_Topic_Counts))
+        #colnames(Token_Data) <- 
+        t1 <- c("Organization","Cluster","Edges","Top1","Top2","Top3","Top4","Top5","Top6","Top7","Top8","Top9","Top10")
+        temp2 <- c(t1,unlist(vocab))
+        temp2 <- unlist(temp2)
+        colnames(Token_Data) <- temp2
+        
+        return_list <- list(Cluster_Data = Cluster_Data , Actor_Data = Actor_Dataset, Token_Data = Token_Data, Vocabulary = vocab)
+        return(return_list)
+      }
 }#end of function definition
 
 

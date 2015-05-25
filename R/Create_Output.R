@@ -110,7 +110,8 @@ Create_Output <- function(data_name,
     }#end of loop
   }else{
     #if we are not using the county email dataset we can only go one at a time
-    Generate_Model_Diagnsotics(input_file = paste("Sample_",data_name,sep = "") ,
+    toreturn <- Generate_Model_Diagnsotics(
+                               input_file = paste("Sample_",data_name,sep = "") ,
                                LS_Actor = 8, 
                                input_folder_path = data_directory,
                                out_directory = data_directory, 
@@ -135,7 +136,7 @@ Create_Output <- function(data_name,
     token_master_data <- list(tv,all_words,metadata)
     toreturn <- list(token_master_data,county_data)
   }else{
-    toreturn  <- "nothing to return"
+    cat("Returning Dataset \n")
   }
     
   return(toreturn)
