@@ -12,12 +12,12 @@ Imports:
 	gplots,
 	ggplot2,
 	grid,
-	Rcpp (>= 0.11.6),
+	Rcpp,
 	RcppArmadillo,
 	slam,
 	snowfall,
 	vegan
-LinkingTo:
+LinkingTo: 
 	BH,
 	Rcpp, 
 	RcppArmadillo
