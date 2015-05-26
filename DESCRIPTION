@@ -20,5 +20,4 @@ Imports:
 	vegan
 LinkingTo: 
 	Rcpp, 
-	RcppArmadillo, 
-	BH
+	RcppArmadillo
