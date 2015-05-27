@@ -52,7 +52,7 @@ Run_MH_To_Convergence <- function(input_file = "Test",
     Topic_Absent_Edge_Counts <- Topic_Model_Results[[3]]
     Word_Type_Topic_Counts <- Topic_Model_Results[[4]]
     Proposal_Variances <- Model_Parameters[[6]][Model_Parameters[[2]],]
-    cat("Proposal Variances:",Proposal_Variances,"\n")
+    #cat("Proposal Variances:",Proposal_Variances,"\n")
     LSPs <- Metropolis_Results[[3]][(2*Itterations-1):(2*Itterations),,]
     Intercepts <- Metropolis_Results[[1]][Itterations,]
     Betas <- Metropolis_Results[[2]][,,Itterations]
@@ -61,8 +61,8 @@ Run_MH_To_Convergence <- function(input_file = "Test",
     if(set_proposal_variance== T){
         Proposal_Variances <- rep(prop_var,Clusters)
     }
-    print(Cluster_Topic_Assignments)
-    print(apply(Topic_Present_Edge_Counts,1,sum))
+    # print(Cluster_Topic_Assignments)
+    # print(apply(Topic_Present_Edge_Counts,1,sum))
     #print(Topic_Present_Edge_Counts)
     #get the total number of tokens assigned to each topic
     Topic_Token_Totals <- apply(Word_Type_Topic_Counts,2,sum)
@@ -127,7 +127,7 @@ Run_MH_To_Convergence <- function(input_file = "Test",
 							"mixing_parameter_type_indicator_array",
 							"intial_mixing_parameter_values")
 
-    print("saving")
+    print("Saving Results")
     save(Return_List, file=paste(data_dir,output_file,".Rdata",sep = ""))
 
 }# end of ouuter function definition 
