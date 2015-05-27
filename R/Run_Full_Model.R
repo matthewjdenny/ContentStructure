@@ -33,7 +33,7 @@ Run_Full_Model <- function(data_name,
                            Doc_Edge_Matrix = document_edge_matrix ,
                            Doc_Word_Matrix = document_word_matrix, 
                            Vocab = vocabulary,
-                           Seed = 1234){
+                           Seed = 123456){
   
     
     

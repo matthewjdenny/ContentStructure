@@ -13,7 +13,7 @@ Run_Inference <- function(Number_Of_Iterations,
                           Sample_Step_Itterations = 10, 
                           output_file,
                           Proposal_Variance = 0.5, 
-                          seed = 1234, 
+                          seed, 
                           output_folder_path = "~/Dropbox/PINLab/", 
                           Number_of_Clusters,
                           Itterations_Before_Cluster_Assingment_Updates = 5, 
@@ -60,7 +60,7 @@ Run_Inference <- function(Number_Of_Iterations,
     Document_Authors <- Document_Edge_Matrix[,1] #make a vector of document authors
     
     Document_Edge_Matrix <- Document_Edge_Matrix[,-1] # remove the authors from the docuemnt edge matrix
-    print("Initializing Topic Assignments...")
+    cat("Initializing Topic Assignments... \n")
 
     Token_Topic_Assignments <- vector(length = Number_Of_Documents, mode = "list")
     for(d in 1:Number_Of_Documents){
@@ -69,11 +69,13 @@ Run_Inference <- function(Number_Of_Iterations,
         Token_Topic_Assignments[[d]] <- cur_token_assignments
     }
     
-    print("Initiailizing Latent Space Positions...")
+    #print(str(Token_Topic_Assignments))
+    
+    cat("Initiailizing Latent Space Positions... \n")
     Latent_Space_Positions <- array(rnorm( n = Latent_Dimensions*Number_of_Clusters*Number_Of_Authors, mean = 0,sd = 1),c(Latent_Dimensions,Number_of_Clusters,Number_Of_Authors))
     
     #initialize a datastructure to keep a number of topics by number of unique words matrix 
-    print("Initializing Word Type Topic Counts...")
+    cat("Initializing Word Type Topic Counts... \n")
     Word_Type_Topic_Counts <- matrix(0,nrow = Number_Of_Words, ncol = Number_Of_Topics)
 
     Token_Word_Types <- vector(length = Number_Of_Documents, mode = "list")
@@ -99,7 +101,7 @@ Run_Inference <- function(Number_Of_Iterations,
             Word_Type_Topic_Counts[word_types[i],current_doc_assignments[i]] <- Word_Type_Topic_Counts[word_types[i],current_doc_assignments[i]] + 1
         }
     }
-    print("Initializing Betas...")
+    cat("Initializing Mixing Parameters... \n")
     #initialize betas
     MP <- Initialize_Mixing_Parameters(num_mixing_parameters = Number_of_Binary_Mixing_Parameters,
                                        num_clusters = Number_of_Clusters,
@@ -116,7 +118,7 @@ Run_Inference <- function(Number_Of_Iterations,
         Topic_Cluster_Assignments[k] <- round(runif(1, min = 1, max = Number_of_Clusters),0)
     }
     
-    print("Running Model...")
+    cat("Running Model... \n")
     #==================== MAIN Function ====================#                             
     
     Return_List <- Main_Sampler(
