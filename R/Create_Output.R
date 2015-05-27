@@ -132,8 +132,10 @@ Create_Output <- function(data_name,
   
   # now we clean up the intermediate datasets and save everything
   load(paste("Sample_",data_name,".Rdata",sep = ""))
-  rm(paste("Sample_",data_name,".Rdata",sep = ""))
-  rm(paste("Model_Output_",data_name,".Rdata",sep = ""))
+  p1 <- pipe(paste("rm Sample_",data_name,".Rdata",sep = ""),"r")
+  close(p1)
+  p2 <- pipe(paste("rm Model_Output_",data_name,".Rdata",sep = ""), "r")
+  close(p2)
   Return_List <- Return_List[-c(5,8)]
   save(paste("MCMC_Output_",data_name,".Rdata",sep = ""))
   }
