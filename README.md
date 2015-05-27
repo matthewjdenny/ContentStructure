@@ -38,43 +38,49 @@ The package provides two functions: `Run_Full_Model()` and `Create_Output()` whi
 
 Here is some example code that will run the model an generate output on a toy dataset of 121 emails between 20 department managers. 
 
-    # set working directory and load the library 
-    setwd("~/Working/Directory/")
-    library(ContentStructure)
-    # load in necessary data (you will need all 4 objects)
+    ## set working directory, dataset name, and load the library 
+    mywd <- "~/Dropbox/Testing"
+    mydataset <- "Test"
+    setwd(mywd)
+    library(ContentStructure)  
+    
+    #load in necessary data
     data(vocabulary)
     data(author_attributes)
     data(document_edge_matrix)
-    data(document_word_matrix)
+    data(document_word_matrix)  
+      
     # run model
-    Run_Full_Model(data_name = "Test",  
+    Run_Full_Model(data_name = mydataset,  
                    main_iterations = 100, 
                    sample_step_burnin = 2000, 
                    sample_step_iterations = 8000,
                    sample_step_sample_every = 20,
                    topics = 6,
                    clusters = 2,
-                   data_directory = "~/Working/Directory/",
+                   data_directory = mywd,
                    run_MH_only = F,
                    mixing_variable = "Gender",
                    Auth_Attr = author_attributes, 
                    Doc_Edge_Matrix = document_edge_matrix ,
                    Doc_Word_Matrix = document_word_matrix, 
-                   Vocab = vocabulary
-                   )
-    Data <- Create_Output(data_name = "Test",
-                          only_generate_summaries = T, 
-                          data_directory = "~/Working/Directory/",
-                          print_agg_stats = T,
-                          using_county_email_data = F,
-                          Topic_Model_Burnin = 50,
-                          Skip = 0, 
-                          Thin = 1,
-                          Used_MP = T,
-                          MP_Name = "Gender",
-                          Auth_Attr = author_attributes,
-                          Vocabulary = vocabulary
-                          )
+                   Vocab = vocabulary,
+    			   Seed = 123456
+                   )  
+                     
+    Data <- Create_Output(data_name = mydataset,
+              		  only_generate_summaries = T, 
+                      data_directory = mywd,
+                      print_agg_stats = T,
+                      using_county_email_data = F,
+                      Topic_Model_Burnin = 50,
+                      Skip = 0, 
+                      Thin = 1,
+                      Used_MP = T,
+                      MP_Name = "Gender",
+                      Auth_Attr = author_attributes,
+                      Vocabulary = vocabulary
+                      )
                           
 ## Output
 
