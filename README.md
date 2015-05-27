@@ -14,7 +14,9 @@ A paper detailing the extended and generalized model is currently under revision
 
 ## Installation
 
-To install this package from git, you will need to Hadley Wickham's devtools package installed.
+Note that if you are using a Mac, you will need to start by making sure you have Xcode + developer tools installed or you will not be able to compile the C++ code that is used in the samplers for this package. You will need to go here: <https://developer.apple.com/xcode/downloads/> and then select the link to the additional downloads page which will prompt you to enter you apple ID. This will let you download the developer tools. This requirement is not unique to this package, but is necessary for all packages that use Rcpp.  
+  
+To install this package from Github, you will need to Hadley Wickham's devtools package installed.
 
     install.packages("devtools")
     library("devtools")
