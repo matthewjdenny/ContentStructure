@@ -127,9 +127,11 @@ Run_MH_To_Convergence <- function(input_file = "Test",
 							"mixing_parameter_type_indicator_array",
 							"intial_mixing_parameter_values")
 
-    cat("Topic Cluster Assignments: \n",Return_List$topic_cluster_assignments,"\n", "If all topics are assigned to one cluster, you may want to rerun with a new seed as this may indicate that the model jumped to a degenerate distribution over cluster assignments.\n")
+    clust_assigns <- Return_List$topic_cluster_assignments
+    nrows <- nrow(clust_assigns)
+    cat("Topic Cluster Assignments: \n",clust_assigns[nrows,],"\n", "If all topics are assigned to one cluster, you may want to rerun with a new seed as this may indicate that the model jumped to a degenerate distribution over cluster assignments...\n", sep = "")
 
-    cat("Saving Results \n")
+    cat("Saving Results... \n")
     save(Return_List, file=paste(data_dir,output_file,".Rdata",sep = ""))
 
 }# end of ouuter function definition 
