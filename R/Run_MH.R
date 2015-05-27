@@ -101,6 +101,31 @@ Run_MH_To_Convergence <- function(input_file = "Test",
     Return_List[[18]] <- Result_List[[4]]
     Return_List[[19]] <- Result_List[[2]]
     Return_List[[20]] <- Result_List[[3]]
+	
+	#assign names to list object
+	names(Return_List) <- c("token_topic_assignments",
+							"topic_present_edge_counts",
+							"topic_absent_edge_counts",
+							"token_type_topic_counts",
+							"nothing_will_eventually_remove",
+							"number_of_documents",
+							"number_of_iterations",
+							"Gibbs_per_iteration_will_eventually_remove",
+							"number_of_LSM_MH_iterations", 
+							"number_of_clusters",
+							"cluster_proposal_variances",
+							"cluster_accept_rates",
+							"LDA_log_likelihood_trace",
+							"topic_cluster_assignments",
+							"LSM_cluster_intercepts",
+							"LSM_cluster_mixing_parameters",
+							"LSM_actor_latent_positions",
+							"cluster_whether_accepted",
+							"cluster_proposed_likelihoods",
+							"cluster_current_likelihoods",
+							"number_possible_mixing_parameter_values",
+							"mixing_parameter_type_indicator_array",
+							"intial_mixing_parameter_values")
 
     print("saving")
     save(Return_List, file=paste(data_dir,output_file,".Rdata",sep = ""))
