@@ -62,10 +62,11 @@ Run_Inference <- function(Number_Of_Iterations,
     Document_Edge_Matrix <- Document_Edge_Matrix[,-1] # remove the authors from the docuemnt edge matrix
     print("Initializing Topic Assignments...")
 
-    Token_Topic_Assignments <- list()
+    Token_Topic_Assignments <- vector(length = Number_Of_Documents, mode = "list")
     for(d in 1:Number_Of_Documents){
         cur_token_assignments <- sample(1:Number_Of_Topics,sum(Document_Word_Matrix[d,]),replace= T) #samples from a discrete uniform distribution
-        Token_Topic_Assignments <- append(Token_Topic_Assignments,list(cur_token_assignments))
+        #Token_Topic_Assignments <- append(Token_Topic_Assignments,list(cur_token_assignments))
+        Token_Topic_Assignments[[d]] <- cur_token_assignments
     }
     
     print("Initiailizing Latent Space Positions...")
@@ -75,7 +76,7 @@ Run_Inference <- function(Number_Of_Iterations,
     print("Initializing Word Type Topic Counts...")
     Word_Type_Topic_Counts <- matrix(0,nrow = Number_Of_Words, ncol = Number_Of_Topics)
 
-    Token_Word_Types <- list()
+    Token_Word_Types <- vector(length = Number_Of_Documents, mode = "list")
     for(d in 1:Number_Of_Documents){
         #create a vector of word types for each token
         word_indexes <- which(Document_Word_Matrix[d,] > 0)
@@ -89,7 +90,8 @@ Run_Inference <- function(Number_Of_Iterations,
                 word_types <- c(word_types,rep(word_indexes[i],word_counts[i]))
             }
         }
-        Token_Word_Types <- append(Token_Word_Types,list(word_types))
+        #Token_Word_Types <- append(Token_Word_Types,list(word_types))
+        Token_Word_Types[[d]] <- word_types
         #now get the token topic assignemnts for this document
         current_doc_assignments <- Token_Topic_Assignments[[d]]
         #now go through and increment based in intial draws
