@@ -88,8 +88,6 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         
         Clusters <- Model_Parameters[[5]]
         
-        #just print everything
-        Clusters_to_Pretty_Print = 1:Clusters 
         #Clusters <- 2
         Topics <- length(Last_Cluster_Topic_Assignments)
         Actors <- length(Metropolis_Results[[3]][1,1,])
@@ -101,6 +99,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         Proposal_Variances <- Model_Parameters[[6]][Model_Parameters[[2]],]
         Cluster_Topic_Assigns <- Last_Cluster_Topic_Assignments
         
+        Clusters_to_Pretty_Print <- unique(Cluster_Topic_Assigns)
         #get the total number of tokens assigned to each topic
         Topic_Token_Totals <- apply(Word_Type_Topic_Counts,2,sum)
         #get the total number of present edges assigned to each topic
