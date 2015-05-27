@@ -130,6 +130,12 @@ Create_Output <- function(data_name,
                                binary_mixing_attribute_name = MP_Name
                                )
   
+  # now we clean up the intermediate datasets and save everything
+  load(paste("Sample_",data_name,".Rdata",sep = ""))
+  rm(paste("Sample_",data_name,".Rdata",sep = ""))
+  rm(paste("Model_Output_",data_name,".Rdata",sep = ""))
+  Return_List <- Return_List[-c(5,8)]
+  save(paste("MCMC_Output_",data_name,".Rdata",sep = ""))
   }
   
   if(using_county_email_data){
