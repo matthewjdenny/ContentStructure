@@ -100,6 +100,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         Cluster_Topic_Assigns <- Last_Cluster_Topic_Assignments
         
         Clusters_to_Pretty_Print <- unique(Cluster_Topic_Assigns)
+        cat("Clusters to Print:", Clusters_to_Pretty_Print, "\n")
         #get the total number of tokens assigned to each topic
         Topic_Token_Totals <- apply(Word_Type_Topic_Counts,2,sum)
         #get the total number of present edges assigned to each topic
@@ -945,7 +946,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         pdf(paste(out_directory,output_name,"_All_Clusters.pdf", sep = ""),height=8,width=10,pointsize=7)
         layout(matrix(c(1,2,3,4), 2, 2, byrow = TRUE), widths=c(3,1), heights=c(1,2))
          
-        for(clust in 1:Clusters){
+        for(clust in Clusters_to_Pretty_Print){
             Pretty_Cluster_Likelihood(clust)
             if(used_binary_mixing_attribute){
               Pretty_Beta_Estimates(clust)
@@ -966,7 +967,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         attr <- Author_Attributes[,attr_index]
         unique_attrs <- unique(attr)
         #generate asortativity - token dataset
-        print("Generating Dataset")
+        cat("Generating Datasets... \n")
         get_beta_estimates <- function(Cluster){
           betas <- matrix(0,ncol = 4, nrow = Itterations)
           for(i in 1:Itterations){
@@ -1006,12 +1007,17 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         county3 <- matrix(pretty_name,ncol = 1,nrow = Topics)
         
         Cluster_Data <- cbind(county,Clusters_intercepts,beta_averages,beta_se,Cluster_Top_Twenty_Words)
-        colnames(Cluster_Data) = c("County","Intercept","Intercept_SE",paste(unique_attrs[1],"-",unique_attrs[1],sep = ""), paste(unique_attrs[1],"-",unique_attrs[2],sep = ""),paste(unique_attrs[2],"-",unique_attrs[1],sep = ""), paste(unique_attrs[2],"-",unique_attrs[2],sep = ""),paste(unique_attrs[1],"-",unique_attrs[1],"_SE",sep = ""), paste(unique_attrs[1],"-",unique_attrs[2],"_SE",sep = ""),paste(unique_attrs[2],"-",unique_attrs[1],"_SE",sep = ""), paste(unique_attrs[2],"-",unique_attrs[2],"_SE",sep = ""),"Top1","Top2","Top3","Top4","Top5","Top6","Top7","Top8","Top9","Top10","Top11","Top12","Top13","Top14","Top15","Top16","Top17","Top18","Top19","Top20")
+         cols1 <- c("Organization","Intercept","Intercept_SE",paste(unique_attrs[1],"-",unique_attrs[1],sep = ""), paste(unique_attrs[1],"-",unique_attrs[2],sep = ""),paste(unique_attrs[2],"-",unique_attrs[1],sep = ""), paste(unique_attrs[2],"-",unique_attrs[2],sep = ""),paste(unique_attrs[1],"-",unique_attrs[1],"_SE",sep = ""), paste(unique_attrs[1],"-",unique_attrs[2],"_SE",sep = ""),paste(unique_attrs[2],"-",unique_attrs[1],"_SE",sep = ""), paste(unique_attrs[2],"-",unique_attrs[2],"_SE",sep = ""),"Top1","Top2","Top3","Top4","Top5","Top6","Top7","Top8","Top9","Top10","Top11","Top12","Top13","Top14","Top15","Top16","Top17","Top18","Top19","Top20")
+        #print(colnames(Cluster_Data))
+        #print(cols1)
+        colnames(Cluster_Data) = cols1
         Actor_Dataset <- cbind(county2,Actor_Dataset)
         cad <- c("Organization",colnames(Author_Attributes))
-        for(i in 1:Clusters){
+        for(i in Clusters_to_Pretty_Print){
           cad <- c(cad, paste("C",i,"_D1",sep = ""),paste("C",i,"_D2",sep = ""))
         }
+        #print(colnames(Actor_Dataset))
+        #print(cad)
         colnames(Actor_Dataset) <- cad
         
         Token_Data <- cbind(county3,Cluster_Topic_Assigns,Email_Assignments,Topic_Top_Ten_Words, t(Word_Type_Topic_Counts))
@@ -1019,6 +1025,8 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         t1 <- c("Organization","Cluster","Edges","Top1","Top2","Top3","Top4","Top5","Top6","Top7","Top8","Top9","Top10")
         temp2 <- c(t1,unlist(vocab))
         temp2 <- unlist(temp2)
+        #print(colnames(Token_Data))
+        #print(temp2)
         colnames(Token_Data) <- temp2
         
         return_list <- list(Cluster_Data = Cluster_Data , Actor_Data = Actor_Dataset, Token_Data = Token_Data, Vocabulary = vocab)
@@ -1047,7 +1055,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         
         Actor_Dataset <- cbind(county2,Actor_Dataset)
         cad <- c("Organization",colnames(Author_Attributes))
-        for(i in 1:Clusters){
+        for(i in Clusters_to_Pretty_Print){
           cad <- c(cad, paste("C",i,"_D1",sep = ""),paste("C",i,"_D2",sep = ""))
         }
         colnames(Actor_Dataset) <- cad
