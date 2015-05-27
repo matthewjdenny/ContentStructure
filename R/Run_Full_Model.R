@@ -1,5 +1,7 @@
 #' A Function to run the ContentStructure model to convergence for one dataset.
 #' 
+#' @useDynLib ContentStructure
+#' @importFrom Rcpp evalCpp
 #' @param data_name The exact name of the .Rdata file containing the relevant files necessary to run the model.
 #' @param main_iterations The number of iterations of Gibbs sampling for the LDA part of the model. We have found 4,000 seems to work well.
 #' @param sample_step_burnin The number of iterations of burnin that should be completed before sampling the latent space parameters when running MH for the LSM to convergence.
