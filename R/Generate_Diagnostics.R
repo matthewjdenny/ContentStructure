@@ -228,7 +228,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
             len <- length(log_likelihoods)
             geweke_log_likelihoods <- log_likelihoods[topic_model_burnin:len]
             par(mfrow = c(1,1), mar = c(5,5,4,1))
-            plot( y =geweke_log_likelihoods,x= topic_model_burnin:len, pch = 19, col = UMASS_BLUE, main = paste("Un-Normalized Topic Model Log Likelihood \n"," Geweke Statistic for Last",len-topic_model_burnin,"Iterations:", round(geweke.diag(geweke_log_likelihoods)$z,2)  ), xlab = "Iteration",ylab = "Log Likelihood",cex.lab=2, cex.axis=1.4, cex.main=1.4)
+            plot( y =geweke_log_likelihoods,x= topic_model_burnin:len, pch = 19, col = UMASS_BLUE, main = paste("Un-Normalized Topic Model Log Likelihood \n"," Geweke Statistic for Last",len-topic_model_burnin,"Iterations:", round(coda::geweke.diag(geweke_log_likelihoods)$z,2)  ), xlab = "Iteration",ylab = "Log Likelihood",cex.lab=2, cex.axis=1.4, cex.main=1.4)
             dev.off()
         }
 
@@ -268,14 +268,14 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         #function to plot intercept over time
         plot_intercepts <- function(intercept){
             intercepts <- Metropolis_Results[[1]][,intercept]
-            plot(intercepts, main = paste("Topic:",intercept,"Geweke:",round(geweke.diag(intercepts)$z,2)),ylab= "Value",pch = 20)
+            plot(intercepts, main = paste("Topic:",intercept,"Geweke:",round(coda::geweke.diag(intercepts)$z,2)),ylab= "Value",pch = 20)
         }
 
         #function to plot betas over time
         plot_betas <- function(Cluster){
             betas <- Metropolis_Results[[2]][Cluster,,]
             betas <- t(betas)
-            matplot(betas, main = paste("Cluster:",Cluster,"Geweke","\n MM:",round(geweke.diag(betas[,1])$z,2) , "MF:",round(geweke.diag(betas[,2])$z,2) ,"\n FM:",round(geweke.diag(betas[,3])$z,2) ,"FF:",round(geweke.diag(betas[,4])$z,2)),ylab= "Value",pch = 20)
+            matplot(betas, main = paste("Cluster:",Cluster,"Geweke","\n MM:",round(coda::geweke.diag(betas[,1])$z,2) , "MF:",round(coda::geweke.diag(betas[,2])$z,2) ,"\n FM:",round(coda::geweke.diag(betas[,3])$z,2) ,"FF:",round(coda::geweke.diag(betas[,4])$z,2)),ylab= "Value",pch = 20)
         }
 
         #function to plot latent spaces for a given actor
@@ -286,7 +286,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
                 LSP[i,2] <- Metropolis_Results[[3]][2*i,cluster,LS_Actor]
             }
             corel <- cor(LSP[,1], LSP[,2])
-            matplot(LSP, main = paste("Cluster:",cluster, "\n LS Correlations:", round(corel,3),"\n Geweke - LS1:",round(geweke.diag(LSP[,1])$z,2),"LS2:",round(geweke.diag(LSP[,2])$z,2)),ylab= "Value",pch = 20)
+            matplot(LSP, main = paste("Cluster:",cluster, "\n LS Correlations:", round(corel,3),"\n Geweke - LS1:",round(coda::geweke.diag(LSP[,1])$z,2),"LS2:",round(coda::geweke.diag(LSP[,2])$z,2)),ylab= "Value",pch = 20)
         }
         
         plot_Cluster_present_edge_Network <- function(Cluster){
@@ -370,7 +370,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         #function to plot log likelihoods over time
         plot_likelihoods <- function(Cluster){
             likelihoods <- cbind(Metropolis_Results[[5]][,Cluster],Metropolis_Results[[6]][,Cluster])
-            matplot(likelihoods, main = paste("Log Likelihoods of Current and Proposed Positions over Time For Cluster", Cluster, "\n Geweke Statistic:", round(geweke.diag(likelihoods[,1])$z,2)),ylab= "Value",pch = 20)
+            matplot(likelihoods, main = paste("Log Likelihoods of Current and Proposed Positions over Time For Cluster", Cluster, "\n Geweke Statistic:", round(coda::geweke.diag(likelihoods[,1])$z,2)),ylab= "Value",pch = 20)
         }
         
         #function to plot log ratios vs log uniform draws over time
@@ -455,7 +455,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
             mean_coordinates <- matrix(0, nrow = Actors, ncol = 2)
             for(i in 1:Itterations){
                 temp <- cbind(Metropolis_Results[[3]][2*i-1,Cluster,],Metropolis_Results[[3]][2*i,Cluster,])
-                rotated <- procrustes(base,temp,scale=F)$Yrot
+                rotated <- vegan::procrustes(base,temp,scale=F)$Yrot
                 mean_coordinates <- mean_coordinates + rotated
             }
             
@@ -538,7 +538,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
             base <- cbind(Metropolis_Results[[3]][2*1-1,Cluster,],Metropolis_Results[[3]][2*1,Cluster,])
             for(i in 1:Itterations){
                 temp <- cbind(Metropolis_Results[[3]][2*i-1,Cluster,],Metropolis_Results[[3]][2*i,Cluster,])
-                rotated <- procrustes(base,temp,scale=F)$Yrot
+                rotated <- vegan::procrustes(base,temp,scale=F)$Yrot
                 
                 counter <- 1
                 for(j in 1:Actors){
@@ -621,7 +621,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
             clust_email_assignments <- clust_email_assignments[indexes]
             clust_top_ten_words <- clust_top_ten_words[indexes]
             
-            bp <- barplot2(clust_email_assignments, beside = TRUE, horiz = TRUE, col = "grey", border= "grey", ylab = "", xlab = "Number of Edges Assigned to Topic",main =paste("Top Words for Top",num_topics,"Topics")) 
+            bp <- gplots::barplot2(clust_email_assignments, beside = TRUE, horiz = TRUE, col = "grey", border= "grey", ylab = "", xlab = "Number of Edges Assigned to Topic",main =paste("Top Words for Top",num_topics,"Topics")) 
             text(0,bp,clust_top_ten_words,cex=1,pos=4)# label on the bars themselves 
         }
     
@@ -639,9 +639,9 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
             ints <- intercept_list[[Cluster]]
             
             if(used_binary_mixing_attribute){
-              matplot(likelihoods, main = paste(pretty_name,": Trace Plot of Log Likelihoods For Cluster", Cluster, "\n Geweke Statistic:", round(geweke.diag(likelihoods[,1])$z,2),paste(" --- Percent Betas Converged ($z < 1.645$):",round(bets/3,3)), "\n",paste(" Percent LS Positions Converged ($z < 1.645$):",round(ls/num_ls,3)),"  --- Intercept Geweke Statistic:",round(ints,3) ),ylab= "Log Likelihood",pch = 20)
+              matplot(likelihoods, main = paste(pretty_name,": Trace Plot of Log Likelihoods For Cluster", Cluster, "\n Geweke Statistic:", round(coda::geweke.diag(likelihoods[,1])$z,2),paste(" --- Percent Betas Converged ($z < 1.645$):",round(bets/3,3)), "\n",paste(" Percent LS Positions Converged ($z < 1.645$):",round(ls/num_ls,3)),"  --- Intercept Geweke Statistic:",round(ints,3) ),ylab= "Log Likelihood",pch = 20)
             }else{
-              matplot(likelihoods, main = paste(pretty_name,": Trace Plot of Log Likelihoods For Cluster", Cluster, "\n Geweke Statistic:", round(geweke.diag(likelihoods[,1])$z,2),"\n",paste(" Percent LS Positions Converged ($z < 1.645$):",round(ls/num_ls,3)),"  --- Intercept Geweke Statistic:",round(ints,3) ),ylab= "Log Likelihood",pch = 20)
+              matplot(likelihoods, main = paste(pretty_name,": Trace Plot of Log Likelihoods For Cluster", Cluster, "\n Geweke Statistic:", round(coda::geweke.diag(likelihoods[,1])$z,2),"\n",paste(" Percent LS Positions Converged ($z < 1.645$):",round(ls/num_ls,3)),"  --- Intercept Geweke Statistic:",round(ints,3) ),ylab= "Log Likelihood",pch = 20)
             }
             
             legend("bottomright",c("Proposed", "Current"), fill=c("black","red"), horiz=T)
@@ -652,7 +652,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         Pretty_Cluster_Trace <- function(Cluster){
             likelihoods <- Metropolis_Results[[6]][,Cluster]
             
-            plot(likelihoods, main = paste("Trace Plot of Log Likelihoods", "\n Geweke Statistic:", round(geweke.diag(likelihoods)$z,2)),ylab= "Log Likelihood", type="n")
+            plot(likelihoods, main = paste("Trace Plot of Log Likelihoods", "\n Geweke Statistic:", round(coda::geweke.diag(likelihoods)$z,2)),ylab= "Log Likelihood", type="n")
             lines(likelihoods)
             
         }
@@ -736,15 +736,15 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
                 
             } else {
                 # Set up the page
-                grid.newpage()
-                pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+                grid::grid.newpage()
+                grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow(layout), ncol(layout))))
                 
                 # Make each plot, in the correct location
                 for (i in 1:numPlots) {
                     # Get the i,j matrix positions of the regions that contain this subplot
                     matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
                     
-                    print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                    print(plots[[i]], vp = grid::viewport(layout.pos.row = matchidx$row,
                                                     layout.pos.col = matchidx$col))
                 }
             }
@@ -784,7 +784,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         if(!only_print_summaries){
             pdf(paste(out_directory,output_name,"_Top_Words.pdf", sep = ""),height=12,width=10,pointsize=7)
             par(mfrow= c(1,1))
-            bp <- barplot2(Email_Assignments, beside = TRUE, horiz = TRUE, col = "lightblue1", border= "lightblue1", ylab = "Topic:", xlab = "Number of Edges Assigned to Topic",main = paste("Top Words by Number of Words Assigned to Topic for ",output_name,sep = "")) 
+            bp <- gplots::barplot2(Email_Assignments, beside = TRUE, horiz = TRUE, col = "lightblue1", border= "lightblue1", ylab = "Topic:", xlab = "Number of Edges Assigned to Topic",main = paste("Top Words by Number of Words Assigned to Topic for ",output_name,sep = "")) 
             text(0,bp,Top_Ten_Words,cex=1,pos=4)# label on the bars themselves 
             dev.off()
             
@@ -808,7 +808,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
             print(paste("Current Cluster: ", t))
             #Intercepts
             intercepts <- Metropolis_Results[[1]][,t]
-            int <- as.numeric(geweke.diag(intercepts)$z)
+            int <- as.numeric(coda::geweke.diag(intercepts)$z)
             intercept_list <- append(intercept_list,int)
             
             #Betas
@@ -819,19 +819,19 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
               }
               bets <- rep(0,4)
               for(i in 1:4){
-                bets[i] <- as.numeric(geweke.diag(betas[,i])$z)
+                bets[i] <- as.numeric(coda::geweke.diag(betas[,i])$z)
               } 
               beta_list <- append(beta_list,bets)
             }
             
             
             
-            #generate procrustes transformed positions
+            #generate vegan::procrustes transformed positions
             storage <- matrix(0,nrow = Itterations, ncol = 2*Actors)
             base <- cbind(Metropolis_Results[[3]][2*1-1,Cluster,],Metropolis_Results[[3]][2*1,Cluster,])
             for(i in 1:Itterations){
                 temp <- cbind(Metropolis_Results[[3]][2*i-1,Cluster,],Metropolis_Results[[3]][2*i,Cluster,])
-                rotated <- procrustes(base,temp,scale=F)$Yrot
+                rotated <- vegan::procrustes(base,temp,scale=F)$Yrot
                 
                 counter <- 1
                 for(j in 1:Actors){
@@ -852,7 +852,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
                 }
                 #calcaulte statistic
                 for(j in 1:Latent_Spaces){
-                    lat[a,j] <- as.numeric(geweke.diag(LSP[,j])$z)
+                    lat[a,j] <- as.numeric(coda::geweke.diag(LSP[,j])$z)
                 }
             }
             LS_list <- append(LS_list,lat)

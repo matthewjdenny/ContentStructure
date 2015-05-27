@@ -89,12 +89,12 @@ Create_Output <- function(data_name,
         #the new words that the current vocab is adding
         addition <- new_vocab[-(1:length(all_vocab[,1])),]
         #create a block of zeros to append to the right side of the existing matrix (becasue those documents do not use the new words)
-        add_word_matrix <- simple_triplet_zero_matrix(nrow =nrow(all_words),ncol= length(addition))
+        add_word_matrix <- slam::simple_triplet_zero_matrix(nrow =nrow(all_words),ncol= length(addition))
         #stick them together
         all_words <- cbind(all_words,add_word_matrix)
         
         #now create a new matrix with all the right row indicies to 
-        current_word_matrix <- simple_triplet_zero_matrix(nrow = nrow(word_mat),ncol= length(new_vocab[,1]))
+        current_word_matrix <- slam::simple_triplet_zero_matrix(nrow = nrow(word_mat),ncol= length(new_vocab[,1]))
         for(j in 1:length(cur_vocab[,1])){
           index <- which(new_vocab[,1] == cur_vocab[j,1])
           current_word_matrix[,index] <- word_mat[,j]
