@@ -126,7 +126,7 @@ List MH_Sampler(
                     }
                     
                 }
-                Rcpp::Rcout << "Cluster Proposal Variacnes: " << proposal_variance << std::endl;
+                Rcpp::Rcout << "Cluster Proposal Variacnes: " << std::endl << proposal_variance << std::endl;
             }// end of if statement to see if we are actually in an update iteration
             adaptive_metropolis_update_counter += 1;
         }//end of if statement for using adaptive metropolis

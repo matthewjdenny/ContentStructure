@@ -539,7 +539,7 @@ List Main_Sampler(
             }
             
         }
-        Rcpp::Rcout << "Cluster Proposal Variances: " << proposal_variance << std::endl;
+        Rcpp::Rcout << "Cluster Proposal Variances: " << std::endl << proposal_variance << std::endl;
 
         // ===================================================== //
         // ===================== LSM Step ====================== //
