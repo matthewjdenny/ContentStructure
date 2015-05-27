@@ -27,8 +27,10 @@ Krafft, P., Moore, J., Desmarais, B. A., & Wallach, H. (2012). Topic-partitioned
 The appropriate publication to cite for this pacakge is still in preparation.
 }
 \examples{
-## set working directory and load the library 
-setwd("~/Dropbox/PINLab/Package_Development")
+## set working directory, dataset name, and load the library 
+mywd <- "~/Dropbox/Testing"
+mydataset <- "Test"
+setwd(mywd)
 library(ContentStructure)
 
 #load in necessary data
@@ -38,25 +40,26 @@ data(document_edge_matrix)
 data(document_word_matrix)
 
 # run model
-Run_Full_Model(data_name = "Test",  
+Run_Full_Model(data_name = mydataset,  
                main_iterations = 100, 
                sample_step_burnin = 2000, 
                sample_step_iterations = 8000,
                sample_step_sample_every = 20,
                topics = 6,
                clusters = 2,
-               data_directory = "~/Dropbox/PINLab/Package_Development/",
+               data_directory = mywd,
                run_MH_only = F,
                mixing_variable = "Gender",
                Auth_Attr = author_attributes, 
                Doc_Edge_Matrix = document_edge_matrix ,
                Doc_Word_Matrix = document_word_matrix, 
-               Vocab = vocabulary
+               Vocab = vocabulary,
+			   Seed = 123456
                )
 
-Data <- Create_Output(data_name = "Test",
+Data <- Create_Output(data_name = mydataset,
               		  only_generate_summaries = T, 
-                      data_directory = "~/Dropbox/PINLab/Package_Development/",
+                      data_directory = mywd,
                       print_agg_stats = T,
                       using_county_email_data = F,
                       Topic_Model_Burnin = 50,
