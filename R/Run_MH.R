@@ -10,7 +10,7 @@ Run_MH_To_Convergence <- function(input_file = "Test",
                                   adaptive_metropolis_update_every = 100, 
                                   use_adaptive_metropolis = 1, 
                                   MH_prior_standard_deviation = 2, 
-                                  seed = 1234){
+                                  seed){
     
     set.seed(seed)
 #     library(RcppArmadillo)
@@ -22,7 +22,7 @@ Run_MH_To_Convergence <- function(input_file = "Test",
     #set.seed(seed)
 #     Rcpp::sourceCpp("./Scripts/CPME_Inference_MH.cpp")
     
-    print("Loading Data")
+    cat("Loading Data... \n")
     #extract current metropolis results
     first_return <- 13
     Topic_Model_Results <- Return_List[1:5]
@@ -70,7 +70,7 @@ Run_MH_To_Convergence <- function(input_file = "Test",
     Email_Assignments <- apply(Topic_Present_Edge_Counts,3,sum)
     clp <- array(0,c(Latent_Spaces,Clusters,Actors))
     
-    print("Running Model")
+    cat("Running Model... \n")
     
     Result_List <- MH_Sampler(itterations,
             as.integer(Actors), 
@@ -127,7 +127,9 @@ Run_MH_To_Convergence <- function(input_file = "Test",
 							"mixing_parameter_type_indicator_array",
 							"intial_mixing_parameter_values")
 
-    print("Saving Results")
+    cat("Topic Cluster Assignments: \n",Return_List$topic_cluster_assignments,"\n", "If all topics are assigned to one cluster, you may want to rerun with a new seed as this may indicate that the model jumped to a degenerate distribution over cluster assignments.\n")
+
+    cat("Saving Results \n")
     save(Return_List, file=paste(data_dir,output_file,".Rdata",sep = ""))
 
 }# end of ouuter function definition 
