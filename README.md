@@ -1,5 +1,7 @@
 # ContentStructure
 
+NOTE: **This package is still under development and is very much a work in progress. Please do not use in any publication without express consent of the authors. PLEASE REPORT ANY BUGS OR ERRORS TO <mzd5530@psu.edu>**. 
+
 ## Model Overview 
 
 An R package which implements an extension to the TPME model of Krafft et al. (2012) [[Available here](http://dirichlet.net/pdf/krafft12topic-partitioned.pdf)].  The three main extensions we make to model are detailed below:
@@ -21,10 +23,10 @@ Now we can install from Github using the following line:
 
     devtools::install_github("matthewjdenny/ContentStructure")
 
-I have  had success installing with R 3.2.0+ installed but if you do not have the latest version of R installed, it should work as long as you install the dependencies first with the following block of code:
+I have  had success installing with R 3.2.0+ installed but if you do not have the latest version of R installed, or run into some install errors (please email if you do), it should work as long as you install the dependencies first with the following block of code:
 
     install.packages( pkgs = c("BH","coda","RcppArmadillo","gridBase",
-    "gplots","ggplot2","slam","snowfall","vegan"), dependencies = TRUE)
+    "gplots","slam","vegan"), dependencies = TRUE)
 
 If all went well, check out the `?ContentStructure` help file to see a full working example with info on how the data should look. 
 
@@ -34,7 +36,7 @@ The package provides two functions: `Run_Full_Model()` and `Create_Output()` whi
 
 ## Example
 
-Here is some example code that will run the model an generate output on a toy dataset of 121 emails between 20 department managers. The `Create_Output()` function returns a list object that has the following members: `Cluster_Data` contains cluster level data including top words and mixing parameters (with standard errors) if applicable. `Actor_Data` contains actors level data (all of the `Auth_Attr` dataframe) plus average latent positions for each actor in each dimension (2 currently), for each cluster. `Token_Data` contains the counts of each token for each topic, along with the edge counts for that topic and the cluster assignment for it. `Vocabulary` simply holds the vocabulary as a vector for easy handling. We have found these aggregate level statistics to be helpful in further analysis.
+Here is some example code that will run the model an generate output on a toy dataset of 121 emails between 20 department managers. 
 
     # set working directory and load the library 
     setwd("~/Working/Directory/")
@@ -73,5 +75,40 @@ Here is some example code that will run the model an generate output on a toy da
                           Auth_Attr = author_attributes,
                           Vocabulary = vocabulary
                           )
+                          
+## Output
+
+The `Create_Output()` function will save a number of PDF's in the `data_directory`, which will often be the most interesting a visually interpretable output, but it alo returns a list object that has the following members: 
+
+* `Cluster_Data` contains cluster level data including top words and mixing parameters (with standard errors) if applicable.
+* `Actor_Data` contains actors level data (all of the `Auth_Attr` dataframe) plus average latent positions for each actor in each dimension (2 currently), for each cluster. 
+* `Token_Data` contains the counts of each token for each topic, along with the edge counts for that topic and the cluster assignment for it. 
+* `Vocabulary` simply holds the vocabulary as a vector for easy handling. We have found these aggregate level statistics to be helpful in further analysis.
+
+The model also saves a `MCMC_Output_data_name.Rdata` file which contains a `Return_List` R list object holding the raw output from the MCMC chain with the following members:
+
+* `$token_topic_assignments`
+* `$topic_present_edge_counts`
+* `$topic_absent_edge_counts`
+* `$token_type_topic_counts`
+* `$number_of_documents`
+* `$number_of_iterations`
+* `$number_of_LSM_MH_iterations` 
+* `$number_of_clusters`
+* `$cluster_proposal_variances`
+* `$cluster_accept_rates`
+* `$LDA_log_likelihood_trace`
+* `$topic_cluster_assignments`
+* `$LSM_cluster_intercepts`
+* `$LSM_cluster_mixing_parameters`
+* `$LSM_actor_latent_positions`
+* `$cluster_whether_accepted`
+* `$cluster_proposed_likelihoods`
+* `$cluster_current_likelihoods`
+* `$number_possible_mixing_parameter_values`
+* `$mixing_parameter_type_indicator_array`
+* `$intial_mixing_parameter_values`
+
+## Testing
             
 So far, this package has been tested successfully on OSX 10.9.5 and CentOS 6.6. Please email me at <mzd5530@psu.edu> if you have success on another OS or run into any problems.
