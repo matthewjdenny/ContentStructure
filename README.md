@@ -46,10 +46,10 @@ The package provides two functions: `Run_Full_Model()` and `Create_Output()` whi
 
 ## Example
 
-Here is some example code that will run the model an generate output on a toy dataset of 121 emails between 20 department managers. 
+Here is some example code that will run the model an generate output on a toy dataset of 121 emails between 20 department managers. Note that you need to include a `/` after the last part of the path to your working directory as in `~/Dropbox/Testing/` or the model will not save things to the correct location.
 
     ## set working directory, dataset name, and load the library 
-    mywd <- "~/Dropbox/Testing"
+    mywd <- "~/Dropbox/Testing/"
     mydataset <- "Test"
     setwd(mywd)
     library(ContentStructure)  
