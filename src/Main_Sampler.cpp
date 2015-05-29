@@ -67,7 +67,8 @@ List Main_Sampler(
     arma::mat store_cluster_current_likelihoods(number_of_MH_itterations,number_of_clusters);
 
     // Set RNG and define uniform distribution 
-    boost::mt19937_64 generator(seed);
+    //boost::mt19937_64 generator(seed);
+    boost::mt19937 generator(seed);
     boost::random::uniform_real_distribution< >  uniform_distribution(0.0,1.0);
 
     arma::cube topic_present_edge_counts = arma::zeros(number_of_actors,number_of_actors,number_of_topics);

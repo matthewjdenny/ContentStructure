@@ -63,7 +63,8 @@ List MH_Sampler(
     double metropolis_target_accpet_rate = 0.20;
     
     // Set RNG and define uniform distribution 
-    boost::mt19937_64 generator(seed);
+    //boost::mt19937_64 generator(seed);
+    boost::mt19937 generator(seed);
     boost::random::uniform_real_distribution< >  uniform_distribution(0.0,1.0);
 
     //read in topic present edge counts array [num actors x num actors x topics]
