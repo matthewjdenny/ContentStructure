@@ -127,4 +127,4 @@ The model also saves a `MCMC_Output_data_name.Rdata` file which contains a `Retu
 
 ## Testing
             
-So far, this package has been tested successfully on OSX 10.9.5 and CentOS 6.6. Please email me at <mzd5530@psu.edu> if you have success on another OS or run into any problems.
+So far, this package has been tested successfully on OSX 10.9.5, Windows 7 and CentOS 6.6. Please email me at <mzd5530@psu.edu> if you have success on another OS or run into any problems.
