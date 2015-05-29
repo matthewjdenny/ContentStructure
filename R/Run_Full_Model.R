@@ -36,7 +36,18 @@ Run_Full_Model <- function(data_name,
                            Seed = 123456){
   
     
+    substrRight <- function(x, n){
+      substr(x, nchar(x)-n+1, nchar(x))
+    }
     
+    lastchar <- substrRight(data_directory,1)
+    
+    if(lastchar == "/"){
+      #we are all set
+    }else{
+      #add a trailing slash to we save to right place
+      data_directory <- paste(data_directory,"/",sep = "")
+    }
     #load data
     #load( paste(data_directory,data_name,".Rdata", sep = ""))
     

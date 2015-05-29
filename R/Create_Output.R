@@ -30,6 +30,19 @@ Create_Output <- function(data_name,
                           Vocabulary = NULL
                           ){
   
+  substrRight <- function(x, n){
+    substr(x, nchar(x)-n+1, nchar(x))
+  }
+  
+  lastchar <- substrRight(data_directory,1)
+  
+  if(lastchar == "/"){
+    #we are all set
+  }else{
+    #add a trailing slash to we save to right place
+    data_directory <- paste(data_directory,"/",sep = "")
+  }
+  
   setwd(data_directory)
   #     source("./Scripts/CPME_Generate_Diagnostics.R")
   #     library(slam)
