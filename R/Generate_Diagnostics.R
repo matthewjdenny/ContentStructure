@@ -563,20 +563,23 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
             #add in lines between actors in order from dimmest to brightest
             total <- length(which(slice >0))
             low_high <- order(slice, decreasing = F)
-            len <- length(low_high)
-            low_high <- low_high[(len-total +1):len]
+			add_matrix <- matrix(low_high,ncol = Actors,nrow = Actors)
+            # len <- length(low_high)
+            # low_high <- low_high[(len-total +1):len]
+            
+
+	        counter <- 1
+	        for(l in 1:total){
+	            for(i in 1:Actors){
+	                for(j in 1:Actors){
+		                if(add_matrix[i,j] == low_high[l]){
+		                    lines(c(mean_coordinates[j,1],mean_coordinates[i,1]) , c(mean_coordinates[j,2],mean_coordinates[i,2]), col = colors[i*j], lwd = 1.5)
+						}
+	                }
+	            }
+	        }
             
             
-            counter <- 1
-            for(l in 1:total){
-                for(i in 1:Actors){
-                    for(j in 1:Actors){
-                        if(i*j == low_high[l]){
-                            lines(c(mean_coordinates[j,1],mean_coordinates[i,1]) , c(mean_coordinates[j,2],mean_coordinates[i,2]), col = colors[i*j], lwd = 1.5)
-                        }
-                    }
-                }
-            }
             
             points(mean_coordinates,col = colors2, pch = shapes, cex = 1.5)
             if(used_binary_mixing_attribute){
