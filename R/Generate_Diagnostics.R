@@ -492,7 +492,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
             
 
             #generate edge colors
-            linecolor <- colorRampPalette(c("gray90", "black"))
+            linecolor <- colorRampPalette(c("grey90", "black"))
             cols <- linecolor(21)
             min <- min(slice)
             max <- max(slice)
@@ -565,18 +565,23 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
             
             #iff there are any edges assigned to this cluster
             if(total > 0){
-              low_high <- order(slice, decreasing = F)
-              add_matrix <- matrix(low_high,ncol = Actors,nrow = Actors)
+              ordering <- order(slice, decreasing = F)
+              correct_ordering <- rep(0,length(ordering))
+              for(i in 1:length(ordering)){
+                correct_ordering[ordering[i]] <- i
+              }
+              add_matrix <- matrix(correct_ordering,ncol = Actors,nrow = Actors)
+              colormat <- matrix(colors,ncol = Actors,nrow = Actors)
               # len <- length(low_high)
               # low_high <- low_high[(len-total +1):len]
               
               
               counter <- 1
-              for(l in 1:total){
+              for(l in 1:length(ordering)){
                 for(i in 1:Actors){
                   for(j in 1:Actors){
-                    if(add_matrix[i,j] == low_high[l]){
-                      lines(c(mean_coordinates[j,1],mean_coordinates[i,1]) , c(mean_coordinates[j,2],mean_coordinates[i,2]), col = colors[i*j], lwd = 1.5)
+                    if(add_matrix[i,j] == l & slice[i,j] > 0){
+                      lines(c(mean_coordinates[j,1],mean_coordinates[i,1]) , c(mean_coordinates[j,2],mean_coordinates[i,2]), col = colormat[i,j], lwd = 1.5)
                     }
                   }
                 }
