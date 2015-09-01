@@ -7,7 +7,10 @@
 #include <math.h>
 #include <cmath>
 
-
+using std::pow;
+using std::exp;
+using std::sqrt;
+using std::log;
 using namespace Rcpp;
 
 // [[Rcpp::export]]
