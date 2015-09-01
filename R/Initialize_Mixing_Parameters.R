@@ -50,6 +50,7 @@ Initialize_Mixing_Parameters <- function(num_mixing_parameters,
     }    
   }else{
     #we assume we are not using any mixing parameters
+    Number_of_Betas <- 4
     Betas <- matrix(0,nrow =num_clusters,ncol = Number_of_Betas)
     Number_of_Betas <- 0
     Beta_Indicator_Array <- array(0,c(num_authors,num_authors,4))
