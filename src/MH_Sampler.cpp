@@ -3,7 +3,7 @@
 
 #include <RcppArmadillo.h>
 #include <boost/random.hpp>
-#include <boost/random/uniform_real_distribution.hpp>
+#include <boost/random/uniform_01.hpp>
 #include <math.h>
 #include <cmath>
 
@@ -65,8 +65,7 @@ List MH_Sampler(
     // Set RNG and define uniform distribution 
     //boost::mt19937_64 generator(seed);
     boost::mt19937 generator(seed);
-    boost::random::uniform_real_distribution< >  uniform_distribution(0.0,1.0);
-
+    boost::uniform_01<double> uniform_distribution;
     //read in topic present edge counts array [num actors x num actors x topics]
     IntegerVector arrayDims1 = tpec.attr("dim");
     arma::cube topic_present_edge_counts(tpec.begin(), arrayDims1[0], arrayDims1[1], arrayDims1[2], false);

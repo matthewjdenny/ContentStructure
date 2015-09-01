@@ -3,7 +3,7 @@
 
 #include <RcppArmadillo.h>
 #include <boost/random.hpp>
-#include <boost/random/uniform_real_distribution.hpp>
+#include <boost/random/uniform_01.hpp>
 #include <math.h>
 #include <cmath>
 
@@ -69,7 +69,7 @@ List Main_Sampler(
     // Set RNG and define uniform distribution 
     //boost::mt19937_64 generator(seed);
     boost::mt19937 generator(seed);
-    boost::random::uniform_real_distribution< >  uniform_distribution(0.0,1.0);
+    boost::uniform_01<double> uniform_distribution;
 
     arma::cube topic_present_edge_counts = arma::zeros(number_of_actors,number_of_actors,number_of_topics);
     arma::cube topic_absent_edge_counts = arma::zeros(number_of_actors,number_of_actors,number_of_topics);
@@ -333,7 +333,6 @@ List Main_Sampler(
                         topic_cluster_distribution[k] = sum_log_probability_of_current_positions;
                         
                     } // end loop over clusters
-                    //report(topic_cluster_distribution);
                     arma::vec cluster_probabilities = arma::zeros(number_of_clusters);
                     for(int x = 0; x < number_of_clusters; ++x){
                         cluster_probabilities[x] = exp(topic_cluster_distribution[x]);
