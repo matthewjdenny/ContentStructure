@@ -24,13 +24,11 @@ Run_Inference <- function(Number_Of_Iterations,
                           Number_of_Binary_Mixing_Parameters = 1,
                           Mixing_Variable = "Gender"){
     
-    #================ set working driectory and source all functions ====================#
-#     require(Rcpp)
-#     require(RcppArmadillo)
+    #== set working driectory and source all functions ===#
     set.seed(seed)
     
     
-    #================= Initialize all variables, latent spaces edge assingments and topic assignments ==============#
+    #== Initialize all variables, latent spaces edge assingments and topic assignments ==#
     
     
     #if we are slice smpling alhpa then set the control variable to one, otherwise leave it at zero
@@ -39,38 +37,33 @@ Run_Inference <- function(Number_Of_Iterations,
         SS_Alpha <- 1
     }
     
-    Latent_Space_Intercepts <- rep(0, Number_of_Clusters) #this is set to 10 becasue it can only get smaller
-    
+    Latent_Space_Intercepts <- rep(0, Number_of_Clusters) 
     temp <- Proposal_Variance #create vector of proposal variances
     Proposal_Variance <- rep(temp, Number_of_Clusters)
-    
-    Number_Of_Documents <- length(Document_Word_Matrix[,1]) # the number of documents is equal to the number of rows 
-    
-    Metropolis_Hastings_Control_Parameter <- 0 #this is used to shrink the proposal variace of the metropolis hastings portion of the algorithm 
-    
+    # The number of documents is equal to the number of rows 
+    Number_Of_Documents <- length(Document_Word_Matrix[,1]) 
+    # This is used to shrink the proposal variace of the metropolis hastings portion of the algorithm 
+    Metropolis_Hastings_Control_Parameter <- 0 
     Number_Of_Authors <- length(Author_Attributes[,1]) 
-    
-    Number_Of_Words <- length(Vocabulary[,1]) #the number of unique words in the corpus
-    
+    # The number of unique words in the corpus
+    Number_Of_Words <- length(Vocabulary[,1]) 
+    # LDA hyper-parameter
     Beta <- Base_Beta*Number_Of_Words 
     
-    #we define alpha to be a vector so that it can accomodate an asymmetric base measure in the future
+    # We define alpha to be a vector so that it can accomodate an asymmetric base measure in the future
     Alpha_Base_Measure_Vector <- rep(Base_Alpha/Number_Of_Topics,Number_Of_Topics)
-    
-    Document_Authors <- Document_Edge_Matrix[,1] #make a vector of document authors
-    
-    Document_Edge_Matrix <- Document_Edge_Matrix[,-1] # remove the authors from the docuemnt edge matrix
+    # Make a vector of document authors
+    Document_Authors <- Document_Edge_Matrix[,1] 
+    # Remove the authors from the docuemnt edge matrix
+    Document_Edge_Matrix <- Document_Edge_Matrix[,-1] 
     cat("Initializing Topic Assignments... \n")
 
     Token_Topic_Assignments <- vector(length = Number_Of_Documents, mode = "list")
     for(d in 1:Number_Of_Documents){
         cur_token_assignments <- sample(1:Number_Of_Topics,sum(Document_Word_Matrix[d,]),replace= T) #samples from a discrete uniform distribution
-        #Token_Topic_Assignments <- append(Token_Topic_Assignments,list(cur_token_assignments))
         Token_Topic_Assignments[[d]] <- cur_token_assignments
     }
-    
-    #print(str(Token_Topic_Assignments))
-    
+
     cat("Initiailizing Latent Space Positions... \n")
     Latent_Space_Positions <- array(rnorm( n = Latent_Dimensions*Number_of_Clusters*Number_Of_Authors, mean = 0,sd = 1),c(Latent_Dimensions,Number_of_Clusters,Number_Of_Authors))
     
@@ -92,7 +85,6 @@ Run_Inference <- function(Number_Of_Iterations,
                 word_types <- c(word_types,rep(word_indexes[i],word_counts[i]))
             }
         }
-        #Token_Word_Types <- append(Token_Word_Types,list(word_types))
         Token_Word_Types[[d]] <- word_types
         #now get the token topic assignemnts for this document
         current_doc_assignments <- Token_Topic_Assignments[[d]]
@@ -102,12 +94,12 @@ Run_Inference <- function(Number_Of_Iterations,
         }
     }
     cat("Initializing Mixing Parameters... \n")
-    #initialize betas
-    MP <- Initialize_Mixing_Parameters(num_mixing_parameters = Number_of_Binary_Mixing_Parameters,
-                                       num_clusters = Number_of_Clusters,
-                                       num_authors = Number_Of_Authors,
-                                       author_attributes = Author_Attributes,
-                                       mixing_attribute = Mixing_Variable)
+    MP <- Initialize_Mixing_Parameters(
+            num_mixing_parameters = Number_of_Binary_Mixing_Parameters,
+            num_clusters = Number_of_Clusters,
+            num_authors = Number_Of_Authors,
+            author_attributes = Author_Attributes,
+            mixing_attribute = Mixing_Variable)
   
     Number_of_Betas <- MP[[1]]
     Beta_Indicator_Array <- MP[[2]]

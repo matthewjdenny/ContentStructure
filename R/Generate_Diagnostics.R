@@ -17,13 +17,6 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
                                        binary_mixing_attribute_name , 
                                        used_county_email_data ){
 
-#         library(coda)
-#         library(depth)
-#         library(gplots)
-#         library(ggplot2)
-#         library(vegan)
-#         require(grid)
-        
         UMASS_BLUE <- rgb(51,51,153,255,maxColorValue = 255)
         UMASS_RED <- rgb(153,0,51,255,maxColorValue = 255)
         UMASS_GREEN <- rgb(0,102,102,255,maxColorValue = 255)
@@ -32,7 +25,6 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         print("Loading Data...")
         print(paste(input_folder_path,input_file,".Rdata", sep = ""))
         load(paste(input_folder_path,input_file,".Rdata", sep = ""))
-        #print(vocab)
         print("Extracting Reduced Data")
         first_return <- 13
         Topic_Model_Results <- Return_List[1:5]
@@ -40,7 +32,6 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         Cluster_Topic_Assignments <- Return_List[[14]]
         Last_Cluster_Topic_Assignments <- Cluster_Topic_Assignments[Model_Parameters[[2]],]
         Metropolis_Results <- Return_List[15:20]
-        
         
         Latent_Spaces <- length(Metropolis_Results[[3]][,1,1])/length(Metropolis_Results[[1]][,1])
         skip_first= skip_first+1
@@ -56,7 +47,6 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         
         
         Itterations <- Model_Parameters[[4]] - skip_first +1
-
         # generate vector to thin latent space positions by
         base <- seq(1, 2*Itterations,2*Thin_Itterations)
         base2 <- seq(2, 2*Itterations,2*Thin_Itterations)
@@ -69,8 +59,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
             ordered[counter] <- base2[k]
             counter <- counter +1
         }
-                
-                
+     
         #thin out the data by taking every Thin_Itterations itteration for the metropolis step
         Metropolis_Results[[1]] <- Metropolis_Results[[1]][seq(1, Itterations,Thin_Itterations),]
         Metropolis_Results[[2]] <- Metropolis_Results[[2]][,,seq(1, Itterations,Thin_Itterations)]
@@ -78,17 +67,12 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         Metropolis_Results[[4]] <- Metropolis_Results[[4]][seq(1, Itterations,Thin_Itterations),]
         Metropolis_Results[[5]] <- Metropolis_Results[[5]][seq(1, Itterations,Thin_Itterations),]
         Metropolis_Results[[6]] <- Metropolis_Results[[6]][seq(1, Itterations,Thin_Itterations),]
-        
-        
+
         Itterations <- Itterations/Thin_Itterations
         #get model information and extract data
         selected_depth <- Itterations - floor(proportion_in_confidence_contour*Itterations)
 
-
-        
         Clusters <- Model_Parameters[[5]]
-        
-        #Clusters <- 2
         Topics <- length(Last_Cluster_Topic_Assignments)
         Actors <- length(Metropolis_Results[[3]][1,1,])
         Token_Topic_Assignments <- Topic_Model_Results[[1]]
@@ -101,14 +85,13 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         
         Clusters_to_Pretty_Print <- unique(Cluster_Topic_Assigns)
         cat("Clusters to Print:", Clusters_to_Pretty_Print, "\n")
-        #get the total number of tokens assigned to each topic
+        # Get the total number of tokens assigned to each topic
         Topic_Token_Totals <- apply(Word_Type_Topic_Counts,2,sum)
-        #get the total number of present edges assigned to each topic
+        # Get the total number of present edges assigned to each topic
         Email_Assignments <- apply(Topic_Present_Edge_Counts,3,sum)
-        #number of words
         num_words <- length(vocab[,1])
         
-        #this list will be used to store lists of three vectors: word indicies in descending order of likelihood, word probability in topic, actual word. 
+        # This list will be used to store lists of three vectors: word indicies in descending order of likelihood, word probability in topic, actual word. 
         Topic_Top_Words <- list()
         Top_Ten_Words <- rep("",Topics)
         Top_Four_Words <- rep("",Topics)
@@ -147,9 +130,9 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         }
         data <- list(Top_Four_Words,Cluster_Topic_Assigns)
         
-    if(print_agregate_level_stats){
-        save(data,file=paste(out_directory ,output_name,"Topic_Top_Words.Rdata", sep = ""))
-    }
+        if(print_agregate_level_stats){
+            save(data,file=paste(out_directory ,output_name,"Topic_Top_Words.Rdata", sep = ""))
+        }
         
         #print out the top words for each topic in each cluster
         for(i in 1:Clusters){
@@ -157,10 +140,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
             inds <- which(data[[2]] == i)
             print(data[[1]][inds])
         }
-        
-        
-        
-        
+
         #this list will be used to store lists of three vectors: word indicies in descending order of likelihood, word probability in topic, actual word. 
         Cluster_Top_Words <- list()
         Cluster_Ten_Words <- rep("",Clusters)
@@ -243,7 +223,6 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
                 for(i in cluster_indexes){
                     slice <- slice + Topic_Present_Edge_Counts[,,i]
                 }
-                
             }
             cluster_proportions[j] <- sum(slice)/sum(Topic_Present_Edge_Counts)
         }
@@ -258,12 +237,9 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
             for(j in 1:Clusters){
                 lines(c(j,j) , c(0,cluster_proportions[j]), col = UMASS_BLUE, lwd = 1.5)
             }
-            
-            
             dev.off()
         }
-        
-        
+
         #======= plotting function definitions =======#
         #function to plot intercept over time
         plot_intercepts <- function(intercept){
@@ -324,7 +300,6 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
             points(coordinates,col = colors, pch = 19, cex = 2)
             
         }
-        
         
         plot_Cluster_absent_edge_Network <- function(Cluster){
             #get all topics assigned to cluster
@@ -393,7 +368,6 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
                 accepted <- accept
                 
             }
-            #fit <- lm(accepted~1:10000)
             print(paste("Average Accepted Prob:",mean(accepted)))
             len <- length(accepted)
             print(paste("Average Accepted Prob last 10 percent:",mean(accepted[(len - len/10):len])))
@@ -402,25 +376,8 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
             plot(loess.smooth(x = 1:length(accepted), y = accepted, family = "gaussian"), main = "Log Likelihood Ratio of Accepted Proposals",ylab= "Value",xlab = "Iterations",pch = 20)
             plot(likelihoods, main = "Red represents rejected proposals, blue represents accepted proposals",ylab= "Value",pch = 20, col = colors)
         }
-        
-#         #function to plot mean beta values over time
-#         plot_beta_estimates <- function(Cluster){
-#             betas <- matrix(0,ncol = 4, nrow = Itterations)
-#             for(i in 1:Itterations){
-#                 betas[i,] <- Metropolis_Results[[2]][Cluster,,i]
-#             }
-#             mean_se <- as.data.frame(matrix(0,nrow=4, ncol = 2))
-#             mean_se <- cbind(c("M-M", "M-F","F-M", "F-F"),mean_se)
-#             names(mean_se) <- c("Tie","Parameter_Estimate","SE")
-#             for(j in 1:length(mean_se[,1])){
-#                 mean_se[j,2] <- mean(betas[,j])
-#                 mean_se[j,3] <- sd(betas[,j]) 
-#             }
-#             plot <- ggplot(mean_se, aes(x=Tie, y=Parameter_Estimate))+geom_errorbar(aes(ymin=Parameter_Estimate-SE, ymax=Parameter_Estimate+SE),col = c("black","red", "green", "blue"), width=.1, size = 1.3)+geom_point(fill= c("black","red", "green", "blue"),colour="black",pch=c(21,22,23,24), size = 4)+ labs(title = paste("Cluster:",Cluster))
-#             return(list(plot))
-#         }
 
-############## PRetty Plotting Functions for Infographics
+############## Pretty Plotting Functions for Infographics
         Pretty_Present_Edge_Network_Plots <- function(Cluster, return_coords = F){
             print(paste("generating pretty network plots for cluster:", Cluster))
             #get all topics assigned to cluster
@@ -487,9 +444,6 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
               colors3 <- rep(rgb(102,102,204,20,maxColorValue = 255), Actors)
               shapes <- rep(15, Actors)
             }
-            
-            
-            
 
             #generate edge colors
             linecolor <- colorRampPalette(c("grey90", "black"))
@@ -518,7 +472,6 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
                                 already <- T
                             }
                         }
-                        
                     }
                 }
             }
@@ -527,13 +480,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
 
             plot(mean_coordinates,main = paste("Cluster:",Cluster,"Fraction of Edges:",round(sum(slice)/sum(Topic_Present_Edge_Counts),3), "--- Number of Emails Represented:",number_of_emails," of ",length(Token_Topic_Assignments), "\n", "Darker edges indicate more communication"),pch = 20, col = "white", axes = F, xlab = "", ylab = "")
             box(which = "plot")
-            
-            #"--- Proportion on Draws in Confidence Regions:", proportion_in_confidence_contour
-            # black background
-            # rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "black")
-            
-            
-            
+
             storage <- matrix(0,nrow = Itterations, ncol = 2*Actors)
             base <- cbind(Metropolis_Results[[3]][2*1-1,Cluster,],Metropolis_Results[[3]][2*1,Cluster,])
             for(i in 1:Itterations){
@@ -548,18 +495,6 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
                 }   
             }
             
-            #make iso plots 
-#             for(j in 1:Actors){ 
-#                 coords <- isodepth(storage[,(2*j-1):(2*j)], dpth = selected_depth ,mustdith = T, output = T)[[1]]
-#                 for(k in 1:length(coords[,1])){
-#                     if(k < length(coords[,1])){
-#                         lines(c(coords[k,1],coords[k+1,1]) , c(coords[k,2],coords[k+1,2]), col = colors3[j], lwd = 2) 
-#                     }else{
-#                         lines(c(coords[k,1],coords[1,1]) , c(coords[k,2],coords[1,2]), col = colors3[j], lwd = 2)
-#                     } 
-#                 } 
-#             }
-            
             #add in lines between actors in order from dimmest to brightest
             total <- length(which(slice >0))
             
@@ -572,10 +507,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
               }
               add_matrix <- matrix(correct_ordering,ncol = Actors,nrow = Actors)
               colormat <- matrix(colors,ncol = Actors,nrow = Actors)
-              # len <- length(low_high)
-              # low_high <- low_high[(len-total +1):len]
-              
-              
+
               counter <- 1
               for(l in 1:length(ordering)){
                 for(i in 1:Actors){
@@ -669,12 +601,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
             lines(likelihoods)
             
         }
-    
 
-        # ================================================ #
-        
-        
-        
         # ======= Generate Plots and save as PDFs =========#      
         make_plots <- function(Width, Height, parrow,parcol){
             #generate pdf of intercepts
@@ -700,14 +627,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
             par(mfrow= c(parrow,parcol))
             sapply(1:Clusters,plot_LS_Positions)
             dev.off()
-            
-            #             #generate network plots
-            #             print("Plotting Networks...")
-            #             pdf(file=paste(out_directory,output_name,"_Network_Plots.pdf",sep = ""), width = Width, height = Height)
-            #             par(mfrow= c(parrow,parcol))
-            #             sapply(1:Clusters,plot_Topic_Network)
-            #             dev.off()
-            
+
             pdf(paste(out_directory,output_name,"_Likelihoods.pdf", sep = ""),height=Height,width=Width,pointsize=7)
             par(mfrow= c(parrow,parcol))
             sapply(1:Clusters,plot_likelihoods) 
@@ -728,8 +648,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         
         #stolen from the R cookbook
         multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-            
-            
+
             # Make a list from the ... arguments and plotlist
             plots <- c(list(...), plotlist)
             
@@ -785,31 +704,20 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         # ======= Now generate top words and topic model diagnostics ====== #
         
         print("Generating Topic Model Output")
-        
-        
-        
-        #Establish Ordering 
-        #ordering <- order(Email_Assignments, decreasing = FALSE)
-        #Email_Assignments <- Email_Assignments[ordering]
-        #Top_Ten_Words <- Top_Ten_Words[ordering]
-        
-        
+
         if(!only_print_summaries){
             pdf(paste(out_directory,output_name,"_Top_Words.pdf", sep = ""),height=12,width=10,pointsize=7)
             par(mfrow= c(1,1))
             bp <- gplots::barplot2(Email_Assignments, beside = TRUE, horiz = TRUE, col = "lightblue1", border= "lightblue1", ylab = "Topic:", xlab = "Number of Edges Assigned to Topic",main = paste("Top Words by Number of Words Assigned to Topic for ",output_name,sep = "")) 
             text(0,bp,Top_Ten_Words,cex=1,pos=4)# label on the bars themselves 
             dev.off()
-            
-            
-            
+
             pdf(paste(out_directory,output_name,"_Log_Ratio_LUD.pdf", sep = ""),height=8,width=12,pointsize=7)
             par(mfrow= c(5,2))
             sapply(1:Clusters,plot_ratio_lud) 
             dev.off() 
         }
-        
-        
+
         print("Outputing Geweke statistics..")
         
         intercept_list <- list()
@@ -836,9 +744,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
               } 
               beta_list <- append(beta_list,bets)
             }
-            
-            
-            
+
             #generate vegan::procrustes transformed positions
             storage <- matrix(0,nrow = Itterations, ncol = 2*Actors)
             base <- cbind(Metropolis_Results[[3]][2*1-1,Cluster,],Metropolis_Results[[3]][2*1,Cluster,])
@@ -852,9 +758,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
                     storage[i,2*j] <- rotated[j,2]
                 }   
             }
-            
-            
-            
+
             #Latent Space Positions
             lat <- matrix(0,nrow=Actors, ncol= Latent_Spaces)
             for(a in 1:Actors){
@@ -920,10 +824,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
                 Pretty_Topic_Top_Words(clust)
                 dev.off()
               }
-                
-                
-                
-                
+
                 pdf(paste(out_directory,output_name,"_Network",clust,".pdf", sep = ""),height=6,width=6,pointsize=7)
                 
                 
@@ -938,19 +839,13 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
                 Pretty_Beta_Estimates(clust)
                 dev.off()
               }
-                
-                
-                
+
                 pdf(paste(out_directory,output_name,"_clust_topics",clust,".pdf", sep = ""),height=5,width=4,pointsize=7)
                 par(mfrow= c(1,1))
                 Pretty_Topic_Top_Words(clust)
                 dev.off()
             }
-            
-
         }
-        
-
 
         par(mfrow= c(1,1))
 
@@ -973,8 +868,6 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
 
         dev.off()
 
-        #return(Generate_Datasets(used_binary_mixing_attribute,binary_mixing_attribute_name))
-# 
       if(used_binary_mixing_attribute){
         attr_index <- which(colnames(Author_Attributes) == binary_mixing_attribute_name)
         attr <- Author_Attributes[,attr_index]
@@ -1003,9 +896,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
           beta_averages[i,] <- result[,1]
           beta_se[i,] <- result[,2] 
         }
-        
-        
-        
+
         Clusters_intercepts <- matrix(0,ncol = 2,nrow= Clusters)
         for(c in 1:Clusters){
           intercepts <- Metropolis_Results[[1]][,c]
@@ -1021,25 +912,19 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         
         Cluster_Data <- cbind(county,Clusters_intercepts,beta_averages,beta_se,Cluster_Top_Twenty_Words)
          cols1 <- c("Organization","Intercept","Intercept_SE",paste(unique_attrs[1],"-",unique_attrs[1],sep = ""), paste(unique_attrs[1],"-",unique_attrs[2],sep = ""),paste(unique_attrs[2],"-",unique_attrs[1],sep = ""), paste(unique_attrs[2],"-",unique_attrs[2],sep = ""),paste(unique_attrs[1],"-",unique_attrs[1],"_SE",sep = ""), paste(unique_attrs[1],"-",unique_attrs[2],"_SE",sep = ""),paste(unique_attrs[2],"-",unique_attrs[1],"_SE",sep = ""), paste(unique_attrs[2],"-",unique_attrs[2],"_SE",sep = ""),"Top1","Top2","Top3","Top4","Top5","Top6","Top7","Top8","Top9","Top10","Top11","Top12","Top13","Top14","Top15","Top16","Top17","Top18","Top19","Top20")
-        #print(colnames(Cluster_Data))
-        #print(cols1)
+
         colnames(Cluster_Data) = cols1
         Actor_Dataset <- cbind(county2,Actor_Dataset)
         cad <- c("Organization",colnames(Author_Attributes))
         for(i in Clusters_to_Pretty_Print){
           cad <- c(cad, paste("C",i,"_D1",sep = ""),paste("C",i,"_D2",sep = ""))
         }
-        #print(colnames(Actor_Dataset))
-        #print(cad)
         colnames(Actor_Dataset) <- cad
         
         Token_Data <- cbind(county3,Cluster_Topic_Assigns,Email_Assignments,Topic_Top_Ten_Words, t(Word_Type_Topic_Counts))
-        #colnames(Token_Data) <- 
         t1 <- c("Organization","Cluster","Edges","Top1","Top2","Top3","Top4","Top5","Top6","Top7","Top8","Top9","Top10")
         temp2 <- c(t1,unlist(vocab))
         temp2 <- unlist(temp2)
-        #print(colnames(Token_Data))
-        #print(temp2)
         colnames(Token_Data) <- temp2
         
         return_list <- list(Cluster_Data = Cluster_Data , Actor_Data = Actor_Dataset, Token_Data = Token_Data, Vocabulary = vocab)
@@ -1064,8 +949,7 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         
         Cluster_Data <- cbind(county,Clusters_intercepts,Cluster_Top_Twenty_Words)
         colnames(Cluster_Data) = c("County","Intercept","Intercept_SE","Top1","Top2","Top3","Top4","Top5","Top6","Top7","Top8","Top9","Top10","Top11","Top12","Top13","Top14","Top15","Top16","Top17","Top18","Top19","Top20")
-        
-        
+
         Actor_Dataset <- cbind(county2,Actor_Dataset)
         cad <- c("Organization",colnames(Author_Attributes))
         for(i in Clusters_to_Pretty_Print){
