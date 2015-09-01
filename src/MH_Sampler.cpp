@@ -6,6 +6,7 @@
 #include <boost/random/uniform_01.hpp>
 #include <math.h>
 #include <cmath>
+#include "Normal_Distribution_No_Assert.cpp"
 
 using std::pow;
 using std::exp;
@@ -152,20 +153,20 @@ List MH_Sampler(
         for(int k = 0; k < number_of_clusters; ++k){
 
             //for intercepts   
-            boost::normal_distribution<double> distribution1(current_intercepts[k],proposal_variance[k]);
+            mjd::normal_distribution<double> distribution1(current_intercepts[k],proposal_variance[k]);
             proposed_intercepts[k] = distribution1(generator);
 
             //for latent positions
             for(int a = 0; a < number_of_actors; ++a){
                 for(int l = 0; l < number_of_latent_dimensions; ++l){
-                    boost::normal_distribution<double> distribution2(current_latent_positions(l,k,a),proposal_variance[k]);
+                    mjd::normal_distribution<double> distribution2(current_latent_positions(l,k,a),proposal_variance[k]);
                     proposed_latent_positions(l,k,a) = distribution2(generator);
                 }
             }
             //for mixing parameters
             proposed_betas(k,0) = 0;
             for(int b = 1; b < number_of_betas; ++b){
-                boost::normal_distribution<double> distribution3(betas(k,b),proposal_variance[k]);
+                mjd::normal_distribution<double> distribution3(betas(k,b),proposal_variance[k]);
                 proposed_betas(k,b) = distribution3(generator);
             }
         }//end of loop over generating new potenttial LS positions
