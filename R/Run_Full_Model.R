@@ -8,7 +8,8 @@
 #' @param sample_step_iterations The total number of iterations to run MH for the LSM for (before thinning).
 #' @param sample_step_sample_every How many iterations to skip when thinning the MH for the LSM chain in our MH for the LSM sample step.
 #' @param topics The number of topics to use
-#' @param clusters The number of topic clusters to use
+#' @param clusters The number of topic clusters to use.
+#' @param latent_space_dimensions THe number of dimensions to be included in the latent space model. Note that plotting is only currently supported for two dimensions.
 #' @param data_directory The directory where our data_name file is stored. This is also where all output will be saved
 #' @param run_MH_only If TRUE, then we only rerun MH for the LSM to convergence
 #' @param mixing_variable if not NULL, specifies the name of the binary variable in the author_attributes dataset that will be used to estimate mixing parameter effects.
@@ -26,6 +27,7 @@ Run_Full_Model <- function(data_name,
                            sample_step_sample_every = 2000,
                            topics = 10,
                            clusters = 2,
+                           latent_space_dimensions = 2,
                            data_directory,
                            run_MH_only = F,
                            mixing_variable = NULL,
@@ -86,7 +88,8 @@ Run_Full_Model <- function(data_name,
                                  Document_Word_Matrix = Doc_Word_Matrix, 
                                  Vocabulary = Vocab,
                                  output_folder_path = data_directory,
-                                 output_file = data_name)
+                                 output_file = data_name,
+                                 Latent_Dimensions = latent_space_dimensions)
     }
       
     Run_MH_To_Convergence(input_file = paste("Model_Output_",data_name,sep = ""),

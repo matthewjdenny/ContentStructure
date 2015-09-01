@@ -7,8 +7,9 @@
 Run_Full_Model(data_name, main_iterations = 4000,
   sample_step_burnin = 2e+06, sample_step_iterations = 8e+06,
   sample_step_sample_every = 2000, topics = 10, clusters = 2,
-  data_directory, run_MH_only = F, mixing_variable = NULL,
-  Auth_Attr = author_attributes, Doc_Edge_Matrix = document_edge_matrix,
+  latent_space_dimensions = 2, data_directory, run_MH_only = F,
+  mixing_variable = NULL, Auth_Attr = author_attributes,
+  Doc_Edge_Matrix = document_edge_matrix,
   Doc_Word_Matrix = document_word_matrix, Vocab = vocabulary,
   Seed = 123456)
 }
@@ -25,7 +26,9 @@ Run_Full_Model(data_name, main_iterations = 4000,
 
 \item{topics}{The number of topics to use}
 
-\item{clusters}{The number of topic clusters to use}
+\item{clusters}{The number of topic clusters to use.}
+
+\item{latent_space_dimensions}{THe number of dimensions to be included in the latent space model. Note that plotting is only currently supported for two dimensions.}
 
 \item{data_directory}{The directory where our data_name file is stored. This is also where all output will be saved}
 
