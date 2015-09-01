@@ -194,13 +194,10 @@ List MH_Sampler(
             }
 
             for(int a = 0; a < number_of_actors; ++a){
-                
-                current_author_position[0] = current_latent_positions(0,k,a);
-                current_author_position[1] = current_latent_positions(1,k,a);
-                proposed_author_position[0] = proposed_latent_positions(0,k,a);
-                proposed_author_position[1] = proposed_latent_positions(1,k,a);
-                
+              
                 for(int c = 0; c < number_of_latent_dimensions; ++c){
+                    current_author_position[c] = current_latent_positions(c,k,a);
+                    proposed_author_position[c] = proposed_latent_positions(c,k,a);
                     lsm_prior_current_positions += log(( 1 / ( standard_deviation * sqrt(2*M_PI) ) ) * exp( -0.5 * pow( (current_author_position[c]-dist_center)/standard_deviation, 2.0 ) ));
                     lsm_prior_proposed_positions += log(( 1 / ( standard_deviation * sqrt(2*M_PI) ) ) * exp( -0.5 * pow( (proposed_author_position[c]-dist_center)/standard_deviation, 2.0 ) ));
                 }
@@ -218,9 +215,11 @@ List MH_Sampler(
                                 num_non_edge += topic_absent_edge_counts(a,b,t); 
                             }
                         }
-
-                        recipient_position[0] = current_latent_positions(0,k,b);
-                        recipient_position[1] = current_latent_positions(1,k,b);
+                        
+                        for(int c = 0; c < number_of_latent_dimensions; ++c){
+                          recipient_position[c] = current_latent_positions(c,k,b);
+                        }
+                        
                         
                         //initialize distance
                         double distance = 0;
@@ -258,9 +257,10 @@ List MH_Sampler(
                         
                         
                         // ======== Now calculate for new positions ==========//
-                            //get current recipient position
-                        recipient_position[0] = proposed_latent_positions(0,k,b);
-                        recipient_position[1] = proposed_latent_positions(1,k,b);
+                        //get current recipient position
+                        for(int c = 0; c < number_of_latent_dimensions; ++c){
+                          recipient_position[c] = proposed_latent_positions(c,k,b);
+                        }    
                         
                         //initialize distance
                         distance = 0;
