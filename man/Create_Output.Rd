@@ -4,19 +4,19 @@
 \alias{Create_Output}
 \title{A Function to generate diagnostic plots and interpretable output for a list of 1 to N model output objects from running the ContentStructure model.}
 \usage{
-Create_Output(data_name, only_generate_summaries = T, data_directory,
-  print_agg_stats = T, using_county_email_data = F,
+Create_Output(data_name = NULL, only_generate_summaries = T,
+  data_directory = NULL, print_agg_stats = T, using_county_email_data = F,
   Topic_Model_Burnin = 50, Skip = 0, Thin = 1, Used_MP = F,
   MP_Name = "Gender", data_list = NULL, Auth_Attr = NULL,
   Vocabulary = NULL, load_results_from_file = F,
   Estimation_Results = NULL, save_results = F)
 }
 \arguments{
-\item{data_name}{The name of organization data file as in the function to run the model.}
+\item{data_name}{The name of organization data file as in the function to run the model. Defaults to NULL if we are not saving any output to disk or reading in any intermediate data from disk.}
 
 \item{only_generate_summaries}{If TRUE, then only generate a one-page-per-cluster pdf summary of model output for each county, otherwise generate a ton of output.}
 
-\item{data_directory}{The directory where all .Rdata files are stored -- also where all output will be stored.}
+\item{data_directory}{The directory where all .Rdata files are stored -- also where all output will be stored. Defaults to NULL if we are not saving any output to disk or reading in any intermediate data from disk.}
 
 \item{print_agg_stats}{If TRUE, generates a plot comapring topics frequency across all clusters and a trace plot of th topic model log likelihood -- very useful.}
 
@@ -37,6 +37,12 @@ Create_Output(data_name, only_generate_summaries = T, data_directory,
 \item{Auth_Attr}{The author attributes dataframe.}
 
 \item{Vocabulary}{The vocabulary dataframe.}
+
+\item{load_results_from_file}{A logical which defaults to FALSE. If TRUE, then the function will load data named by data_name output from Run_Full_Model (note that save_results_to_file must be set to TRUE in this function) in the data_directory and use this to generate output.}
+
+\item{Estimation_Results}{A list object returned by Run_Full_Model that will be used to generate output. Can be NULL if load_results_from_file == TRUE in which case intermediate results saved to disk will be used instead.}
+
+\item{save_results}{Defaults to FALSE, if TRUE, then data_name and data_directory must be supplied and .pdfs will be created for all plots.}
 }
 \value{
 A list object with 4 entries and the following structure: Cluster_Data contains cluster level data including top words and mixing parameters (with standard errors) if applicable. Actor_Data contains actors level data (all of the Auth_Attr dataframe) plus average latent positions for each actor in each dimension (2 currently), for each cluster. Token_Data contains the counts of each token for each topic, along with the edge counts for that topic and the cluster assignment for it. Vocabulary simply holds the vocabulary as a vector for easy handling.
