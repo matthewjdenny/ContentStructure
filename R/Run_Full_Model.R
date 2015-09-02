@@ -31,10 +31,10 @@ Run_Full_Model <- function(data_name,
                            data_directory,
                            run_MH_only = F,
                            mixing_variable = NULL,
-                           Auth_Attr = author_attributes, 
-                           Doc_Edge_Matrix = document_edge_matrix ,
-                           Doc_Word_Matrix = document_word_matrix, 
-                           Vocab = vocabulary,
+                           Auth_Attr, 
+                           Doc_Edge_Matrix,
+                           Doc_Word_Matrix, 
+                           Vocab,
                            Seed = 123456){
   
     

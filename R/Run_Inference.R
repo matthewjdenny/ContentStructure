@@ -4,33 +4,31 @@ Run_Inference <- function(Number_Of_Iterations,
                           Base_Alpha, 
                           Base_Beta, 
                           Number_Of_Topics, 
-                          Author_Attributes= author_attributes, 
-                          Document_Edge_Matrix = document_edge_matrix ,
-                          Document_Word_Matrix = document_word_matrix, 
-                          Vocabulary = vocabulary,
+                          Author_Attributes, 
+                          Document_Edge_Matrix,
+                          Document_Word_Matrix, 
+                          Vocabulary,
                           Latent_Dimensions, 
                           Topic_Step_Itterations, 
-                          Sample_Step_Itterations = 10, 
+                          Sample_Step_Itterations, 
                           output_file,
-                          Proposal_Variance = 0.5, 
+                          Proposal_Variance, 
                           seed, 
-                          output_folder_path = "~/Dropbox/PINLab/", 
+                          output_folder_path, 
                           Number_of_Clusters,
-                          Itterations_Before_Cluster_Assingment_Updates = 5, 
-                          Adaptive_Metropolis_Target_Accept_Rate = 0.3, 
-                          slice_sample_alpha_step_size = 1, 
-                          Slice_Sample_Alpha = F, 
-                          MH_prior_standard_deviation = 2, 
-                          Number_of_Binary_Mixing_Parameters = 1,
-                          Mixing_Variable = "Gender"){
+                          Itterations_Before_Cluster_Assingment_Updates, 
+                          Adaptive_Metropolis_Target_Accept_Rate, 
+                          slice_sample_alpha_step_size, 
+                          Slice_Sample_Alpha, 
+                          MH_prior_standard_deviation, 
+                          Number_of_Binary_Mixing_Parameters,
+                          Mixing_Variable){
     
     #== set working driectory and source all functions ===#
     set.seed(seed)
-    
-    
+
     #== Initialize all variables, latent spaces edge assingments and topic assignments ==#
-    
-    
+
     #if we are slice smpling alhpa then set the control variable to one, otherwise leave it at zero
     SS_Alpha <- 0
     if(Slice_Sample_Alpha){
