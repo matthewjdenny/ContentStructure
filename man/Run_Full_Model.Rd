@@ -4,17 +4,21 @@
 \alias{Run_Full_Model}
 \title{A Function to run the ContentStructure model to convergence for one dataset.}
 \usage{
-Run_Full_Model(data_name, main_iterations = 4000,
-  sample_step_burnin = 2e+06, sample_step_iterations = 8e+06,
-  sample_step_sample_every = 2000, topics = 10, clusters = 2,
-  latent_space_dimensions = 2, data_directory, run_MH_only = F,
-  mixing_variable = NULL, Auth_Attr = author_attributes,
-  Doc_Edge_Matrix = document_edge_matrix,
-  Doc_Word_Matrix = document_word_matrix, Vocab = vocabulary,
-  Seed = 123456)
+Run_Full_Model(Auth_Attr, Doc_Edge_Matrix, Doc_Word_Matrix, Vocab,
+  main_iterations = 4000, sample_step_burnin = 2e+06,
+  sample_step_iterations = 8e+06, sample_step_sample_every = 2000,
+  topics = 10, clusters = 2, latent_space_dimensions = 2,
+  run_MH_only = F, mixing_variable = NULL, Seed = 123456,
+  save_results_to_file = FALSE, data_directory = NULL, data_name = NULL)
 }
 \arguments{
-\item{data_name}{The exact name of the .Rdata file containing the relevant files necessary to run the model.}
+\item{Auth_Attr}{A dataframe with one row for each unique sender/reciever and containing atleast one column with the ID of each sender/reciever and any number of additional varaibles which will be ignored unless specified as a binary attribute for which the user would like to calculate mixing parameter estimates by specifying the mixing_variable.}
+
+\item{Doc_Edge_Matrix}{A matrix with one row for each email and one column which records the index of the sender of the email (indexed from 1) followed by one column for each unique sender/receiver in the dataset.}
+
+\item{Doc_Word_Matrix}{A matrix with one row for each email and one column for each unique word in the vocabulary that records the number of times each word was used in each document.}
+
+\item{Vocab}{A vector containing every unique term in the vocabulary an corresponding in length to the number of columns in the Doc_Word_Matrix.}
 
 \item{main_iterations}{The number of iterations of Gibbs sampling for the LDA part of the model. We have found 4,000 seems to work well.}
 
@@ -30,21 +34,17 @@ Run_Full_Model(data_name, main_iterations = 4000,
 
 \item{latent_space_dimensions}{THe number of dimensions to be included in the latent space model. Note that plotting is only currently supported for two dimensions.}
 
-\item{data_directory}{The directory where our data_name file is stored. This is also where all output will be saved}
-
 \item{run_MH_only}{If TRUE, then we only rerun MH for the LSM to convergence}
 
 \item{mixing_variable}{if not NULL, specifies the name of the binary variable in the author_attributes dataset that will be used to estimate mixing parameter effects.}
 
-\item{Auth_Attr}{A dataframe with one row for each unique sender/reciever and containing atleast one column with the ID of each sender/reciever and any number of additional varaibles which will be ignored unless specified as a binary attribute for which the user would like to calculate mixing parameter estimates by specifying the mixing_variable.}
+\item{Seed}{Sets the seed in R and C++ for replicability.}
 
-\item{Doc_Edge_Matrix}{A matrix with one row for each email and one column which records the index of the sender of the email (indexed from 1) followed by one column for each unique sender/receiver in the dataset.}
+\item{save_results_to_file}{A logical value indicating whether intermediate results should be saved to file or whether they will be return to the R session.}
 
-\item{Doc_Word_Matrix}{A matrix with one row for each email and one column for each unique word in the vocabulary that records the number of times each word was used in each document.}
+\item{data_directory}{The directory where our data_name file is stored. This is also where all output will be saved. Defaults to NULL if save_results_to_file == FALSE.}
 
-\item{Vocab}{A vector containing every unique term in the vocabulary an corresponding in length to the number of columns in the Doc_Word_Matrix.}
-
-\item{Seed}{Sets the seed in R and C++ for replicability}
+\item{data_name}{The name of the .Rdata file you would like to save model output in. Defaults to NULL if save_results_to_file == FALSE.}
 }
 \value{
 Does not return anything, just saves everything to our data_directory folder.

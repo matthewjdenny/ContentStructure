@@ -2,7 +2,10 @@
 #' 
 #' @useDynLib ContentStructure
 #' @importFrom Rcpp evalCpp
-#' @param data_name The exact name of the .Rdata file containing the relevant files necessary to run the model.
+#' @param Auth_Attr A dataframe with one row for each unique sender/reciever and containing atleast one column with the ID of each sender/reciever and any number of additional varaibles which will be ignored unless specified as a binary attribute for which the user would like to calculate mixing parameter estimates by specifying the mixing_variable.
+#' @param Doc_Edge_Matrix A matrix with one row for each email and one column which records the index of the sender of the email (indexed from 1) followed by one column for each unique sender/receiver in the dataset.
+#' @param Doc_Word_Matrix A matrix with one row for each email and one column for each unique word in the vocabulary that records the number of times each word was used in each document. 
+#' @param Vocab A vector containing every unique term in the vocabulary an corresponding in length to the number of columns in the Doc_Word_Matrix.
 #' @param main_iterations The number of iterations of Gibbs sampling for the LDA part of the model. We have found 4,000 seems to work well.
 #' @param sample_step_burnin The number of iterations of burnin that should be completed before sampling the latent space parameters when running MH for the LSM to convergence.
 #' @param sample_step_iterations The total number of iterations to run MH for the LSM for (before thinning).
@@ -10,17 +13,18 @@
 #' @param topics The number of topics to use
 #' @param clusters The number of topic clusters to use.
 #' @param latent_space_dimensions THe number of dimensions to be included in the latent space model. Note that plotting is only currently supported for two dimensions.
-#' @param data_directory The directory where our data_name file is stored. This is also where all output will be saved
 #' @param run_MH_only If TRUE, then we only rerun MH for the LSM to convergence
 #' @param mixing_variable if not NULL, specifies the name of the binary variable in the author_attributes dataset that will be used to estimate mixing parameter effects.
-#' @param Auth_Attr A dataframe with one row for each unique sender/reciever and containing atleast one column with the ID of each sender/reciever and any number of additional varaibles which will be ignored unless specified as a binary attribute for which the user would like to calculate mixing parameter estimates by specifying the mixing_variable.
-#' @param Doc_Edge_Matrix A matrix with one row for each email and one column which records the index of the sender of the email (indexed from 1) followed by one column for each unique sender/receiver in the dataset.
-#' @param Doc_Word_Matrix A matrix with one row for each email and one column for each unique word in the vocabulary that records the number of times each word was used in each document. 
-#' @param Vocab A vector containing every unique term in the vocabulary an corresponding in length to the number of columns in the Doc_Word_Matrix.
-#' @param Seed Sets the seed in R and C++ for replicability
+#' @param Seed Sets the seed in R and C++ for replicability.
+#' @param save_results_to_file A logical value indicating whether intermediate results should be saved to file or whether they will be return to the R session.
+#' @param data_directory The directory where our data_name file is stored. This is also where all output will be saved. Defaults to NULL if save_results_to_file == FALSE.
+#' @param data_name The name of the .Rdata file you would like to save model output in. Defaults to NULL if save_results_to_file == FALSE.
 #' @return Does not return anything, just saves everything to our data_directory folder.
 #' @export
-Run_Full_Model <- function(data_name,  
+Run_Full_Model <- function(Auth_Attr, 
+                           Doc_Edge_Matrix,
+                           Doc_Word_Matrix, 
+                           Vocab,
                            main_iterations = 4000, 
                            sample_step_burnin = 2000000, 
                            sample_step_iterations = 8000000,
@@ -28,16 +32,14 @@ Run_Full_Model <- function(data_name,
                            topics = 10,
                            clusters = 2,
                            latent_space_dimensions = 2,
-                           data_directory,
                            run_MH_only = F,
                            mixing_variable = NULL,
-                           Auth_Attr, 
-                           Doc_Edge_Matrix,
-                           Doc_Word_Matrix, 
-                           Vocab,
-                           Seed = 123456){
+                           Seed = 123456,
+                           save_results_to_file = FALSE,
+                           data_directory = NULL,
+                           data_name = NULL
+                           ){
   
-    
     substrRight <- function(x, n){
       substr(x, nchar(x)-n+1, nchar(x))
     }
@@ -50,22 +52,12 @@ Run_Full_Model <- function(data_name,
       #add a trailing slash to we save to right place
       data_directory <- paste(data_directory,"/",sep = "")
     }
-    #load data
-    #load( paste(data_directory,data_name,".Rdata", sep = ""))
-    
-    #assign global variables
-#     document_edge_matrix <<- document_edge_matrix
-#     document_word_matrix <<- document_word_matrix
-#     vocabulary <<- vocabulary
-#     author_attributes <<- author_attributes
-    
+
     num_bin_mix_vars <- 0
     if(!is.null(mixing_variable)){
       num_bin_mix_vars <- 1
     }
     
-    
-    #print(ls())
     if(!run_MH_only){
         Results <- Run_Inference(Number_Of_Iterations = main_iterations, 
                                  Base_Alpha =0.1, 
@@ -89,7 +81,8 @@ Run_Full_Model <- function(data_name,
                                  Vocabulary = Vocab,
                                  output_folder_path = data_directory,
                                  output_file = data_name,
-                                 Latent_Dimensions = latent_space_dimensions)
+                                 Latent_Dimensions = latent_space_dimensions,
+                                 save_results_to_file = save_results_to_file)
     }
       
     Run_MH_To_Convergence(input_file = paste("Model_Output_",data_name,sep = ""),
@@ -103,6 +96,7 @@ Run_Full_Model <- function(data_name,
                           use_adaptive_metropolis = 1, 
                           MH_prior_standard_deviation = 5 ,
                           data_dir = data_directory ,
-                          seed = Seed)
+                          seed = Seed,
+                          save_results_to_file = save_results_to_file)
 
 }

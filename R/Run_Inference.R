@@ -22,7 +22,8 @@ Run_Inference <- function(Number_Of_Iterations,
                           Slice_Sample_Alpha, 
                           MH_prior_standard_deviation, 
                           Number_of_Binary_Mixing_Parameters,
-                          Mixing_Variable){
+                          Mixing_Variable,
+                          save_results_to_file){
     
     #== set working driectory and source all functions ===#
     set.seed(seed)
