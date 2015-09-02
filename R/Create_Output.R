@@ -44,8 +44,6 @@ Create_Output <- function(data_name,
   }
   
   setwd(data_directory)
-  #     source("./Scripts/CPME_Generate_Diagnostics.R")
-  #     library(slam)
   
   #loop over all counties in list:
   if(using_county_email_data){
@@ -74,9 +72,6 @@ Create_Output <- function(data_name,
                                          binary_mixing_attribute_name = MP_Name
       )
       
-      #testing
-      #temp <- test[[1]]
-      #temp <- test[[2]]
       #if we are on the first iteration, make the return object equal to temp, oterwise, append
       if(i == 1){
         county_data <- list(temp)
