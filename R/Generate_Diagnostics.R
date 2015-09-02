@@ -146,7 +146,9 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         data <- list(Top_Four_Words,Cluster_Topic_Assigns)
         
         if(print_agregate_level_stats){
+          if(save_results){
             save(data,file=paste(out_directory ,output_name,"Topic_Top_Words.Rdata", sep = ""))
+          }
         }
         
         #print out the top words for each topic in each cluster
