@@ -1,21 +1,22 @@
 
-Generate_Model_Diagnsotics <- function(input_folder_path , 
-                                       input_file = "Test",
-                                       LS_Actor = 8, 
-                                       out_directory ,
-                                       Thin_Itterations , 
-                                       vocab = vocabulary,
-                                       output_name = "Testing",
+Generate_Model_Diagnsotics <- function(input_folder_path ,
                                        skip_first ,
-                                       Author_Attributes = author_attributes,
-                                       proportion_in_confidence_contour  = 0.9, 
                                        topic_model_burnin , 
                                        pretty_name , 
                                        only_print_summaries, 
                                        print_agregate_level_stats, 
                                        used_binary_mixing_attribute, 
                                        binary_mixing_attribute_name , 
-                                       used_county_email_data ){
+                                       used_county_email_data,
+                                       out_directory ,
+                                       Thin_Itterations ,
+                                       input_file,
+                                       LS_Actor , 
+                                       vocab,
+                                       output_name,
+                                       Author_Attributes,
+                                       proportion_in_confidence_contour  = 0.9 
+                                        ){
 
         UMASS_BLUE <- rgb(51,51,153,255,maxColorValue = 255)
         UMASS_RED <- rgb(153,0,51,255,maxColorValue = 255)
@@ -38,6 +39,12 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         #remove the first skip_first itterations of each sublist and recombine
         Itterations <- Model_Parameters[[4]]
         cat("Raw Number of Iterations:",Itterations,"\n")
+        
+        #' check to make sure that the user has specified a valid number of 
+        #' iterations to skip. 
+        if(skip_first >= Itterations){
+          stop("You must specify Skip < the number of samples saved from the last iteration of Metropolis Hasings.")
+        }
         Metropolis_Results[[1]] <- Metropolis_Results[[1]][skip_first:Itterations,]
         Metropolis_Results[[2]] <- Metropolis_Results[[2]][,,skip_first:Itterations]
         Metropolis_Results[[3]] <- Metropolis_Results[[3]][(2*skip_first-1):(2*Itterations),,]
