@@ -27,6 +27,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         UMASS_YELLOW <- rgb(255,255,102,255,maxColorValue = 255)
         UMASS_ORANGE <- rgb(255,204,51,255,maxColorValue = 255)
         Main_Estimation_Results <- NULL
+        topic <- NULL
         if(load_results_from_file){
           print("Loading Data...")
           print(paste(input_folder_path,input_file,".Rdata", sep = ""))
