@@ -928,6 +928,10 @@ Generate_Model_Diagnsotics <- function(skip_first ,
           }
           
           dev.off()
+        }else{
+          for(clust in Clusters_to_Pretty_Print){
+            Actor_Dataset <- cbind(Actor_Dataset, Pretty_Present_Edge_Network_Plots(clust,T))
+          }
         }
 
       if(used_binary_mixing_attribute){
@@ -981,6 +985,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         for(i in Clusters_to_Pretty_Print){
           cad <- c(cad, paste("C",i,"_D1",sep = ""),paste("C",i,"_D2",sep = ""))
         }
+
         colnames(Actor_Dataset) <- cad
         
         Token_Data <- cbind(county3,Cluster_Topic_Assigns,Email_Assignments,Topic_Top_Ten_Words, t(Word_Type_Topic_Counts))
