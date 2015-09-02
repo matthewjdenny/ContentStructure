@@ -57,11 +57,11 @@ Create_Output <- function(data_name,
                                          LS_Actor = 8, 
                                          input_folder_path = data_directory,
                                          out_directory = data_directory, 
-                                         vocab = vocabulary, 
+                                         vocab = Vocabulary, 
                                          output_name = paste("Output_",data_list[i],sep = ""),
                                          Thin_Itterations = Thin,
                                          skip_first = Skip,
-                                         Author_Attributes = author_attributes,
+                                         Author_Attributes = Auth_Attr,
                                          proportion_in_confidence_contour  = 0.9, 
                                          topic_model_burnin = Topic_Model_Burnin, 
                                          pretty_name = data_list[i],
@@ -82,7 +82,7 @@ Create_Output <- function(data_name,
         nc <-ncol(word_mat[,14:len])
         word_mat <- matrix(as.numeric(word_mat[,14:len]),nrow = nr, ncol= nc)
         all_vocab <- temp[[4]]
-        all_words <- as.simple_triplet_matrix(word_mat)
+        all_words <- slam::as.simple_triplet_matrix(word_mat)
       }else{
         county_data <- append(county_data,list(temp))
         word_mat <- temp[[3]]
