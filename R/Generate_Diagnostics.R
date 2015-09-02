@@ -249,15 +249,27 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         
         if(print_agregate_level_stats){
             print("Generating Cluster Edge Proportions")
-            pdf(paste(out_directory,output_name,"_Cluster_Edges.pdf", sep = ""),height=4,width=4,pointsize=7) 
-            par(mfrow = c(1,1), mar = c(5,5,4,1))
-            plot(x = 1:Clusters, y =cluster_proportions,main = pretty_name,pch = 19, col = UMASS_BLUE, axes = T, xlab = "Cluster", ylab = "Proportion of Edges",cex = 2,cex.lab=2, cex.axis= 1.8, cex.main=2.2, xaxt = "n",ylim =c(0,max(cluster_proportions)) )
-            axis(1, at = seq(1,Clusters, by = 1), las=1, cex.axis= 1.8)
-            box(which = "plot")
-            for(j in 1:Clusters){
+            if(save_results){
+              pdf(paste(out_directory,output_name,"_Cluster_Edges.pdf", sep = ""),height=4,width=4,pointsize=7) 
+              par(mfrow = c(1,1), mar = c(5,5,4,1))
+              plot(x = 1:Clusters, y =cluster_proportions,main = pretty_name,pch = 19, col = UMASS_BLUE, axes = T, xlab = "Cluster", ylab = "Proportion of Edges",cex = 2,cex.lab=2, cex.axis= 1.8, cex.main=2.2, xaxt = "n",ylim =c(0,max(cluster_proportions)) )
+              axis(1, at = seq(1,Clusters, by = 1), las=1, cex.axis= 1.8)
+              box(which = "plot")
+              for(j in 1:Clusters){
                 lines(c(j,j) , c(0,cluster_proportions[j]), col = UMASS_BLUE, lwd = 1.5)
+              }
+              dev.off()
+            }else{
+              par(mfrow = c(1,1), mar = c(5,5,4,1))
+              plot(x = 1:Clusters, y =cluster_proportions,main = pretty_name,pch = 19, col = UMASS_BLUE, axes = T, xlab = "Cluster", ylab = "Proportion of Edges",cex = 2,cex.lab=2, cex.axis= 1.8, cex.main=2.2, xaxt = "n",ylim =c(0,max(cluster_proportions)) )
+              axis(1, at = seq(1,Clusters, by = 1), las=1, cex.axis= 1.8)
+              box(which = "plot")
+              for(j in 1:Clusters){
+                lines(c(j,j) , c(0,cluster_proportions[j]), col = UMASS_BLUE, lwd = 1.5)
+              }
+              Sys.sleep(3)
             }
-            dev.off()
+            
         }
 
         #======= plotting function definitions =======#
@@ -626,44 +638,50 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         make_plots <- function(Width, Height, parrow,parcol){
             #generate pdf of intercepts
             print("Plotting Intercepts...")
-            pdf(file=paste(out_directory,output_name,"_Intercepts.pdf",sep = ""), width = Width, height = Height)
-            par(mfrow= c(parrow,parcol))
-            sapply(1:Clusters,plot_intercepts)
-            dev.off()
-            
-            if(used_binary_mixing_attribute){
-              #generate pdf of intercepts 
-              print("Plotting Betas...")
-              pdf(file=paste(out_directory,output_name,"_Betas.pdf",sep = ""), width = Width, height = Height)
+            if(save_results){
+              pdf(file=paste(out_directory,output_name,"_Intercepts.pdf",sep = ""), width = Width, height = Height)
               par(mfrow= c(parrow,parcol))
-              sapply(1:Clusters,plot_betas)
+              sapply(1:Clusters,plot_intercepts)
               dev.off()
             }
-            
-            
-            #generate pdf of intercepts 
-            print("Plotting Latent Space Positions...")
-            pdf(file=paste(out_directory,output_name,"_LS_Positions.pdf",sep = ""), width = Width, height = Height)
-            par(mfrow= c(parrow,parcol))
-            sapply(1:Clusters,plot_LS_Positions)
-            dev.off()
 
-            pdf(paste(out_directory,output_name,"_Likelihoods.pdf", sep = ""),height=Height,width=Width,pointsize=7)
-            par(mfrow= c(parrow,parcol))
-            sapply(1:Clusters,plot_likelihoods) 
-            dev.off()
+            if(used_binary_mixing_attribute){
+              #generate pdf of intercepts
+              if(save_results){
+                print("Plotting Betas...")
+                pdf(file=paste(out_directory,output_name,"_Betas.pdf",sep = ""), width = Width, height = Height)
+                par(mfrow= c(parrow,parcol))
+                sapply(1:Clusters,plot_betas)
+                dev.off()
+              }
+            }
+
+            #generate pdf of intercepts 
             
-            #generate network plots one per page
-            print("Plotting Networks...")
-            pdf(file=paste(out_directory,output_name,"_Cluster_Absent_Edge_Networks.pdf",sep = ""), width = Width, height = Height)
-            par(mfrow= c(parrow,parcol))
-            sapply(1:Clusters,plot_Cluster_absent_edge_Network)
-            dev.off()
-            
-            pdf(file=paste(out_directory,output_name,"_Cluster_Present_Edge_Networks.pdf",sep = ""), width = Width, height = Height)
-            par(mfrow= c(parrow,parcol))
-            sapply(1:Clusters,plot_Cluster_present_edge_Network)
-            dev.off()
+            if(save_results){
+              print("Plotting Latent Space Positions...")
+              pdf(file=paste(out_directory,output_name,"_LS_Positions.pdf",sep = ""), width = Width, height = Height)
+              par(mfrow= c(parrow,parcol))
+              sapply(1:Clusters,plot_LS_Positions)
+              dev.off()
+              
+              pdf(paste(out_directory,output_name,"_Likelihoods.pdf", sep = ""),height=Height,width=Width,pointsize=7)
+              par(mfrow= c(parrow,parcol))
+              sapply(1:Clusters,plot_likelihoods) 
+              dev.off()
+              
+              #generate network plots one per page
+              print("Plotting Networks...")
+              pdf(file=paste(out_directory,output_name,"_Cluster_Absent_Edge_Networks.pdf",sep = ""), width = Width, height = Height)
+              par(mfrow= c(parrow,parcol))
+              sapply(1:Clusters,plot_Cluster_absent_edge_Network)
+              dev.off()
+              
+              pdf(file=paste(out_directory,output_name,"_Cluster_Present_Edge_Networks.pdf",sep = ""), width = Width, height = Height)
+              par(mfrow= c(parrow,parcol))
+              sapply(1:Clusters,plot_Cluster_present_edge_Network)
+              dev.off()
+            }
         }
         
         #stolen from the R cookbook
@@ -726,16 +744,18 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         print("Generating Topic Model Output")
 
         if(!only_print_summaries){
+          if(save_results){
             pdf(paste(out_directory,output_name,"_Top_Words.pdf", sep = ""),height=12,width=10,pointsize=7)
             par(mfrow= c(1,1))
             bp <- gplots::barplot2(Email_Assignments, beside = TRUE, horiz = TRUE, col = "lightblue1", border= "lightblue1", ylab = "Topic:", xlab = "Number of Edges Assigned to Topic",main = paste("Top Words by Number of Words Assigned to Topic for ",output_name,sep = "")) 
             text(0,bp,Top_Ten_Words,cex=1,pos=4)# label on the bars themselves 
             dev.off()
-
+            
             pdf(paste(out_directory,output_name,"_Log_Ratio_LUD.pdf", sep = ""),height=8,width=12,pointsize=7)
             par(mfrow= c(5,2))
             sapply(1:Clusters,plot_ratio_lud) 
-            dev.off() 
+            dev.off()
+          }
         }
 
         print("Outputing Geweke statistics..")
@@ -817,53 +837,72 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         
 
         for(clust in Clusters_to_Pretty_Print){
-            
-            
             if(!only_print_summaries){
-                
               if(used_binary_mixing_attribute){
-                pdf(paste(out_directory,output_name,"_Pretty_Plot_Cluster",clust,".pdf", sep = ""),height=8,width=10,pointsize=7)
-                
-                layout(matrix(c(1,2,3,4), 2, 2, byrow = TRUE), 
-                       widths=c(3,1), heights=c(1,2))
-                
-                Pretty_Cluster_Likelihood(clust)
-                Pretty_Beta_Estimates(clust)
-                Pretty_Present_Edge_Network_Plots(clust)
-                Pretty_Topic_Top_Words(clust)
-                dev.off()
+                if(save_results){
+                  pdf(paste(out_directory,output_name,"_Pretty_Plot_Cluster",clust,".pdf", sep = ""),height=8,width=10,pointsize=7)
+                  
+                  layout(matrix(c(1,2,3,4), 2, 2, byrow = TRUE), 
+                         widths=c(3,1), heights=c(1,2))
+                  
+                  Pretty_Cluster_Likelihood(clust)
+                  Pretty_Beta_Estimates(clust)
+                  Pretty_Present_Edge_Network_Plots(clust)
+                  Pretty_Topic_Top_Words(clust)
+                  dev.off()
+                }else{
+                  layout(matrix(c(1,2,3,4), 2, 2, byrow = TRUE), 
+                         widths=c(3,1), heights=c(1,2))
+                  
+                  Pretty_Cluster_Likelihood(clust)
+                  Pretty_Beta_Estimates(clust)
+                  Pretty_Present_Edge_Network_Plots(clust)
+                  Pretty_Topic_Top_Words(clust)
+                }
               }else{
-                pdf(paste(out_directory,output_name,"_Pretty_Plot_Cluster",clust,".pdf", sep = ""),height=8,width=10,pointsize=7)
-                
-                layout(matrix(c(1,2,3,4), 2, 2, byrow = TRUE), 
-                       widths=c(3,1), heights=c(1,2))
-                
-                Pretty_Cluster_Likelihood(clust)
-                plot.new()
-                Pretty_Present_Edge_Network_Plots(clust)
-                Pretty_Topic_Top_Words(clust)
-                dev.off()
+                if(save_results){
+                  pdf(paste(out_directory,output_name,"_Pretty_Plot_Cluster",clust,".pdf", sep = ""),height=8,width=10,pointsize=7)
+                  layout(matrix(c(1,2,3,4), 2, 2, byrow = TRUE), 
+                         widths=c(3,1), heights=c(1,2))
+                  Pretty_Cluster_Likelihood(clust)
+                  plot.new()
+                  Pretty_Present_Edge_Network_Plots(clust)
+                  Pretty_Topic_Top_Words(clust)
+                  dev.off()
+                }else{
+                  layout(matrix(c(1,2,3,4), 2, 2, byrow = TRUE), 
+                         widths=c(3,1), heights=c(1,2))
+                  Pretty_Cluster_Likelihood(clust)
+                  plot.new()
+                  Pretty_Present_Edge_Network_Plots(clust)
+                  Pretty_Topic_Top_Words(clust)
+                  Sys.sleep(8)
+                }
               }
-
+              
+              if(save_results){
                 pdf(paste(out_directory,output_name,"_Network",clust,".pdf", sep = ""),height=6,width=6,pointsize=7)
-                
-                
                 par(mfrow = c(1,1))
                 Pretty_Present_Edge_Network_Plots(clust)
                 dev.off()
-                
-              if(used_binary_mixing_attribute){
-                pdf(paste(out_directory,output_name,"_Beta_and_Trace",clust,".pdf", sep = ""),height=6,width=3,pointsize=7)
-                par(mfrow = c(2,1))
-                Pretty_Cluster_Trace(clust)
-                Pretty_Beta_Estimates(clust)
-                dev.off()
               }
-
+              
+              if(used_binary_mixing_attribute){
+                if(save_results){
+                  pdf(paste(out_directory,output_name,"_Beta_and_Trace",clust,".pdf", sep = ""),height=6,width=3,pointsize=7)
+                  par(mfrow = c(2,1))
+                  Pretty_Cluster_Trace(clust)
+                  Pretty_Beta_Estimates(clust)
+                  dev.off()
+                }
+              }
+  
+              if(save_results){
                 pdf(paste(out_directory,output_name,"_clust_topics",clust,".pdf", sep = ""),height=5,width=4,pointsize=7)
                 par(mfrow= c(1,1))
                 Pretty_Topic_Top_Words(clust)
                 dev.off()
+              }
             }
         }
 
@@ -871,10 +910,11 @@ Generate_Model_Diagnsotics <- function(skip_first ,
 
         Actor_Dataset <- Author_Attributes
         #print one documen for whole county
-        pdf(paste(out_directory,output_name,"_All_Clusters.pdf", sep = ""),height=8,width=10,pointsize=7)
-        layout(matrix(c(1,2,3,4), 2, 2, byrow = TRUE), widths=c(3,1), heights=c(1,2))
-         
-        for(clust in Clusters_to_Pretty_Print){
+        if(save_results){
+          pdf(paste(out_directory,output_name,"_All_Clusters.pdf", sep = ""),height=8,width=10,pointsize=7)
+          layout(matrix(c(1,2,3,4), 2, 2, byrow = TRUE), widths=c(3,1), heights=c(1,2))
+          
+          for(clust in Clusters_to_Pretty_Print){
             Pretty_Cluster_Likelihood(clust)
             if(used_binary_mixing_attribute){
               Pretty_Beta_Estimates(clust)
@@ -884,9 +924,10 @@ Generate_Model_Diagnsotics <- function(skip_first ,
             
             Actor_Dataset <- cbind(Actor_Dataset, Pretty_Present_Edge_Network_Plots(clust,T))
             Pretty_Topic_Top_Words(clust)
+          }
+          
+          dev.off()
         }
-
-        dev.off()
 
       if(used_binary_mixing_attribute){
         attr_index <- which(colnames(Author_Attributes) == binary_mixing_attribute_name)
