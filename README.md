@@ -48,60 +48,52 @@ The package provides two functions: `Run_Full_Model()` and `Create_Output()` whi
 
 Here is some example code that will run the model an generate output on a toy dataset of 121 emails between 20 department managers. 
 
-    ## set working directory, dataset name, and load the library 
-    mywd <- "~/Dropbox/Testing/"
-    mydataset <- "Test"
-    setwd(mywd)
-    library(ContentStructure)  
-    
-    #load in necessary data
+    # Load in necessary data
     data(vocabulary)
     data(author_attributes)
     data(document_edge_matrix)
     data(document_word_matrix)  
       
-    # run model
-    Run_Full_Model(data_name = mydataset,  
-                   main_iterations = 100, 
-                   sample_step_burnin = 2000, 
-                   sample_step_iterations = 8000,
-                   sample_step_sample_every = 20,
-                   topics = 6,
-                   clusters = 2,
-                   data_directory = mywd,
-                   run_MH_only = F,
-                   mixing_variable = "Gender",
-                   Auth_Attr = author_attributes, 
-                   Doc_Edge_Matrix = document_edge_matrix ,
-                   Doc_Word_Matrix = document_word_matrix, 
-                   Vocab = vocabulary,
-    			   Seed = 123456
-                   )  
-                     
-    Data <- Create_Output(data_name = mydataset,
-              		  only_generate_summaries = T, 
-                      data_directory = mywd,
-                      print_agg_stats = T,
-                      using_county_email_data = F,
-                      Topic_Model_Burnin = 50,
-                      Skip = 0, 
-                      Thin = 1,
-                      Used_MP = T,
-                      MP_Name = "Gender",
-                      Auth_Attr = author_attributes,
-                      Vocabulary = vocabulary
-                      )
+    # Run Model
+    Estimation_Results <- Run_Full_Model(
+      main_iterations = 100, 
+      sample_step_burnin = 2000, 
+      sample_step_iterations = 8000,
+      sample_step_sample_every = 20,
+      topics = 6,
+      clusters = 2,
+      mixing_variable = "Gender",
+      Auth_Attr = author_attributes, 
+      Doc_Edge_Matrix = document_edge_matrix ,
+      Doc_Word_Matrix = document_word_matrix, 
+      Vocab = vocabulary,
+      Seed = 123456
+      )  
+        
+    # Generate Output
+    Data <- Create_Output(
+      data_name = "Testing",
+      Estimation_Results = Estimation_Results,
+      print_agg_stats = TRUE,
+      Topic_Model_Burnin = 50,
+      Skip = 0, 
+      Thin = 2,
+      Used_MP = TRUE,
+      MP_Name = "Gender",
+      Auth_Attr = author_attributes,
+      Vocabulary = vocabulary
+      )
                           
 ## Output
 
-The `Create_Output()` function will save a number of PDF's in the `data_directory`, which will often be the most interesting a visually interpretable output, but it alo returns a list object that has the following members: 
+The `Create_Output()` function will save a number of PDF's in the `data_directory` (if `save_results = T`), which will often be the most interesting a visually interpretable output, but it alo returns a list object that has the following members: 
 
 * `Cluster_Data` contains cluster level data including top words and mixing parameters (with standard errors) if applicable.
 * `Actor_Data` contains actors level data (all of the `Auth_Attr` dataframe) plus average latent positions for each actor in each dimension (2 currently), for each cluster. 
 * `Token_Data` contains the counts of each token for each topic, along with the edge counts for that topic and the cluster assignment for it. 
 * `Vocabulary` simply holds the vocabulary as a vector for easy handling. We have found these aggregate level statistics to be helpful in further analysis.
 
-The model also saves a `MCMC_Output_data_name.Rdata` file which contains a `Return_List` R list object holding the raw output from the MCMC chain with the following members:
+The model also returns an R list object holding the raw output from the MCMC chain with the following members:
 
 * `$token_topic_assignments`
 * `$topic_present_edge_counts`
