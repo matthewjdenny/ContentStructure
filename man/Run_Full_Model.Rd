@@ -9,7 +9,8 @@ Run_Full_Model(Auth_Attr, Doc_Edge_Matrix, Doc_Word_Matrix, Vocab,
   sample_step_iterations = 8e+06, sample_step_sample_every = 2000,
   topics = 10, clusters = 2, latent_space_dimensions = 2,
   run_MH_only = F, mixing_variable = NULL, Seed = 123456,
-  save_results_to_file = FALSE, data_directory = NULL, data_name = NULL)
+  save_results_to_file = FALSE, data_directory = NULL, data_name = NULL,
+  Main_Estimation_Results = NULL)
 }
 \arguments{
 \item{Auth_Attr}{A dataframe with one row for each unique sender/reciever and containing atleast one column with the ID of each sender/reciever and any number of additional varaibles which will be ignored unless specified as a binary attribute for which the user would like to calculate mixing parameter estimates by specifying the mixing_variable.}
@@ -45,6 +46,8 @@ Run_Full_Model(Auth_Attr, Doc_Edge_Matrix, Doc_Word_Matrix, Vocab,
 \item{data_directory}{The directory where our data_name file is stored. This is also where all output will be saved. Defaults to NULL if save_results_to_file == FALSE.}
 
 \item{data_name}{The name of the .Rdata file you would like to save model output in. Defaults to NULL if save_results_to_file == FALSE.}
+
+\item{Main_Estimation_Results}{A list object returned by previous model estimation to be supplied if the user wishes to select run_MH_only == TRUE. Useful if the user would like to specify a greater number of iterations for the final step of LSM estimation.}
 }
 \value{
 Does not return anything, just saves everything to our data_directory folder.

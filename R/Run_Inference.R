@@ -146,11 +146,12 @@ Run_Inference <- function(Number_Of_Iterations,
         seed
     )
     
-    Return_List <- append(Return_List,MP)
+    Main_Estimation_Results <- append(Return_List,MP)
     #get things ready to return a model object with all of the relevant info 
-    save(Return_List, file = paste(output_folder_path,"Model_Output_",output_file,".Rdata",sep = ""))
-    
-    return(Return_List)
+    if(save_results_to_file){
+      save(Main_Estimation_Results, file = paste(output_folder_path,"Model_Output_",output_file,".Rdata",sep = ""))
+    }
+    return(Main_Estimation_Results)
 } # End of Run_Analysis definition
 
 

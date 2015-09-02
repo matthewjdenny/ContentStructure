@@ -27,32 +27,41 @@ Create_Output <- function(data_name,
                           MP_Name = "Gender",
                           data_list = NULL,
                           Auth_Attr = NULL,
-                          Vocabulary = NULL
+                          Vocabulary = NULL,
+                          load_results_from_file = F,
+                          Estimation_Results = NULL,
+                          save_results = F
                           ){
   
-  substrRight <- function(x, n){
-    substr(x, nchar(x)-n+1, nchar(x))
+  if(save_results){
+    substrRight <- function(x, n){
+      substr(x, nchar(x)-n+1, nchar(x))
+    }
+    
+    lastchar <- substrRight(data_directory,1)
+    
+    if(lastchar == "/"){
+      #we are all set
+    }else{
+      #add a trailing slash to we save to right place
+      data_directory <- paste(data_directory,"/",sep = "")
+    }
+    
+    setwd(data_directory)
   }
-  
-  lastchar <- substrRight(data_directory,1)
-  
-  if(lastchar == "/"){
-    #we are all set
-  }else{
-    #add a trailing slash to we save to right place
-    data_directory <- paste(data_directory,"/",sep = "")
-  }
-  
-  setwd(data_directory)
-  
   #loop over all counties in list:
   if(using_county_email_data){
     for(i in 1:length(data_list)){
-      cat("Current County:",data_list[i],"--",i,"of",length(data_list), " \n")
+      
       #load data
-      load( paste(data_directory,data_list[i],".Rdata", sep = ""))
-      
-      
+      if(load_results_from_file){
+        cat("Current County:",data_list[i],"--",i,"of",length(data_list), " \n")
+        load( paste(data_directory,data_list[i],".Rdata", sep = ""))
+        Estimation_Results <- NULL
+      }else{
+        Estimation_Results <- data_list[[i]]
+      }
+
       temp <- Generate_Model_Diagnsotics(input_file = paste("Sample_",data_list[i],sep = "") ,
                                          LS_Actor = 8, 
                                          input_folder_path = data_directory,
@@ -69,7 +78,10 @@ Create_Output <- function(data_name,
                                          print_agregate_level_stats = print_agg_stats, 
                                          used_county_email_data = using_county_email_data,
                                          used_binary_mixing_attribute = Used_MP, 
-                                         binary_mixing_attribute_name = MP_Name
+                                         binary_mixing_attribute_name = MP_Name,
+                                         Estimation_Results = Estimation_Results,
+                                         load_results_from_file = load_results_from_file,
+                                         save_results = save_results
       )
       
       #if we are on the first iteration, make the return object equal to temp, oterwise, append
@@ -135,17 +147,22 @@ Create_Output <- function(data_name,
                                print_agregate_level_stats = print_agg_stats, 
                                used_county_email_data = using_county_email_data,
                                used_binary_mixing_attribute = Used_MP, 
-                               binary_mixing_attribute_name = MP_Name
+                               binary_mixing_attribute_name = MP_Name,
+                               Estimation_Results = Estimation_Results,
+                               load_results_from_file = load_results_from_file,
+                               save_results = save_results
                                )
   
   # now we clean up the intermediate datasets and save everything
-  load(paste("Sample_",data_name,".Rdata",sep = ""))
-  p1 <- pipe(paste("rm Sample_",data_name,".Rdata",sep = ""),"r")
-  close(p1)
-  p2 <- pipe(paste("rm Model_Output_",data_name,".Rdata",sep = ""), "r")
-  close(p2)
-  Return_List <- Return_List[-c(5,8)]
-  save(Return_List, file = paste("MCMC_Output_",data_name,".Rdata",sep = ""))
+    if(load_results_from_file){
+      load(paste("Sample_",data_name,".Rdata",sep = ""))
+      p1 <- pipe(paste("rm Sample_",data_name,".Rdata",sep = ""),"r")
+      close(p1)
+      p2 <- pipe(paste("rm Model_Output_",data_name,".Rdata",sep = ""), "r")
+      close(p2)
+      Return_List <- Return_List[-c(5,8)]
+      save(Return_List, file = paste("MCMC_Output_",data_name,".Rdata",sep = ""))
+    }
   }
   
   if(using_county_email_data){

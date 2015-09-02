@@ -19,6 +19,7 @@
 #' @param save_results_to_file A logical value indicating whether intermediate results should be saved to file or whether they will be return to the R session.
 #' @param data_directory The directory where our data_name file is stored. This is also where all output will be saved. Defaults to NULL if save_results_to_file == FALSE.
 #' @param data_name The name of the .Rdata file you would like to save model output in. Defaults to NULL if save_results_to_file == FALSE.
+#' @param Main_Estimation_Results A list object returned by previous model estimation to be supplied if the user wishes to select run_MH_only == TRUE. Useful if the user would like to specify a greater number of iterations for the final step of LSM estimation.
 #' @return Does not return anything, just saves everything to our data_directory folder.
 #' @export
 Run_Full_Model <- function(Auth_Attr, 
@@ -37,21 +38,25 @@ Run_Full_Model <- function(Auth_Attr,
                            Seed = 123456,
                            save_results_to_file = FALSE,
                            data_directory = NULL,
-                           data_name = NULL
+                           data_name = NULL,
+                           Main_Estimation_Results = NULL
                            ){
-  
-    substrRight <- function(x, n){
-      substr(x, nchar(x)-n+1, nchar(x))
+    
+    if(save_results_to_file){
+      substrRight <- function(x, n){
+        substr(x, nchar(x)-n+1, nchar(x))
+      }
+      
+      lastchar <- substrRight(data_directory,1)
+      
+      if(lastchar == "/"){
+        #we are all set
+      }else{
+        #add a trailing slash to we save to right place
+        data_directory <- paste(data_directory,"/",sep = "")
+      }
     }
     
-    lastchar <- substrRight(data_directory,1)
-    
-    if(lastchar == "/"){
-      #we are all set
-    }else{
-      #add a trailing slash to we save to right place
-      data_directory <- paste(data_directory,"/",sep = "")
-    }
 
     num_bin_mix_vars <- 0
     if(!is.null(mixing_variable)){
@@ -83,20 +88,25 @@ Run_Full_Model <- function(Auth_Attr,
                                  output_file = data_name,
                                  Latent_Dimensions = latent_space_dimensions,
                                  save_results_to_file = save_results_to_file)
+    }else{
+      Results <- Main_Estimation_Results
     }
       
-    Run_MH_To_Convergence(input_file = paste("Model_Output_",data_name,sep = ""),
-                          output_file = paste("Sample_",data_name,sep = ""),
-                          sample_step_burnin = sample_step_burnin,
-                          itterations = sample_step_iterations,
-                          sample_every = sample_step_sample_every, 
-                          prop_var = 1,
-                          set_proposal_variance = F,
-                          adaptive_metropolis_update_every = 1000, 
-                          use_adaptive_metropolis = 1, 
-                          MH_prior_standard_deviation = 5 ,
-                          data_dir = data_directory ,
-                          seed = Seed,
-                          save_results_to_file = save_results_to_file)
+    Results <-  Run_MH_To_Convergence(
+                  input_file = paste("Model_Output_",data_name,sep = ""),
+                  output_file = paste("Sample_",data_name,sep = ""),
+                  sample_step_burnin = sample_step_burnin,
+                  itterations = sample_step_iterations,
+                  sample_every = sample_step_sample_every, 
+                  prop_var = 1,
+                  set_proposal_variance = F,
+                  adaptive_metropolis_update_every = 1000, 
+                  use_adaptive_metropolis = 1, 
+                  MH_prior_standard_deviation = 5 ,
+                  data_dir = data_directory ,
+                  seed = Seed,
+                  save_results_to_file = save_results_to_file,
+                  Main_Estimation_Results = Results)
 
+    return(Results)
 }

@@ -11,22 +11,23 @@ Run_MH_To_Convergence <- function(input_file,
                                   use_adaptive_metropolis, 
                                   MH_prior_standard_deviation, 
                                   seed,
-                                  save_results_to_file){
+                                  save_results_to_file,
+                                  Main_Estimation_Results){
     
     set.seed(seed)
-    load(paste(data_dir,input_file,".Rdata", sep = ""))
-
-    cat("Loading Data... \n")
+    if(save_results_to_file){
+      load(paste(data_dir,input_file,".Rdata", sep = ""))
+    }
     #extract current metropolis results
     first_return <- 13
-    Topic_Model_Results <- Return_List[1:5]
-    Model_Parameters <- Return_List[6:first_return]
-    Cluster_Topic_Assignments <- Return_List[[14]]
+    Topic_Model_Results <- Main_Estimation_Results[1:5]
+    Model_Parameters <- Main_Estimation_Results[6:first_return]
+    Cluster_Topic_Assignments <- Main_Estimation_Results[[14]]
     len <- length(Cluster_Topic_Assignments[,1])
     Cluster_Topic_Assignments<- Cluster_Topic_Assignments[len,]
-    Metropolis_Results <- Return_List[15:20]
-    Number_of_Betas <- Return_List[[21]]
-    Beta_Indicator_Array <- Return_List[[22]]
+    Metropolis_Results <- Main_Estimation_Results[15:20]
+    Number_of_Betas <- Main_Estimation_Results[[21]]
+    Beta_Indicator_Array <- Main_Estimation_Results[[22]]
     
     #remove the first skip_first itterations of each sublist and recombine
     Itterations <- Model_Parameters[[4]]
@@ -79,16 +80,16 @@ Run_MH_To_Convergence <- function(input_file,
             MH_prior_standard_deviation,
             seed)
 
-    Return_List[[9]] <- Result_List[[1]]
-    Return_List[[15]] <- Result_List[[5]]
-    Return_List[[16]] <- Result_List[[7]]
-    Return_List[[17]] <- Result_List[[6]]
-    Return_List[[18]] <- Result_List[[4]]
-    Return_List[[19]] <- Result_List[[2]]
-    Return_List[[20]] <- Result_List[[3]]
+    Main_Estimation_Results[[9]] <- Result_List[[1]]
+    Main_Estimation_Results[[15]] <- Result_List[[5]]
+    Main_Estimation_Results[[16]] <- Result_List[[7]]
+    Main_Estimation_Results[[17]] <- Result_List[[6]]
+    Main_Estimation_Results[[18]] <- Result_List[[4]]
+    Main_Estimation_Results[[19]] <- Result_List[[2]]
+    Main_Estimation_Results[[20]] <- Result_List[[3]]
 	
 	#assign names to list object
-	names(Return_List) <- c("token_topic_assignments",
+	names(Main_Estimation_Results) <- c("token_topic_assignments",
 							"topic_present_edge_counts",
 							"topic_absent_edge_counts",
 							"token_type_topic_counts",
@@ -112,13 +113,15 @@ Run_MH_To_Convergence <- function(input_file,
 							"mixing_parameter_type_indicator_array",
 							"intial_mixing_parameter_values")
 
-    clust_assigns <- Return_List$topic_cluster_assignments
+    clust_assigns <- Main_Estimation_Results$topic_cluster_assignments
     nrows <- nrow(clust_assigns)
     cat("Topic Cluster Assignments: \n",clust_assigns[nrows,],"\n", "If all topics are assigned to one cluster, you may want to rerun with a new seed as this may indicate that the model jumped to a degenerate distribution over cluster assignments...\n", sep = "")
 
-    cat("Saving Results... \n")
-    save(Return_List, file=paste(data_dir,output_file,".Rdata",sep = ""))
-
+    if(save_results_to_file){
+      cat("Saving Results... \n")
+      save(Main_Estimation_Results, file=paste(data_dir,output_file,".Rdata",sep = ""))
+    }
+    return(Main_Estimation_Results)
 }# end of ouuter function definition 
 
 

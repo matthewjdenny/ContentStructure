@@ -1,6 +1,5 @@
 
-Generate_Model_Diagnsotics <- function(input_folder_path ,
-                                       skip_first ,
+Generate_Model_Diagnsotics <- function(skip_first ,
                                        topic_model_burnin , 
                                        pretty_name , 
                                        only_print_summaries, 
@@ -10,12 +9,16 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
                                        used_county_email_data,
                                        out_directory ,
                                        Thin_Itterations ,
-                                       input_file,
                                        LS_Actor , 
                                        vocab,
                                        output_name,
                                        Author_Attributes,
-                                       proportion_in_confidence_contour  = 0.9 
+                                       save_results,
+                                       proportion_in_confidence_contour  = 0.9,
+                                       load_results_from_file = F,
+                                       input_folder_path = NULL,
+                                       input_file = NULL,
+                                       Estimation_Results = NULL
                                         ){
 
         UMASS_BLUE <- rgb(51,51,153,255,maxColorValue = 255)
@@ -23,16 +26,20 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         UMASS_GREEN <- rgb(0,102,102,255,maxColorValue = 255)
         UMASS_YELLOW <- rgb(255,255,102,255,maxColorValue = 255)
         UMASS_ORANGE <- rgb(255,204,51,255,maxColorValue = 255)
-        print("Loading Data...")
-        print(paste(input_folder_path,input_file,".Rdata", sep = ""))
-        load(paste(input_folder_path,input_file,".Rdata", sep = ""))
+        Main_Estimation_Results <- NULL
+        if(load_results_from_file){
+          print("Loading Data...")
+          print(paste(input_folder_path,input_file,".Rdata", sep = ""))
+          load(paste(input_folder_path,input_file,".Rdata", sep = ""))
+          Estimation_Results <- Main_Estimation_Results
+        }
         print("Extracting Reduced Data")
         first_return <- 13
-        Topic_Model_Results <- Return_List[1:5]
-        Model_Parameters <- Return_List[6:first_return]
-        Cluster_Topic_Assignments <- Return_List[[14]]
+        Topic_Model_Results <- Estimation_Results[1:5]
+        Model_Parameters <- Estimation_Results[6:first_return]
+        Cluster_Topic_Assignments <- Estimation_Results[[14]]
         Last_Cluster_Topic_Assignments <- Cluster_Topic_Assignments[Model_Parameters[[2]],]
-        Metropolis_Results <- Return_List[15:20]
+        Metropolis_Results <- Estimation_Results[15:20]
         
         Latent_Spaces <- length(Metropolis_Results[[3]][,1,1])/length(Metropolis_Results[[1]][,1])
         skip_first= skip_first+1
@@ -208,15 +215,21 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
 
         print("Generating Topic Model Log Likelihoods")
         if(print_agregate_level_stats){
+          log_likelihoods  <- Model_Parameters[[8]]
+          len <- length(log_likelihoods)
+          geweke_log_likelihoods <- log_likelihoods[topic_model_burnin:len]
+            
+          if(save_results){
             pdf(paste(out_directory,output_name,"_Topic_Model_Log_Likelihood.pdf", sep = ""),height=3,width=5,pointsize=7)
-        
-        
-            log_likelihoods  <- Model_Parameters[[8]]
-            len <- length(log_likelihoods)
-            geweke_log_likelihoods <- log_likelihoods[topic_model_burnin:len]
             par(mfrow = c(1,1), mar = c(5,5,4,1))
             plot( y =geweke_log_likelihoods,x= topic_model_burnin:len, pch = 19, col = UMASS_BLUE, main = paste("Un-Normalized Topic Model Log Likelihood \n"," Geweke Statistic for Last",len-topic_model_burnin,"Iterations:", round(coda::geweke.diag(geweke_log_likelihoods)$z,2)  ), xlab = "Iteration",ylab = "Log Likelihood",cex.lab=2, cex.axis=1.4, cex.main=1.4)
             dev.off()
+          }else{
+            par(mfrow = c(1,1), mar = c(5,5,4,1))
+            plot( y =geweke_log_likelihoods,x= topic_model_burnin:len, pch = 19, col = UMASS_BLUE, main = paste("Un-Normalized Topic Model Log Likelihood \n"," Geweke Statistic for Last",len-topic_model_burnin,"Iterations:", round(coda::geweke.diag(geweke_log_likelihoods)$z,2)  ), xlab = "Iteration",ylab = "Log Likelihood",cex.lab=2, cex.axis=1.4, cex.main=1.4)
+            Sys.sleep(3)
+          }
+           
         }
 
         #calculate teh proportion of edges assigned to each cluster
@@ -934,8 +947,8 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         temp2 <- unlist(temp2)
         colnames(Token_Data) <- temp2
         
-        return_list <- list(Cluster_Data = Cluster_Data , Actor_Data = Actor_Dataset, Token_Data = Token_Data, Vocabulary = vocab)
-        return(return_list)
+        Output <- list(Cluster_Data = Cluster_Data , Actor_Data = Actor_Dataset, Token_Data = Token_Data, Vocabulary = vocab)
+        return(Output)
       }else{
         ##if we did not use a mixing parameter
         #generate asortativity - token dataset
@@ -970,8 +983,8 @@ Generate_Model_Diagnsotics <- function(input_folder_path ,
         temp2 <- unlist(temp2)
         colnames(Token_Data) <- temp2
         
-        return_list <- list(Cluster_Data = Cluster_Data , Actor_Data = Actor_Dataset, Token_Data = Token_Data, Vocabulary = vocab)
-        return(return_list)
+        Output <- list(Cluster_Data = Cluster_Data , Actor_Data = Actor_Dataset, Token_Data = Token_Data, Vocabulary = vocab)
+        return(Output)
       }
 }#end of function definition
 

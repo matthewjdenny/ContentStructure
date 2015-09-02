@@ -8,7 +8,8 @@ Create_Output(data_name, only_generate_summaries = T, data_directory,
   print_agg_stats = T, using_county_email_data = F,
   Topic_Model_Burnin = 50, Skip = 0, Thin = 1, Used_MP = F,
   MP_Name = "Gender", data_list = NULL, Auth_Attr = NULL,
-  Vocabulary = NULL)
+  Vocabulary = NULL, load_results_from_file = F,
+  Estimation_Results = NULL, save_results = F)
 }
 \arguments{
 \item{data_name}{The name of organization data file as in the function to run the model.}
