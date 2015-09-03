@@ -1,4 +1,4 @@
-# ContentStructure
+# ContentStructure [![Travis-CI Build Status](https://travis-ci.org/matthewjdenny/ContentStructure.svg?branch=master)](https://travis-ci.org/matthewjdenny/ContentStructure)
 
 NOTE: **This package is still under development and is very much a work in progress. Please do not use in any publication without express consent of the authors. PLEASE REPORT ANY BUGS OR ERRORS TO <mzd5530@psu.edu>**. 
 
@@ -119,6 +119,6 @@ The model also returns an R list object holding the raw output from the MCMC cha
 
 ## Testing
             
-So far, this package has been tested successfully on OSX 10.9.5, Windows 7 and CentOS 6.6. Please email me at <mzd5530@psu.edu> if you have success on another OS or run into any problems. This Package is also continually checked every time a commit is made using Travis:
+So far, this package has been tested successfully on OSX 10.9.5, Windows 7 and CentOS 6.6. Please email me at <mzd5530@psu.edu> if you have success on another OS or run into any problems. This Package is also continually checked every time a commit is made using Travis.
 
-[![Travis-CI Build Status](https://travis-ci.org/matthewjdenny/ContentStructure.svg?branch=master)](https://travis-ci.org/matthewjdenny/ContentStructure)
+
