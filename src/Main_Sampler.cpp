@@ -7,6 +7,7 @@
 #include <math.h>
 #include <cmath>
 #include "Normal_Distribution_No_Assert.cpp"
+#include "Discrete_Distribution_No_Assert.cpp"
 
 using std::pow;
 using std::exp;
@@ -219,7 +220,7 @@ List Main_Sampler(
                     //save old topic asignemnt
                     int old_topic = token_topic_assignments1[w];
                    
-                    boost::random::discrete_distribution<int> distribution (token_topic_distribution.begin(),token_topic_distribution.end());
+                    mjd::random::discrete_distribution<int> distribution (token_topic_distribution.begin(),token_topic_distribution.end());
                     int temp = distribution(generator) +1;
                     token_topic_assignments1[w] = temp ; 
                     int new_topic = token_topic_assignments1[w];
@@ -345,7 +346,7 @@ List Main_Sampler(
                     for(int x = 0; x < number_of_clusters; ++x){
                         cluster_probabilities[x] = exp(topic_cluster_distribution[x]);
                     }
-                    boost::random::discrete_distribution<int> distribution_clusters (cluster_probabilities.begin(),cluster_probabilities.end());
+                    mjd::random::discrete_distribution<int> distribution_clusters (cluster_probabilities.begin(),cluster_probabilities.end());
                     int cluster_assignment = distribution_clusters(generator) + 1;
                     topic_cluster_assignments[t] = double(cluster_assignment);
                 }//end loop over topics
