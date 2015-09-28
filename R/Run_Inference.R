@@ -97,11 +97,18 @@ Run_Inference <- function(Number_Of_Iterations,
         #now get the token topic assignemnts for this document
         current_doc_assignments <- Token_Topic_Assignments[[d]]
         #now go through and increment based in intial draws
-        if(word_types != -1){
+        if(length(word_types) > 1){
           for(i in 1:length(current_doc_assignments)){
             Word_Type_Topic_Counts[word_types[i],current_doc_assignments[i]] <- Word_Type_Topic_Counts[word_types[i],current_doc_assignments[i]] + 1
           }
+        }else{
+          if(word_types != -1){
+            for(i in 1:length(current_doc_assignments)){
+              Word_Type_Topic_Counts[word_types[i],current_doc_assignments[i]] <- Word_Type_Topic_Counts[word_types[i],current_doc_assignments[i]] + 1
+            }
+          }
         }
+        
     }
     cat("Initializing Mixing Parameters... \n")
     MP <- Initialize_Mixing_Parameters(

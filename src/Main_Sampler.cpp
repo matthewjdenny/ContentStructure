@@ -109,7 +109,7 @@ List Main_Sampler(
                 arma::vec token_topic_assignments1 = token_topic_assignment_list[d];
                 int number_of_tokens = token_topic_assignments1.n_elem;
                 arma::vec token_word_types = token_word_type_list[d];
-                
+          
                 //loop over tokens
                 for(int w = 0; w < number_of_tokens; ++w){
                     
@@ -219,7 +219,7 @@ List Main_Sampler(
                         double temp2 = temp + additional_edge_probability;
                         token_topic_distribution[t] = exp(temp2);
                     }   
-        
+                  
                     //save old topic asignemnt
                     int old_topic = token_topic_assignments1[w];
                    
@@ -228,8 +228,9 @@ List Main_Sampler(
                     token_topic_assignments1[w] = temp ; 
                     int new_topic = token_topic_assignments1[w];
                     
-                    //now we need to update all of the internal counts for the same words as the current token if we sampled a new assignment
-                    if(old_topic != new_topic){
+                    if(token_word_types[0] != -1){
+                      //now we need to update all of the internal counts for the same words as the current token if we sampled a new assignment
+                      if(old_topic != new_topic){
                         topic_token_sums[(old_topic-1)] -=1;
                         topic_token_sums[(new_topic-1)] += 1;
                         
@@ -237,7 +238,9 @@ List Main_Sampler(
                         //now for all tokens that are the same
                         token_type_topic_counts(current_word_type,(old_topic-1)) -=1;
                         token_type_topic_counts(current_word_type,(new_topic-1)) +=1;
+                      }
                     }
+                    
 
                 }//end of loop over tokens 
             
