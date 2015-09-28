@@ -180,38 +180,41 @@ List Main_Sampler(
                             } 
                         }
                         
-
-                        //now we calculate the first and second terms in the likelihood of of the token being from the current topic
-                        //calculate the number of times a token in the current document has been assigned to the current topic
-                        int ntd = 0;
-                        for(int b = 0; b < number_of_tokens; ++b){
+                        
+                        double temp = 0;
+                        if(token_word_types[0] != -1){
+                          //now we calculate the first and second terms in the likelihood of of the token being from the current topic
+                          //calculate the number of times a token in the current document has been assigned to the current topic
+                          int ntd = 0;
+                          for(int b = 0; b < number_of_tokens; ++b){
                             if(b != w){
-                                if(token_topic_assignments1[b] == topic){
-                                    ntd +=1;
-                                }
+                              if(token_topic_assignments1[b] == topic){
+                                ntd +=1;
+                              }
                             }
-                        }
-                        
-                        int current_word = token_word_types[w] -1;
-                        //get the number of times this word type has been assigned in the current topic
-                        int wttac = token_type_topic_counts(current_word,t);
-                        //number of tokens assigned to the topic
-                        int ntt = topic_token_sums[t];
-                        
-                        //subtract one from these counts if the current token was assigned to this topic
-                        if(topic == token_topic_assignments1[w]){
+                          }
+                          
+                          int current_word = token_word_types[w] -1;
+                          //get the number of times this word type has been assigned in the current topic
+                          int wttac = token_type_topic_counts(current_word,t);
+                          //number of tokens assigned to the topic
+                          int ntt = topic_token_sums[t];
+                          
+                          //subtract one from these counts if the current token was assigned to this topic
+                          if(topic == token_topic_assignments1[w]){
                             ntt -= 1;
                             wttac -=1;
-                        }
-                        
-                        //helps deal with wierd initializations by no allowing negative counts
-                        if(wttac < 0){
+                          }
+                          
+                          //helps deal with wierd initializations by no allowing negative counts
+                          if(wttac < 0){
                             wttac = 0;
+                          }
+                          double first_term = double(ntd) + alpha_m[t];
+                          double second_term = (wttac + (beta/double(number_of_word_types)))/(double(ntt) + beta);
+                          //combine terms and add to conditional posterior distribution
+                          temp = log(first_term) + log(second_term);
                         }
-                        double first_term = double(ntd) + alpha_m[t];
-                        double second_term = (wttac + (beta/double(number_of_word_types)))/(double(ntt) + beta);
-                        //combine terms and add to conditional posterior distribution
-                        double temp = log(first_term) + log(second_term);
                         //this adds on the normalize edge contribution after weighting
                         double temp2 = temp + additional_edge_probability;
                         token_topic_distribution[t] = exp(temp2);

@@ -59,7 +59,11 @@ Run_Inference <- function(Number_Of_Iterations,
 
     Token_Topic_Assignments <- vector(length = Number_Of_Documents, mode = "list")
     for(d in 1:Number_Of_Documents){
+      if(sum(Document_Word_Matrix[d,]) > 0){
         cur_token_assignments <- sample(1:Number_Of_Topics,sum(Document_Word_Matrix[d,]),replace= T) #samples from a discrete uniform distribution
+      }else{
+        cur_token_assignments <- sample(1:Number_Of_Topics,1,replace= T)
+      }
         Token_Topic_Assignments[[d]] <- cur_token_assignments
     }
 
@@ -76,20 +80,27 @@ Run_Inference <- function(Number_Of_Iterations,
         word_indexes <- which(Document_Word_Matrix[d,] > 0)
         word_counts <- as.numeric(Document_Word_Matrix[d,word_indexes])
         already <- F
-        for(i in 1:length(word_indexes)){
+        if(length(word_indexes) > 0){
+          for(i in 1:length(word_indexes)){
             if(!already){
-                already <- T
-                word_types <- rep(word_indexes[i],word_counts[i])
+              already <- T
+              word_types <- rep(word_indexes[i],word_counts[i])
             }else{
-                word_types <- c(word_types,rep(word_indexes[i],word_counts[i]))
+              word_types <- c(word_types,rep(word_indexes[i],word_counts[i]))
             }
+          }
+        }else{
+          word_types <- -1
         }
+        
         Token_Word_Types[[d]] <- word_types
         #now get the token topic assignemnts for this document
         current_doc_assignments <- Token_Topic_Assignments[[d]]
         #now go through and increment based in intial draws
-        for(i in 1:length(current_doc_assignments)){
+        if(word_types != -1){
+          for(i in 1:length(current_doc_assignments)){
             Word_Type_Topic_Counts[word_types[i],current_doc_assignments[i]] <- Word_Type_Topic_Counts[word_types[i],current_doc_assignments[i]] + 1
+          }
         }
     }
     cat("Initializing Mixing Parameters... \n")
