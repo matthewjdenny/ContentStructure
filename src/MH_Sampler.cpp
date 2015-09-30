@@ -130,7 +130,7 @@ List MH_Sampler(
                     }
                     
                 }
-                Rcpp::Rcout << "Cluster Proposal Variacnes: " << std::endl << proposal_variance << std::endl;
+                Rcpp::Rcout << "Cluster Proposal Variances: " << std::endl << proposal_variance << std::endl;
             }// end of if statement to see if we are actually in an update iteration
             adaptive_metropolis_update_counter += 1;
         }//end of if statement for using adaptive metropolis
@@ -331,6 +331,7 @@ List MH_Sampler(
             
             storage_counter +=1;
             if(store_every_x_rounds == storage_counter){
+              Rcpp::Rcout << "Current Iteration: " << i << " of " << number_of_MH_itterations << std::endl;
                 storage_counter =0;
                 
                 arma::rowvec ints(number_of_clusters);
