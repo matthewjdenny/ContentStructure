@@ -28,7 +28,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         if(!is.null(binary_mixing_attribute_name)){
           used_binary_mixing_attribute <- TRUE
         }
-        vocab <- Estimation_Results$vocabulary
+        vocab <- data.frame(Estimation_Results$vocabulary,stringsAsFactors = F)
         Author_Attributes <- Estimation_Results$author_attributes
         pretty_name <- output_name
         pretty_name <- paste0(stringr::str_split(pretty_name,"_")[[1]],collapse = " ")
