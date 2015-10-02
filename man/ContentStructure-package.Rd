@@ -24,7 +24,7 @@ First Publication:
 
 Krafft, P., Moore, J., Desmarais, B. A., & Wallach, H. (2012). Topic-partitioned multinetwork embeddings. In Advances in Neural Information Processing Systems Twenty-Five. Retrieved from http://machinelearning.wustl.edu/mlpapers/paper_files/NIPS2012_1288.pdf
 
-The appropriate publication to cite for this pacakge is still in preparation.
+The appropriate publication to cite for this package is still in preparation.
 }
 \examples{
 # Load in necessary data
@@ -51,15 +51,11 @@ Estimation_Results <- Run_Full_Model(
 
   # Generate Output
 Data <- Create_Output(
-  data_name = "Testing",
+  output_names = "Testing",
   Estimation_Results = Estimation_Results,
   print_agg_stats = TRUE,
   Topic_Model_Burnin = 50,
   Skip = 0, 
-  Thin = 2,
-  Used_MP = TRUE,
-  MP_Name = "Gender",
-  Auth_Attr = author_attributes,
-  Vocabulary = vocabulary
+  Thin = 2
   )
 }
