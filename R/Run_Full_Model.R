@@ -108,5 +108,11 @@ Run_Full_Model <- function(Auth_Attr,
                   save_results_to_file = save_results_to_file,
                   Main_Estimation_Results = Results)
 
+    # add in raw input information so that we can access it later
+    Results$author_attributes = Auth_Attr
+    Results$document_edge_matrix = Doc_Edge_Matrix
+    Results$document_word_matrix = Doc_Word_Matrix
+    Results$vocabulary = Vocab
+    
     return(Results)
 }
