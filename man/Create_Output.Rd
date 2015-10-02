@@ -37,8 +37,6 @@ Create_Output(output_names = NULL, Estimation_Results = NULL,
 \item{save_results}{Defaults to FALSE, if TRUE, then output_names and output_directory must be supplied and .pdfs will be created for all plots.}
 
 \item{output_directory}{A directory where we wish to save the output of this function.}
-
-\item{estimation_output_list}{If you prefer to provide a list object where each entry is the object returned by the Run_Full_Model() function. This is a way to circumvent reading in files from disk if we want to keep all information in our current R session.}
 }
 \value{
 A list object with 4 entries and the following structure: Cluster_Data contains cluster level data including top words and mixing parameters (with standard errors) if applicable. Actor_Data contains actors level data (all of the Auth_Attr dataframe) plus average latent positions for each actor in each dimension (2 currently), for each cluster. Token_Data contains the counts of each token for each topic, along with the edge counts for that topic and the cluster assignment for it. Vocabulary simply holds the vocabulary as a vector for easy handling.
