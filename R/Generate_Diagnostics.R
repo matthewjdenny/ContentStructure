@@ -587,7 +587,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
             num_topics <- min(10,length(cluster_indexes))
             indexes <- rep(0,num_topics)
             for(i in 1:num_topics){
-                maxemail <- which(temp == max(temp))
+                maxemail <- which(temp == max(temp))[1]
                 indexes[i] <- maxemail
                 temp[maxemail] <- 0
             }
