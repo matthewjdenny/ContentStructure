@@ -15,10 +15,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
                                        Author_Attributes,
                                        save_results,
                                        proportion_in_confidence_contour  = 0.9,
-                                       load_results_from_file = F,
-                                       input_folder_path = NULL,
-                                       input_file = NULL,
-                                       Estimation_Results = NULL
+                                       Estimation_Results 
                                         ){
 
         UMASS_BLUE <- rgb(51,51,153,255,maxColorValue = 255)
@@ -28,12 +25,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         UMASS_ORANGE <- rgb(255,204,51,255,maxColorValue = 255)
         Main_Estimation_Results <- NULL
         topic <- NULL
-        if(load_results_from_file){
-          print("Loading Data...")
-          print(paste(input_folder_path,input_file,".Rdata", sep = ""))
-          load(paste(input_folder_path,input_file,".Rdata", sep = ""))
-          Estimation_Results <- Main_Estimation_Results
-        }
+        
         print("Extracting Reduced Data")
         first_return <- 13
         Topic_Model_Results <- Estimation_Results[1:5]
