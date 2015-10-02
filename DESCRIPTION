@@ -2,10 +2,10 @@ Package: ContentStructure
 Type: Package
 Title: A Statistical Model for Communication Network Data
 Version: 0.3
-Date: 2015-05-22
+Date: 2015-10-02
 Author: Matt Denny, Bruce Desmarais, Hanna Wallach
 Maintainer: Matt Denny <mzd5530@psu.edu>
-Description:  This package (STILL VERY MUCH IN DEVELOPMENT) provides functions to estimate an as-yet unnamed extension and generalization of the TPME model introduced in Krafft et al. (2012). Samplers are written in  C++ and use the Boost libraries. The Model should scale up to a maximum of about 10-20,000 emails sent by up to 50-100 senders and still run in a few weeks.
+Description:  Functions to estimate an as-yet unnamed extension and generalization of the TPME model introduced in Krafft et al. (2012). Samplers are written in  C++ and use the Boost libraries. The Model should scale up to a maximum of about 10-20,000 emails sent by up to 50-100 senders and still run in a few weeks. (STILL VERY MUCH IN DEVELOPMENT).
 URL: https://github.com/matthewjdenny/ContentStructure
 License: GPL-3
 Imports: 
@@ -17,7 +17,7 @@ Imports:
 	    vegan,
 		stringr
 Depends: 
-        R (>= 3.0.1)
+        R (>= 3.2.1)
 LinkingTo: 
 	    BH,
 	    Rcpp, 
