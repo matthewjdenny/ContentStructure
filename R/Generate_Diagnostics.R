@@ -4,15 +4,11 @@ Generate_Model_Diagnsotics <- function(skip_first ,
                                        pretty_name , 
                                        only_print_summaries, 
                                        print_agregate_level_stats, 
-                                       used_binary_mixing_attribute, 
-                                       binary_mixing_attribute_name , 
                                        used_county_email_data,
                                        out_directory ,
                                        Thin_Itterations ,
-                                       LS_Actor , 
-                                       vocab,
+                                       LS_Actor, 
                                        output_name,
-                                       Author_Attributes,
                                        save_results,
                                        proportion_in_confidence_contour  = 0.9,
                                        Estimation_Results 
@@ -23,21 +19,28 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         UMASS_GREEN <- rgb(0,102,102,255,maxColorValue = 255)
         UMASS_YELLOW <- rgb(255,255,102,255,maxColorValue = 255)
         UMASS_ORANGE <- rgb(255,204,51,255,maxColorValue = 255)
-        Main_Estimation_Results <- NULL
         topic <- NULL
         
-        print("Extracting Reduced Data")
-        first_return <- 13
-        Topic_Model_Results <- Estimation_Results[1:5]
-        Model_Parameters <- Estimation_Results[6:first_return]
-        Cluster_Topic_Assignments <- Estimation_Results[[14]]
-        Last_Cluster_Topic_Assignments <- Cluster_Topic_Assignments[Model_Parameters[[2]],]
-        Metropolis_Results <- Estimation_Results[15:20]
         
-        Latent_Spaces <- length(Metropolis_Results[[3]][,1,1])/length(Metropolis_Results[[1]][,1])
+        print("Extracting Data")
+        binary_mixing_attribute_name <- Estimation_Results$mixing_variable
+        used_binary_mixing_attribute <- FALSE
+        if(!is.null(binary_mixing_attribute_name)){
+          used_binary_mixing_attribute <- TRUE
+        }
+        vocab <- Estimation_Results$vocabulary
+        Author_Attributes <- Estimation_Results$author_attributes
+        pretty_name <- output_name
+        pretty_name <- paste0(stringr::str_split(pretty_name,"_")[[1]],collapse = " ")
+        
+        Cluster_Topic_Assignments <- Estimation_Results$topic_cluster_assignments
+        Itterations <- Estimation_Results$number_of_iterations
+        Last_Cluster_Topic_Assignments <- Cluster_Topic_Assignments[Itterations <- Estimation_Results$number_of_iterations,]
+        
+        Latent_Spaces <- Estimation_Results$latent_space_dimensions
         skip_first= skip_first+1
         #remove the first skip_first itterations of each sublist and recombine
-        Itterations <- Model_Parameters[[4]]
+        
         cat("Raw Number of Iterations:",Itterations,"\n")
         
         #' check to make sure that the user has specified a valid number of 
@@ -45,15 +48,15 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         if(skip_first >= Itterations){
           stop("You must specify Skip < the number of samples saved from the last iteration of Metropolis Hasings.")
         }
-        Metropolis_Results[[1]] <- Metropolis_Results[[1]][skip_first:Itterations,]
-        Metropolis_Results[[2]] <- Metropolis_Results[[2]][,,skip_first:Itterations]
-        Metropolis_Results[[3]] <- Metropolis_Results[[3]][(2*skip_first-1):(2*Itterations),,]
-        Metropolis_Results[[4]] <- Metropolis_Results[[4]][skip_first:Itterations,]
-        Metropolis_Results[[5]] <- Metropolis_Results[[5]][skip_first:Itterations,]
-        Metropolis_Results[[6]] <- Metropolis_Results[[6]][skip_first:Itterations,]
+        Estimation_Results$LSM_cluster_intercepts <- Estimation_Results$LSM_cluster_intercepts[skip_first:Itterations,]
+        Estimation_Results$LSM_cluster_mixing_parameters <- Estimation_Results$LSM_cluster_mixing_parameters[,,skip_first:Itterations]
+        Estimation_Results$LSM_actor_latent_positions <- Estimation_Results$LSM_actor_latent_positions[(2*skip_first-1):(2*Itterations),,]
+        Estimation_Results$cluster_whether_accepted <- Estimation_Results$cluster_whether_accepted[skip_first:Itterations,]
+        Estimation_Results$cluster_proposed_likelihoods <- Estimation_Results$cluster_proposed_likelihoods[skip_first:Itterations,]
+        Estimation_Results$cluster_current_likelihoods <- Estimation_Results$cluster_current_likelihoods[skip_first:Itterations,]
         
         
-        Itterations <- Model_Parameters[[4]] - skip_first +1
+        Itterations <- Estimation_Results$number_of_iterations - skip_first +1
         # generate vector to thin latent space positions by
         base <- seq(1, 2*Itterations,2*Thin_Itterations)
         base2 <- seq(2, 2*Itterations,2*Thin_Itterations)
@@ -68,26 +71,25 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         }
      
         #thin out the data by taking every Thin_Itterations itteration for the metropolis step
-        Metropolis_Results[[1]] <- Metropolis_Results[[1]][seq(1, Itterations,Thin_Itterations),]
-        Metropolis_Results[[2]] <- Metropolis_Results[[2]][,,seq(1, Itterations,Thin_Itterations)]
-        Metropolis_Results[[3]] <- Metropolis_Results[[3]][ordered,,]
-        Metropolis_Results[[4]] <- Metropolis_Results[[4]][seq(1, Itterations,Thin_Itterations),]
-        Metropolis_Results[[5]] <- Metropolis_Results[[5]][seq(1, Itterations,Thin_Itterations),]
-        Metropolis_Results[[6]] <- Metropolis_Results[[6]][seq(1, Itterations,Thin_Itterations),]
+        Estimation_Results$LSM_cluster_intercepts <- Estimation_Results$LSM_cluster_intercepts[seq(1, Itterations,Thin_Itterations),]
+        Estimation_Results$LSM_cluster_mixing_parameters <- Estimation_Results$LSM_cluster_mixing_parameters[,,seq(1, Itterations,Thin_Itterations)]
+        Estimation_Results$LSM_actor_latent_positions <- Estimation_Results$LSM_actor_latent_positions[ordered,,]
+        Estimation_Results$cluster_whether_accepted <- Estimation_Results$cluster_whether_accepted[seq(1, Itterations,Thin_Itterations),]
+        Estimation_Results$cluster_proposed_likelihoods <- Estimation_Results$cluster_proposed_likelihoods[seq(1, Itterations,Thin_Itterations),]
+        Estimation_Results$cluster_current_likelihoods <- Estimation_Results$cluster_current_likelihoods[seq(1, Itterations,Thin_Itterations),]
 
         Itterations <- Itterations/Thin_Itterations
         #get model information and extract data
         selected_depth <- Itterations - floor(proportion_in_confidence_contour*Itterations)
 
-        Clusters <- Model_Parameters[[5]]
-        Topics <- length(Last_Cluster_Topic_Assignments)
-        Actors <- length(Metropolis_Results[[3]][1,1,])
-        Token_Topic_Assignments <- Topic_Model_Results[[1]]
-        Topic_Present_Edge_Counts <- Topic_Model_Results[[2]]
-        Topic_Absent_Edge_Counts <- Topic_Model_Results[[3]]
-        Word_Type_Topic_Counts <- Topic_Model_Results[[4]]
-        Edge_Topic_Assignments <- Topic_Model_Results[[5]]
-        Proposal_Variances <- Model_Parameters[[6]][Model_Parameters[[2]],]
+        Clusters <- Estimation_Results$number_of_clusters
+        Topics <- Estimation_Results$num_topics
+        Actors <- Estimation_Results$num_actors
+        Token_Topic_Assignments <- Estimation_Results$token_topic_assignments
+        Topic_Present_Edge_Counts <- Estimation_Results$topic_present_edge_counts
+        Topic_Absent_Edge_Counts <- Estimation_Results$topic_absent_edge_counts
+        Word_Type_Topic_Counts <- Estimation_Results$token_type_topic_counts
+        Proposal_Variances <- Estimation_Results$cluster_proposal_variances[Estimation_Results$number_of_iterations,]
         Cluster_Topic_Assigns <- Last_Cluster_Topic_Assignments
         
         Clusters_to_Pretty_Print <- unique(Cluster_Topic_Assigns)
@@ -139,7 +141,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         
         if(print_agregate_level_stats){
           if(save_results){
-            save(data,file=paste(out_directory ,output_name,"Topic_Top_Words.Rdata", sep = ""))
+            save(data,file=paste(out_directory ,output_name,"_Topic_Top_Words.Rdata", sep = ""))
           }
         }
         
@@ -202,7 +204,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         }
         
         #display current accept rate
-        Accept_Rates <- Metropolis_Results[[4]]
+        Accept_Rates <- Estimation_Results$cluster_whether_accepted
         
         for(i in 1:Clusters){
             print(paste("Current accept rate for cluster", i, "is:", sum(Accept_Rates[,i])/Itterations))
@@ -210,7 +212,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
 
         print("Generating Topic Model Log Likelihoods")
         if(print_agregate_level_stats){
-          log_likelihoods  <- Model_Parameters[[8]]
+          log_likelihoods  <- Estimation_Results$LDA_log_likelihood_trace
           len <- length(log_likelihoods)
           geweke_log_likelihoods <- log_likelihoods[topic_model_burnin:len]
             
@@ -270,13 +272,13 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         #======= plotting function definitions =======#
         #function to plot intercept over time
         plot_intercepts <- function(intercept){
-            intercepts <- Metropolis_Results[[1]][,intercept]
+            intercepts <- Estimation_Results$LSM_cluster_intercepts[,intercept]
             plot(intercepts, main = paste("Topic:",intercept,"Geweke:",round(coda::geweke.diag(intercepts)$z,2)),ylab= "Value",pch = 20)
         }
 
         #function to plot betas over time
         plot_betas <- function(Cluster){
-            betas <- Metropolis_Results[[2]][Cluster,,]
+            betas <- Estimation_Results$LSM_cluster_mixing_parameters[Cluster,,]
             betas <- t(betas)
             matplot(betas, main = paste("Cluster:",Cluster,"Geweke","\n MM:",round(coda::geweke.diag(betas[,1])$z,2) , "MF:",round(coda::geweke.diag(betas[,2])$z,2) ,"\n FM:",round(coda::geweke.diag(betas[,3])$z,2) ,"FF:",round(coda::geweke.diag(betas[,4])$z,2)),ylab= "Value",pch = 20)
         }
@@ -285,8 +287,8 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         plot_LS_Positions <- function(cluster){
             LSP <- matrix(0,nrow=Itterations, ncol= Latent_Spaces)
             for(i in 1:Itterations){
-                LSP[i,1] <- Metropolis_Results[[3]][2*i-1,cluster,LS_Actor]
-                LSP[i,2] <- Metropolis_Results[[3]][2*i,cluster,LS_Actor]
+                LSP[i,1] <- Estimation_Results$LSM_actor_latent_positions[2*i-1,cluster,LS_Actor]
+                LSP[i,2] <- Estimation_Results$LSM_actor_latent_positions[2*i,cluster,LS_Actor]
             }
             corel <- cor(LSP[,1], LSP[,2])
             matplot(LSP, main = paste("Cluster:",cluster, "\n LS Correlations:", round(corel,3),"\n Geweke - LS1:",round(coda::geweke.diag(LSP[,1])$z,2),"LS2:",round(coda::geweke.diag(LSP[,2])$z,2)),ylab= "Value",pch = 20)
@@ -302,7 +304,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
                     slice <- slice + Topic_Present_Edge_Counts[,,i]
                 }
             }
-            coordinates <- cbind(Metropolis_Results[[3]][2*Itterations-1,Cluster,],Metropolis_Results[[3]][2*Itterations,Cluster,])
+            coordinates <- cbind(Estimation_Results$LSM_actor_latent_positions[2*Itterations-1,Cluster,],Estimation_Results$LSM_actor_latent_positions[2*Itterations,Cluster,])
             coordinates <- as.data.frame(coordinates)
             
             gend <- Author_Attributes$Gender
@@ -338,7 +340,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
                     slice <- slice + Topic_Absent_Edge_Counts[,,i]
                 }
             }
-            coordinates <- cbind(Metropolis_Results[[3]][2*Itterations-1,Cluster,],Metropolis_Results[[3]][2*Itterations,Cluster,])
+            coordinates <- cbind(Estimation_Results$LSM_actor_latent_positions[2*Itterations-1,Cluster,],Estimation_Results$LSM_actor_latent_positions[2*Itterations,Cluster,])
             coordinates <- as.data.frame(coordinates)
             plot(coordinates,main = paste("Topic:",Cluster,"Number of Edges:",sum(slice),"\n", Cluster_Four_Words[Cluster]),pch = 20, col = "red")
             #add in lines between actors
@@ -355,7 +357,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         #make plots will all top words for one per page output
         plot_Topic_Network_Full <- function(Cluster){
             slice <- Topic_Present_Edge_Counts[,,Cluster]
-            coordinates <- cbind(Metropolis_Results[[3]][2*Itterations-1,Cluster,],Metropolis_Results[[3]][2*Itterations,Cluster,])
+            coordinates <- cbind(Estimation_Results$LSM_actor_latent_positions[2*Itterations-1,Cluster,],Estimation_Results$LSM_actor_latent_positions[2*Itterations,Cluster,])
             coordinates <- as.data.frame(coordinates)
             plot(coordinates,main = paste("Cluster:",Cluster,"Number of Edges:",sum(slice),"\n", Cluster_Ten_Words[topic]),pch = 20, col = "red")
             #add in lines between actors
@@ -371,7 +373,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         
         #function to plot log likelihoods over time
         plot_likelihoods <- function(Cluster){
-            likelihoods <- cbind(Metropolis_Results[[5]][,Cluster],Metropolis_Results[[6]][,Cluster])
+            likelihoods <- cbind(Estimation_Results$cluster_proposed_likelihoods[,Cluster],Estimation_Results$cluster_current_likelihoods[,Cluster])
             matplot(likelihoods, main = paste("Log Likelihoods of Current and Proposed Positions over Time For Cluster", Cluster, "\n Geweke Statistic:", round(coda::geweke.diag(likelihoods[,1])$z,2)),ylab= "Value",pch = 20)
         }
         
@@ -383,7 +385,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
             lud <- rep(0,Itterations)
             colors <- rep("",Itterations)
             for(i in 1:Itterations){
-                likelihoods[i] <- Metropolis_Results[[5]][i,Cluster] - Metropolis_Results[[6]][i,Cluster] #- Metropolis_Results[[6*Itterations+i]]
+                likelihoods[i] <- Estimation_Results$cluster_proposed_likelihoods[i,Cluster] - Estimation_Results$cluster_current_likelihoods[i,Cluster] 
                 accept[i] <- Accept_Rates[i,Cluster]
                 if(accept[i] == 1){
                     col <- "blue"
@@ -435,10 +437,10 @@ Generate_Model_Diagnsotics <- function(skip_first ,
             }
             
             #generate mean coordinates
-            base <- cbind(Metropolis_Results[[3]][2*1-1,Cluster,],Metropolis_Results[[3]][2*1,Cluster,])
+            base <- cbind(Estimation_Results$LSM_actor_latent_positions[2*1-1,Cluster,],Estimation_Results$LSM_actor_latent_positions[2*1,Cluster,])
             mean_coordinates <- matrix(0, nrow = Actors, ncol = 2)
             for(i in 1:Itterations){
-                temp <- cbind(Metropolis_Results[[3]][2*i-1,Cluster,],Metropolis_Results[[3]][2*i,Cluster,])
+                temp <- cbind(Estimation_Results$LSM_actor_latent_positions[2*i-1,Cluster,],Estimation_Results$LSM_actor_latent_positions[2*i,Cluster,])
                 rotated <- vegan::procrustes(base,temp,scale=F)$Yrot
                 mean_coordinates <- mean_coordinates + rotated
             }
@@ -509,9 +511,9 @@ Generate_Model_Diagnsotics <- function(skip_first ,
             box(which = "plot")
 
             storage <- matrix(0,nrow = Itterations, ncol = 2*Actors)
-            base <- cbind(Metropolis_Results[[3]][2*1-1,Cluster,],Metropolis_Results[[3]][2*1,Cluster,])
+            base <- cbind(Estimation_Results$LSM_actor_latent_positions[2*1-1,Cluster,],Estimation_Results$LSM_actor_latent_positions[2*1,Cluster,])
             for(i in 1:Itterations){
-                temp <- cbind(Metropolis_Results[[3]][2*i-1,Cluster,],Metropolis_Results[[3]][2*i,Cluster,])
+                temp <- cbind(Estimation_Results$LSM_actor_latent_positions[2*i-1,Cluster,],Estimation_Results$LSM_actor_latent_positions[2*i,Cluster,])
                 rotated <- vegan::procrustes(base,temp,scale=F)$Yrot
                 
                 counter <- 1
@@ -567,7 +569,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
           unique_attrs <- unique(attr)
             betas <- matrix(0,ncol = 4, nrow = Itterations)
             for(i in 1:Itterations){
-                betas[i,] <- Metropolis_Results[[2]][Cluster,,i]
+                betas[i,] <- Estimation_Results$LSM_cluster_mixing_parameters[Cluster,,i]
             }
             boxplot(betas, col = c("grey","grey", "grey", "grey"), names = c(
               paste(unique_attrs[1],"-",unique_attrs[1]," (Fixed)",sep = ""), paste(unique_attrs[1],"-",unique_attrs[2],sep = ""),paste(unique_attrs[2],"-",unique_attrs[1],sep = ""), paste(unique_attrs[2],"-",unique_attrs[2],sep = "")),ylab = "Mixing Parameter Estimate", main = "Mixing Parameter Estimates")
@@ -599,7 +601,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
     
 
         Pretty_Cluster_Likelihood <- function(Cluster){
-            likelihoods <- cbind(Metropolis_Results[[5]][,Cluster],Metropolis_Results[[6]][,Cluster])
+            likelihoods <- cbind(Estimation_Results$cluster_proposed_likelihoods[,Cluster],Estimation_Results$cluster_current_likelihoods[,Cluster])
             if(used_binary_mixing_attribute){
               bets <- length(which(abs(unlist(beta_list[(4*(Cluster-1)+2):(4*Cluster)])) < 1.645))
             }
@@ -622,7 +624,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
 
 
         Pretty_Cluster_Trace <- function(Cluster){
-            likelihoods <- Metropolis_Results[[6]][,Cluster]
+            likelihoods <- Estimation_Results$cluster_current_likelihoods[,Cluster]
             
             plot(likelihoods, main = paste("Trace Plot of Log Likelihoods", "\n Geweke Statistic:", round(coda::geweke.diag(likelihoods)$z,2)),ylab= "Log Likelihood", type="n")
             lines(likelihoods)
@@ -763,7 +765,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
             Cluster <- t
             print(paste("Current Cluster: ", t))
             #Intercepts
-            intercepts <- Metropolis_Results[[1]][,t]
+            intercepts <- Estimation_Results$LSM_cluster_intercepts[,t]
             int <- as.numeric(coda::geweke.diag(intercepts)$z)
             intercept_list <- append(intercept_list,int)
             
@@ -771,7 +773,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
             if(used_binary_mixing_attribute){
               betas <- matrix(0,ncol = 4, nrow = Itterations)
               for(i in 1:Itterations){
-                betas[i,] <- Metropolis_Results[[2]][t,,i]
+                betas[i,] <- Estimation_Results$LSM_cluster_mixing_parameters[t,,i]
               }
               bets <- rep(0,4)
               for(i in 1:4){
@@ -782,9 +784,9 @@ Generate_Model_Diagnsotics <- function(skip_first ,
 
             #generate vegan::procrustes transformed positions
             storage <- matrix(0,nrow = Itterations, ncol = 2*Actors)
-            base <- cbind(Metropolis_Results[[3]][2*1-1,Cluster,],Metropolis_Results[[3]][2*1,Cluster,])
+            base <- cbind(Estimation_Results$LSM_actor_latent_positions[2*1-1,Cluster,],Estimation_Results$LSM_actor_latent_positions[2*1,Cluster,])
             for(i in 1:Itterations){
-                temp <- cbind(Metropolis_Results[[3]][2*i-1,Cluster,],Metropolis_Results[[3]][2*i,Cluster,])
+                temp <- cbind(Estimation_Results$LSM_actor_latent_positions[2*i-1,Cluster,],Estimation_Results$LSM_actor_latent_positions[2*i,Cluster,])
                 rotated <- vegan::procrustes(base,temp,scale=F)$Yrot
                 
                 counter <- 1
@@ -937,7 +939,7 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         get_beta_estimates <- function(Cluster){
           betas <- matrix(0,ncol = 4, nrow = Itterations)
           for(i in 1:Itterations){
-            betas[i,] <- Metropolis_Results[[2]][Cluster,,i]
+            betas[i,] <- Estimation_Results$LSM_cluster_mixing_parameters[Cluster,,i]
           }
           mean_se <- as.data.frame(matrix(0,nrow=4, ncol = 2))
           mean_se <- cbind(c("1-1", "1-2","2-1", "2-2"),mean_se)
@@ -959,9 +961,9 @@ Generate_Model_Diagnsotics <- function(skip_first ,
 
         Clusters_intercepts <- matrix(0,ncol = 2,nrow= Clusters)
         for(c in 1:Clusters){
-          intercepts <- Metropolis_Results[[1]][,c]
+          intercepts <- Estimation_Results$LSM_cluster_intercepts[,c]
           for(i in 1:Itterations){
-            intercepts[i] <- Metropolis_Results[[1]][i,c]
+            intercepts[i] <- Estimation_Results$LSM_cluster_intercepts[i,c]
           }
           Clusters_intercepts[c,1] <- mean(intercepts)
           Clusters_intercepts[c,2] <- sd(intercepts)
@@ -997,9 +999,9 @@ Generate_Model_Diagnsotics <- function(skip_first ,
         
         Clusters_intercepts <- matrix(0,ncol = 2,nrow= Clusters)
         for(c in 1:Clusters){
-          intercepts <- Metropolis_Results[[1]][,c]
+          intercepts <- Estimation_Results$LSM_cluster_intercepts[,c]
           for(i in 1:Itterations){
-            intercepts[i] <- Metropolis_Results[[1]][i,c]
+            intercepts[i] <- Estimation_Results$LSM_cluster_intercepts[i,c]
           }
           Clusters_intercepts[c,1] <- mean(intercepts)
           Clusters_intercepts[c,2] <- sd(intercepts)
