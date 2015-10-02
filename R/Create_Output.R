@@ -72,7 +72,7 @@ Create_Output <- function(output_names = NULL,
       if(load_results_from_file){
         cat("Current County:",estimation_output_list[i],"--",i,"of",length(estimation_output_list), " \n")
         before <- ls()
-        load( paste(estimation_output_directory,estimation_output_list[i],".Rdata", sep = ""))
+        load(paste(estimation_output_directory,estimation_output_list[i],".Rdata", sep = ""))
         after <- ls()
         after <- after[-which(after == "before")]
         estimation_name <- which(after %in% before == FALSE)
