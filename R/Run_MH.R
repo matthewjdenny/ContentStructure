@@ -1,8 +1,5 @@
-Run_MH_To_Convergence <- function(input_file,
-                                  output_file, 
-                                  itterations,
+Run_MH_To_Convergence <- function(itterations,
                                   sample_every, 
-                                  data_dir,
                                   sample_step_burnin,
                                   post_burin_variance_multiplier, 
                                   prop_var,
@@ -11,13 +8,9 @@ Run_MH_To_Convergence <- function(input_file,
                                   use_adaptive_metropolis, 
                                   MH_prior_standard_deviation, 
                                   seed,
-                                  save_results_to_file,
                                   Main_Estimation_Results){
     
     set.seed(seed)
-    if(save_results_to_file){
-      load(paste(data_dir,input_file,".Rdata", sep = ""))
-    }
     #extract current metropolis results
     first_return <- 13
     Topic_Model_Results <- Main_Estimation_Results[1:5]
@@ -89,14 +82,13 @@ Run_MH_To_Convergence <- function(input_file,
     Main_Estimation_Results[[20]] <- Result_List[[3]]
 	
 	#assign names to list object
+	Main_Estimation_Results <- Main_Estimation_Results[-c(5,8)]
 	names(Main_Estimation_Results) <- c("token_topic_assignments",
 							"topic_present_edge_counts",
 							"topic_absent_edge_counts",
 							"token_type_topic_counts",
-							"nothing_will_eventually_remove",
 							"number_of_documents",
 							"number_of_iterations",
-							"Gibbs_per_iteration_will_eventually_remove",
 							"number_of_LSM_MH_iterations", 
 							"number_of_clusters",
 							"cluster_proposal_variances",
@@ -116,11 +108,6 @@ Run_MH_To_Convergence <- function(input_file,
     clust_assigns <- Main_Estimation_Results$topic_cluster_assignments
     nrows <- nrow(clust_assigns)
     cat("Topic Cluster Assignments: \n",clust_assigns[nrows,],"\n", "If all topics are assigned to one cluster, you may want to rerun with a new seed as this may indicate that the model jumped to a degenerate distribution over cluster assignments...\n", sep = "")
-
-    if(save_results_to_file){
-      cat("Saving Results... \n")
-      save(Main_Estimation_Results, file=paste(data_dir,output_file,".Rdata",sep = ""))
-    }
     return(Main_Estimation_Results)
 }# end of ouuter function definition 
 

@@ -11,10 +11,8 @@ Run_Inference <- function(Number_Of_Iterations,
                           Latent_Dimensions, 
                           Topic_Step_Itterations, 
                           Sample_Step_Itterations, 
-                          output_file,
                           Proposal_Variance, 
                           seed, 
-                          output_folder_path, 
                           Number_of_Clusters,
                           Itterations_Before_Cluster_Assingment_Updates, 
                           Adaptive_Metropolis_Target_Accept_Rate, 
@@ -22,8 +20,7 @@ Run_Inference <- function(Number_Of_Iterations,
                           Slice_Sample_Alpha, 
                           MH_prior_standard_deviation, 
                           Number_of_Binary_Mixing_Parameters,
-                          Mixing_Variable,
-                          save_results_to_file){
+                          Mixing_Variable){
     
     #== set working driectory and source all functions ===#
     set.seed(seed)
@@ -165,10 +162,6 @@ Run_Inference <- function(Number_Of_Iterations,
     )
     
     Main_Estimation_Results <- append(Return_List,MP)
-    #get things ready to return a model object with all of the relevant info 
-    if(save_results_to_file){
-      save(Main_Estimation_Results, file = paste(output_folder_path,"Model_Output_",output_file,".Rdata",sep = ""))
-    }
     return(Main_Estimation_Results)
 } # End of Run_Analysis definition
 
